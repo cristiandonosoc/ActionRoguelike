@@ -27,14 +27,19 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputController) override;
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInput) override;
 
 	void MoveForward(float Value);
+	void MoveRight(float Value);
+	void PrimaryAttack();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* CameraComponent;
+	UCameraComponent* Camera;
 	
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArmComponent;
+	USpringArmComponent* SpringArm;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
 };
