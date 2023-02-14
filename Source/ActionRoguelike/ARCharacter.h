@@ -7,6 +7,7 @@
 
 #include "ARCharacter.generated.h"
 
+class UAnimMontage;
 class UARInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
@@ -35,17 +36,27 @@ public:
 	void MoveRight(float Value);
 
 	void PrimaryAttack();
+	void PrimaryAttack_TimerElapsed();
+	
 	void PrimaryInteract();
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	UAnimMontage* AttackAnimation;
+
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float AttackDelay = 0.4f;
+
+	FTimerHandle PrimaryAttack_TimerHandler;
+
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> ProjectileClass;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
