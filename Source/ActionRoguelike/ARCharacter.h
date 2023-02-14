@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
 #include "ARCharacter.generated.h"
 
+class UARInteractionComponent;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -27,20 +29,24 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInput) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	
+
 	void PrimaryAttack();
+	void PrimaryInteract();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UARInteractionComponent> InteractionComponent;
 };

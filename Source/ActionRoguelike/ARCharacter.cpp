@@ -4,6 +4,7 @@
 // #include "ActionRoguelike/Public/ARCharacter.h"
 #include "ARCharacter.h"
 
+#include "ARInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -27,31 +28,36 @@ AARCharacter::AARCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	this->bUseControllerRotationYaw = false;
+
+	InteractionComponent = CreateDefaultSubobject<UARInteractionComponent>("InteractionComponent");
 }
 
 // Called when the game starts or when spawned
-void AARCharacter::BeginPlay() { Super::BeginPlay(); }
+void AARCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+}
 
 namespace ARCharacter_Private
 {
-	void VisualizeRotation(const AARCharacter &Character)
-	{
-		constexpr float DrawScale = 100.0f;
-		constexpr float Thickness = 5.0f;
+void VisualizeRotation(const AARCharacter& Character)
+{
+	constexpr float DrawScale = 100.0f;
+	constexpr float Thickness = 5.0f;
 
-		FVector Start = Character.GetActorLocation() + (Character.GetActorRightVector() * 100.0f);
+	FVector Start = Character.GetActorLocation() + (Character.GetActorRightVector() * 100.0f);
 
-		FVector ActorForward = Start + (Character.GetActorForwardVector() * 100.0f);
-		FVector ControllerForward = Start + (Character.GetControlRotation().Vector() * 100.0f);
+	FVector ActorForward = Start + (Character.GetActorForwardVector() * 100.0f);
+	FVector ControllerForward = Start + (Character.GetControlRotation().Vector() * 100.0f);
 
-		// Draw the lines.
-		UWorld *World = Character.GetWorld();
+	// Draw the lines.
+	UWorld* World = Character.GetWorld();
 
-		DrawDebugDirectionalArrow(World, Start, ActorForward, DrawScale, FColor::Yellow, false,
-								  0.0f, 0, Thickness);
-		DrawDebugDirectionalArrow(World, Start, ControllerForward, DrawScale, FColor::Green, false,
-								  0.0f, 0, Thickness);
-	}
+	DrawDebugDirectionalArrow(World, Start, ActorForward, DrawScale, FColor::Yellow, false, 0.0f, 0,
+							  Thickness);
+	DrawDebugDirectionalArrow(World, Start, ControllerForward, DrawScale, FColor::Green, false,
+							  0.0f, 0, Thickness);
+}
 } // namespace ARCharacter_Private
 
 // Called every frame
@@ -65,7 +71,7 @@ void AARCharacter::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void AARCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInput)
+void AARCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput)
 {
 	Super::SetupPlayerInputComponent(PlayerInput);
 
@@ -77,6 +83,7 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent *PlayerInput)
 
 	PlayerInput->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
 	PlayerInput->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInput->BindAction("Interact", IE_Pressed, this, &AARCharacter::PrimaryInteract);
 }
 
 void AARCharacter::MoveForward(float Value)
@@ -109,7 +116,7 @@ void AARCharacter::PrimaryAttack()
 	{
 		return;
 	}
-
+l
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
@@ -118,4 +125,12 @@ void AARCharacter::PrimaryAttack()
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
+}
+
+void AARCharacter::PrimaryInteract()
+{
+	if (InteractionComponent)
+	{
+		InteractionComponent->PrimaryInteract();
+	}
 }

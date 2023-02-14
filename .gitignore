@@ -76,3 +76,6 @@ DerivedDataCache/*
 # Rider stuff
 .idea/*
 Plugins/Developer/RiderLink/*
+
+# Visual Studio crap.
+*.sln.DotSettings.user

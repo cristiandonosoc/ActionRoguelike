@@ -3,7 +3,7 @@
 
 #include "ARExplosiveBarrel.h"
 
-#include "PhysicsEngine/RadialForceComponent.h"
+#include <PhysicsEngine/RadialForceComponent.h>
 
 // Sets default values
 AARExplosiveBarrel::AARExplosiveBarrel()
