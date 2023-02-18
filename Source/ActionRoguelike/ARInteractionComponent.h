@@ -7,7 +7,12 @@
 
 #include "ARInteractionComponent.generated.h"
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+// UARInteractionComponent handles the intereactivity part of the character.
+// 
+// Currently it is not meant to be ticked directly, but rather it is meant to be called
+// directly from the character. This is because the character holds much more information
+// about the world, camera and where the player is looking at.
+UCLASS()
 class ACTIONROGUELIKE_API UARInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -16,14 +21,10 @@ public:
 	// Sets default values for this component's properties
 	UARInteractionComponent();
 
-	void PrimaryInteract();
+	// target is where the camera is targeting.
+	void PrimaryInteract(const FVector& camera_target);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-							   FActorComponentTickFunction* ThisTickFunction) override;
 };

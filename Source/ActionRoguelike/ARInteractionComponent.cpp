@@ -4,109 +4,66 @@
 #include "ARInteractionComponent.h"
 
 #include "ARGameplayInterface.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Templates/NonNullPointer.h"
 
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You
 	// can turn these features off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
 
-namespace ARInteractionComponent_Private
+void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 {
+	constexpr float interaction_distance = 1000.0f;
+	
+	TNonNullPtr<AActor> owner = GetOwner();
 
-void VisualizeLineTrace(const UARInteractionComponent& Component, const FVector& Start,
-						const FVector& End)
-{
-	UWorld* World = Component.GetWorld();
-	DrawDebugLine(World, Start, End, FColor::Purple, false, 1, 0, 1);
-}
+	// Get the position/rotation of the character's eye.
+	FVector eye_location;
+	FRotator eye_rotation;
+	owner->GetActorEyesViewPoint(eye_location, eye_rotation);
 
+	// The trace we want it to point to the camera target rather than to look directly from the
+	// character, because it gives some un-intuitive location.
+	const FVector& start = eye_location;
+	FRotator rotation = UKismetMathLibrary::FindLookAtRotation(eye_location, camera_target);
+	FVector end = eye_location + (rotation.Vector() * interaction_distance);
 
-void InteractByLineTrace(const UARInteractionComponent& Component)
-{
-	FCollisionObjectQueryParams Params = {};
-	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
+	constexpr float radius = 30.0f;
+	FCollisionShape shape;
+	shape.SetSphere(radius);
 
-	FVector EyeLocation;
-	FRotator EyeRotation;
-
-	AActor* Owner = Component.GetOwner();
-	check(Owner);
-
-	Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	FVector Start = EyeLocation;
-	FVector End = EyeLocation + (EyeRotation.Vector() * 1000.0f);
-
-	ARInteractionComponent_Private::VisualizeLineTrace(Component, Start, End);
-
-	FHitResult Hit;
-	if (Component.GetWorld()->LineTraceSingleByObjectType(Hit, Start, End, Params))
+	FCollisionObjectQueryParams params = {};
+	params.AddObjectTypesToQuery(ECC_WorldDynamic);
+	
+	bool interacted = false;
+	
+	TArray<FHitResult> out_hits;
+	GetWorld()->SweepMultiByObjectType(out_hits, start, end, FQuat::Identity, params, shape);
+	for (const auto& hit : out_hits)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Interacted!"));
-
-		AActor* HitActor = Hit.GetActor();
-		check(HitActor);
-		if (HitActor->Implements<UARGameplayInterface>())
+		if (AActor* hit_actor = hit.GetActor())
 		{
-			APawn* Pawn = Cast<APawn>(Owner);
-			check(Pawn);
+			DrawDebugSphere(GetWorld(), hit.Location, radius, 16, FColor::Yellow, false, 2, 0, 2);
 
-			IARGameplayInterface::Execute_Interact(HitActor, Pawn);
-		}
-	}
-}
-
-} // namespace ARInteractionComponent_Private
-
-
-void UARInteractionComponent::PrimaryInteract()
-{
-	FCollisionObjectQueryParams Params = {};
-	Params.AddObjectTypesToQuery(ECC_WorldDynamic);
-
-	FVector EyeLocation;
-	FRotator EyeRotation;
-
-	AActor* Owner = GetOwner();
-	check(Owner);
-
-	Owner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	FVector Start = EyeLocation;
-	FVector End = EyeLocation + (EyeRotation.Vector() * 1000.0f);
-
-	constexpr float Radius = 30.0f;
-	FCollisionShape Shape;
-	Shape.SetSphere(Radius);
-
-	TArray<FHitResult> Hits;
-	GetWorld()->SweepMultiByObjectType(Hits, Start, End, FQuat::Identity, Params, Shape);
-	bool Interacted = false;
-	for (const auto& Hit : Hits)
-	{
-		if (AActor* HitActor = Hit.GetActor())
-		{
-			DrawDebugSphere(GetWorld(), Hit.Location, Radius, 16, FColor::Yellow, false, 2, 0, 2);
-
-			if (HitActor->Implements<UARGameplayInterface>())
+			if (hit_actor->Implements<UARGameplayInterface>())
 			{
-				APawn* Pawn = Cast<APawn>(Owner);
-				check(Pawn);
+				TNonNullPtr<APawn> pawn = Cast<APawn>(owner.Get());
 
-				IARGameplayInterface::Execute_Interact(HitActor, Pawn);
-				Interacted = true;
+				IARGameplayInterface::Execute_Interact(hit_actor, pawn);
+				interacted = true;
 				break;
 			}
 		}
 	}
 
-	FColor Color = Interacted ? FColor::Green : FColor::Red;
-	DrawDebugCylinder(GetWorld(), Start, End, Radius, 16, Color, false, 2, 0, 2);
+	FColor color = interacted ? FColor::Green : FColor::Red;
+	DrawDebugCylinder(GetWorld(), start, end, radius, 16, color, false, 2, 0, 2);
 }
 
 
@@ -114,16 +71,6 @@ void UARInteractionComponent::PrimaryInteract()
 void UARInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-}
-
-
-// Called every frame
-void UARInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-											FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }

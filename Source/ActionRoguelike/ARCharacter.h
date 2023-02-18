@@ -27,13 +27,13 @@ protected:
 
 public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float delta) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInput) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* player_input) override;
 
-	void MoveForward(float Value);
-	void MoveRight(float Value);
+	void MoveForward(float val);
+	void MoveRight(float val);
 
 	void PrimaryAttack();
 	void PrimaryAttack_TimerElapsed();
@@ -60,4 +60,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
+
+private:
+	// This is where the player is looking from the camera at any given frame.
+	// This is used by other systems to correctly point their target
+	FVector CameraTarget;
 };
