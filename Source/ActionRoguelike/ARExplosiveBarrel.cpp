@@ -42,14 +42,18 @@ void AARExplosiveBarrel::PostInitializeComponents()
 
 	Mesh->OnComponentHit.AddDynamic(this, &AARExplosiveBarrel::OnActorHit);
 }
-void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent *HitComponent, AActor *OtherActor,
-									UPrimitiveComponent *OtherComponent, FVector Normal,
-									const FHitResult &Hit)
+void AARExplosiveBarrel::Explode()
+{
+	ExplosionForce->FireImpulse();
+}
+
+void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
+									UPrimitiveComponent* OtherComponent, FVector Normal,
+									const FHitResult& Hit)
 {
 	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
 
-
-	ExplosionForce->FireImpulse();
+	Explode();
 
 	UE_LOG(LogTemp, Warning, TEXT("Other Actor: %s, at time: %f"), *GetNameSafe(OtherActor),
 		   GetWorld()->TimeSeconds);

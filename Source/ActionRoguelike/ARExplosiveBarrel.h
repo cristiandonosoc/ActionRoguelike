@@ -29,6 +29,9 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 protected:
+	UFUNCTION(BlueprintCallable)
+	void Explode();
+	
 	UFUNCTION()
 	void OnActorHit(UPrimitiveComponent *HitComponent, AActor *OtherActor,
 					UPrimitiveComponent *OtherComponent, FVector Normal, const FHitResult &Hit);

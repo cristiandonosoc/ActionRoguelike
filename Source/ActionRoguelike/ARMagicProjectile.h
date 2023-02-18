@@ -26,11 +26,11 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* CollisionSphere;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USphereComponent> CollisionSphere;
 
 	UPROPERTY(VisibleAnywhere)
-	UProjectileMovementComponent* ProjectileMovement;
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* Effect;

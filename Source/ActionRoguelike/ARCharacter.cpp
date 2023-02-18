@@ -120,16 +120,18 @@ void AARCharacter::PrimaryAttack()
 	PlayAnimMontage(AttackAnimation);
 
 	GetWorldTimerManager().SetTimer(PrimaryAttack_TimerHandler, this,
-									&AARCharacter::PrimaryAttack_TimerElapsed, AttackDelay, false);
-}
+									&AARCharacter::PrimaryAttack_TimerElapsed, AttackDelay, false); }
 
 void AARCharacter::PrimaryAttack_TimerElapsed()
 {
 	FVector HandLocation = GetMesh()->GetSocketLocation("Muzzle_01");
 
 	FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
+	APawn* Pawn = Cast<APawn>(this);
+	check(Pawn);
+	
 	FActorSpawnParameters SpawnParams = {};
-	// TODO(cdc): Change.
+	SpawnParams.Instigator = Pawn;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
