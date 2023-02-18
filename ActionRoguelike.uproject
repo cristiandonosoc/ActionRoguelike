@@ -11,6 +11,11 @@
 			"AdditionalDependencies": [
 				"Engine"
 			]
+		},
+		{
+			"Name": "ARBase",
+			"Type": "Runtime",
+			"LoadingPhase": "EarliestPossible"
 		}
 	],
 	"Plugins": [

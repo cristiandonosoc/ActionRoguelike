@@ -4,11 +4,12 @@
 // #include "ActionRoguelike/Public/ARCharacter.h"
 #include "ARCharacter.h"
 
-#include "ARInteractionComponent.h"
+#include "ActionRoguelike/ARInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "ARBase/BuildDefines.h"
 
 // Sets default values
 AARCharacter::AARCharacter()
@@ -40,8 +41,10 @@ void AARCharacter::BeginPlay()
 
 namespace ARCharacter_Private
 {
+
 void VisualizeRotation(const AARCharacter& Character)
 {
+#if AR_BUILD_DEBUG
 	constexpr float DrawScale = 100.0f;
 	constexpr float Thickness = 5.0f;
 
@@ -57,7 +60,14 @@ void VisualizeRotation(const AARCharacter& Character)
 							  Thickness);
 	DrawDebugDirectionalArrow(World, Start, ControllerForward, DrawScale, FColor::Green, false,
 							  0.0f, 0, Thickness);
+#endif
 }
+
+void VisualizeTargeting(const AARCharacter& Character)
+{
+	
+}
+
 } // namespace ARCharacter_Private
 
 // Called every frame
