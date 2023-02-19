@@ -37,6 +37,7 @@ public:
 	void MoveRight(float val);
 
 	void PrimaryAttack();
+	void DashAttack();
 	void UltimateAttack();
 
 	void ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class);
@@ -45,12 +46,11 @@ public:
 	void PrimaryInteract();
 
 protected:
-
-
-	// PROJECTILES ---------------------------------------------------------------------------------
-	
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
+	
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<AARBaseProjectile> DashAttackProjectile;
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;

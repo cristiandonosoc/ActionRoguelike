@@ -21,6 +21,7 @@ AARBaseProjectile::AARBaseProjectile()
 
 	// Set the collision sphere as the root component for our projectile.
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>("CollisionSphere");
+	CollisionSphere->SetCollisionProfileName(TEXT("Projectile"));
 	RootComponent = CollisionSphere;
 
 	Effect = CreateDefaultSubobject<UParticleSystemComponent>("Effect");

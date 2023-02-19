@@ -53,6 +53,7 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
 	player_input->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
 
 	player_input->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
+	player_input->BindAction("DashAttack", IE_Pressed, this, &AARCharacter::DashAttack);
 	player_input->BindAction("UltimateAttack", IE_Pressed, this, &AARCharacter::UltimateAttack);
 
 	player_input->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -174,16 +175,28 @@ void AARCharacter::PrimaryAttack()
 {
 	if (!PrimaryAttackProjectile)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("PrimaryAttackProjectile not set"));
 		return;
 	}
 
 	ProjectileAnimationStart(PrimaryAttackProjectile);
+}
+void AARCharacter::DashAttack()
+{
+	if (!DashAttackProjectile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DashAttackProjectile not set"));
+		return;
+	}
+
+	ProjectileAnimationStart(DashAttackProjectile);
 }
 
 void AARCharacter::UltimateAttack()
 {
 	if (!UltimateAttackProjectile)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("UltimateAttackProjectile not set"));
 		return;
 	}
 
