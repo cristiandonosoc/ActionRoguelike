@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class ACTIONROGUELIKE_API AARlikeGameModeBase : public AGameModeBase
+class ARGAME_API AARlikeGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	

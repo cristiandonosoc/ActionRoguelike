@@ -11,7 +11,7 @@ class UMeshComponent;
 class URadialForceComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARExplosiveBarrel : public AActor
+class ARGAME_API AARExplosiveBarrel : public AActor
 {
 	GENERATED_BODY()
 

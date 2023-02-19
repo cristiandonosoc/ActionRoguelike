@@ -16,7 +16,7 @@ class UARGameplayInterface : public UInterface
 /**
  * 
  */
-class ACTIONROGUELIKE_API IARGameplayInterface
+class ARGAME_API IARGameplayInterface
 {
 	GENERATED_BODY()
 

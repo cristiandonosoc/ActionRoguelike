@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class ActionRoguelike : ModuleRules
+public class ARGame : ModuleRules
 {
-	public ActionRoguelike(ReadOnlyTargetRules Target) : base(Target)
+	public ARGame(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
@@ -12,9 +12,11 @@ public class ActionRoguelike : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[]
 			{ "Core", "CoreUObject", "Engine", "InputCore" });
 		PrivateDependencyModuleNames.AddRange(new string[] { });
-		
-		// ActionRoguelike deps.
+
+		// ARGame deps.
 		PublicDependencyModuleNames.AddRange(new string[]{"ARBase"});
+
+		PublicIncludePaths.AddRange(new string[] { "ARGame" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

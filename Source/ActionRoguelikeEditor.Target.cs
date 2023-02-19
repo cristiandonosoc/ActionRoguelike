@@ -10,7 +10,7 @@ public class ActionRoguelikeEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
-		ExtraModuleNames.Add("ActionRoguelike");
+		ExtraModuleNames.Add("ARGame");
 		RegisterModulesCreatedByRider();
 	}
 

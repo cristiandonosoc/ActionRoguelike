@@ -11,7 +11,7 @@
 class UStaticMeshComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARItemChest : public AActor, public IARGameplayInterface
+class ARGAME_API AARItemChest : public AActor, public IARGameplayInterface
 {
 	GENERATED_BODY()
 

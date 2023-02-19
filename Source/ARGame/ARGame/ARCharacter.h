@@ -13,7 +13,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARCharacter : public ACharacter
+class ARGAME_API AARCharacter : public ACharacter
 {
 	GENERATED_BODY()
 

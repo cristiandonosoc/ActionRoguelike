@@ -11,7 +11,7 @@ class UProjectileMovementComponent;
 class UParticleSystemComponent;
 
 UCLASS()
-class ACTIONROGUELIKE_API AARMagicProjectile : public AActor
+class ARGAME_API AARMagicProjectile : public AActor
 {
 	GENERATED_BODY()
 

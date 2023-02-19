@@ -13,7 +13,7 @@
 // directly from the character. This is because the character holds much more information
 // about the world, camera and where the player is looking at.
 UCLASS()
-class ACTIONROGUELIKE_API UARInteractionComponent : public UActorComponent
+class ARGAME_API UARInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 

@@ -23,6 +23,6 @@ public class ARBase : ModuleRules
             }
         );
 
-        PublicIncludePaths.AddRange(new string[]{ "." });
+        PublicIncludePaths.AddRange(new string[] { "ARBase" });
     }
 }

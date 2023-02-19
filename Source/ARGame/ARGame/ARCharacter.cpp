@@ -1,11 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-// #include "ActionRoguelike/Public/ARCharacter.h"
 #include "ARCharacter.h"
 
 #include "ARBase/BuildDefines.h"
-#include "ActionRoguelike/ARInteractionComponent.h"
+#include "ARGame/ARInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"

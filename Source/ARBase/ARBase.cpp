@@ -8,9 +8,9 @@ void FBaseModule::StartupModule()
 
 void FBaseModule::ShutdownModule()
 {
-    
+
 }
 
 #undef LOCTEXT_NAMESPACE
-    
-IMPLEMENT_MODULE(FBaseModule, Base)
+
+IMPLEMENT_MODULE(FBaseModule, ARBase)
