@@ -3,15 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "ARBaseProjectile.h"
+
 #include "ARMagicProjectile.generated.h"
 
-class USphereComponent;
-class UProjectileMovementComponent;
-class UParticleSystemComponent;
-
 UCLASS()
-class ARGAME_API AARMagicProjectile : public AActor
+class ARGAME_API AARMagicProjectile : public AARBaseProjectile
 {
 	GENERATED_BODY()
 
@@ -25,13 +22,4 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<USphereComponent> CollisionSphere;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
-
-	UPROPERTY(VisibleAnywhere)
-	UParticleSystemComponent* Effect;
 };

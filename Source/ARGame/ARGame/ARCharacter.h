@@ -7,6 +7,7 @@
 
 #include "ARCharacter.generated.h"
 
+class AARBaseProjectile;
 class UAnimMontage;
 class UARInteractionComponent;
 class UCameraComponent;
@@ -36,21 +37,29 @@ public:
 	void MoveRight(float val);
 
 	void PrimaryAttack();
-	void PrimaryAttack_TimerElapsed();
+	void UltimateAttack();
+
+	void ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class);
+	void ProjectileAnimationEnd();
 	
 	void PrimaryInteract();
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	TSubclassOf<AActor> ProjectileClass;
+
+
+	// PROJECTILES ---------------------------------------------------------------------------------
+	
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
+
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	UAnimMontage* AttackAnimation;
 
 	UPROPERTY(EditAnywhere, Category = "Attack")
 	float AttackDelay = 0.4f;
-
-	FTimerHandle PrimaryAttack_TimerHandler;
 
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Camera;
@@ -62,6 +71,13 @@ protected:
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
 
 private:
+	// This is the timer associated with the wait needed to spawn the projectile.
+	// TOOD(cdc): Use animation notifications.
+	FTimerHandle ProjectileTimerHandle;
+
+	// This is the class of the current projectile we're spawning.
+	TSubclassOf<AARBaseProjectile> CurrentProjectileClass;
+	
 	// This is where the player is looking from the camera at any given frame.
 	// This is used by other systems to correctly point their target
 	FVector CameraTarget;

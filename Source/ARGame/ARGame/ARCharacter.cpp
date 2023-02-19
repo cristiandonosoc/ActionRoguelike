@@ -4,6 +4,7 @@
 #include "ARCharacter.h"
 
 #include "ARBase/BuildDefines.h"
+#include "ARBaseProjectile.h"
 #include "ARGame/ARInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
@@ -38,6 +39,24 @@ AARCharacter::AARCharacter()
 void AARCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+// Called to bind functionality to input
+void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
+{
+	Super::SetupPlayerInputComponent(player_input);
+
+	player_input->BindAxis("MoveForward", this, &AARCharacter::MoveForward);
+	player_input->BindAxis("MoveRight", this, &AARCharacter::MoveRight);
+
+	player_input->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	player_input->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
+
+	player_input->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
+	player_input->BindAction("UltimateAttack", IE_Pressed, this, &AARCharacter::UltimateAttack);
+
+	player_input->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	player_input->BindAction("Interact", IE_Pressed, this, &AARCharacter::PrimaryInteract);
 }
 
 namespace
@@ -126,21 +145,6 @@ void AARCharacter::Tick(float delta)
 	Debug_DisplayCharacterRotation(*this);
 }
 
-// Called to bind functionality to input
-void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
-{
-	Super::SetupPlayerInputComponent(player_input);
-
-	player_input->BindAxis("MoveForward", this, &AARCharacter::MoveForward);
-	player_input->BindAxis("MoveRight", this, &AARCharacter::MoveRight);
-
-	player_input->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	player_input->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
-
-	player_input->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
-	player_input->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	player_input->BindAction("Interact", IE_Pressed, this, &AARCharacter::PrimaryInteract);
-}
 
 void AARCharacter::MoveForward(float val)
 {
@@ -168,19 +172,40 @@ void AARCharacter::MoveRight(float val)
 
 void AARCharacter::PrimaryAttack()
 {
-	if (!ProjectileClass)
+	if (!PrimaryAttackProjectile)
 	{
 		return;
 	}
 
-	PlayAnimMontage(AttackAnimation);
-
-	GetWorldTimerManager().SetTimer(PrimaryAttack_TimerHandler, this,
-									&AARCharacter::PrimaryAttack_TimerElapsed, AttackDelay, false);
+	ProjectileAnimationStart(PrimaryAttackProjectile);
 }
 
-void AARCharacter::PrimaryAttack_TimerElapsed()
+void AARCharacter::UltimateAttack()
 {
+	if (!UltimateAttackProjectile)
+	{
+		return;
+	}
+
+	ProjectileAnimationStart(UltimateAttackProjectile);
+}
+
+void AARCharacter::ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class)
+{
+	// We play the attack animation and then we setup a timer to spawn the projectile once we're
+	// done with that animation.
+	// TODO(cdc): Use anim notify.
+	CurrentProjectileClass = projectile_class;
+	PlayAnimMontage(AttackAnimation);
+	GetWorldTimerManager().SetTimer(ProjectileTimerHandle, this,
+									&AARCharacter::ProjectileAnimationEnd, AttackDelay, false);
+}
+
+void AARCharacter::ProjectileAnimationEnd()
+{
+	auto projectile_class = CurrentProjectileClass;
+	CurrentProjectileClass = nullptr;
+
 	// Obtain the place in the hand where we will spawn from.
 	FVector hand_location = GetMesh()->GetSocketLocation("Muzzle_01");
 
@@ -192,7 +217,7 @@ void AARCharacter::PrimaryAttack_TimerElapsed()
 	TNonNullPtr<APawn> pawn = Cast<APawn>(this);
 	params.Instigator = pawn;
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	GetWorld()->SpawnActor<AActor>(ProjectileClass, spawn_transform, params);
+	GetWorld()->SpawnActor<AActor>(projectile_class.Get(), spawn_transform, params);
 }
 
 void AARCharacter::PrimaryInteract()
