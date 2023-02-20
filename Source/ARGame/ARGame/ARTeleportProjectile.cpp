@@ -85,6 +85,5 @@ void AARTeleportProjectile::ExplosionTimerEnd()
 void AARTeleportProjectile::TeleportInstigator()
 {
 	TNonNullPtr<APawn> instigator = GetInstigator();
-	FTransform new_transform = FTransform(GetActorLocation());
-	instigator->SetActorTransform(new_transform);
+	instigator->TeleportTo(GetActorLocation(), instigator->GetActorRotation());
 }

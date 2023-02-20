@@ -171,36 +171,37 @@ void AARCharacter::MoveRight(float val)
 	AddMovementInput(Right, val);
 }
 
+namespace
+{
+
+void TryFireProjectile(AARCharacter* character, const FString& name,
+					   const TSubclassOf<AARBaseProjectile>& projectile_class)
+{
+	if (ensure(projectile_class))
+	{
+		character->ProjectileAnimationStart(projectile_class);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s not set"), *name);
+	}
+}
+
+} // namespace
+
 void AARCharacter::PrimaryAttack()
 {
-	if (!PrimaryAttackProjectile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("PrimaryAttackProjectile not set"));
-		return;
-	}
-
-	ProjectileAnimationStart(PrimaryAttackProjectile);
+	TryFireProjectile(this, TEXT("PrimaryAttack"), PrimaryAttackProjectile);
 }
+
 void AARCharacter::DashAttack()
 {
-	if (!DashAttackProjectile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DashAttackProjectile not set"));
-		return;
-	}
-
-	ProjectileAnimationStart(DashAttackProjectile);
+	TryFireProjectile(this, TEXT("DashAttack"), DashAttackProjectile);
 }
 
 void AARCharacter::UltimateAttack()
 {
-	if (!UltimateAttackProjectile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UltimateAttackProjectile not set"));
-		return;
-	}
-
-	ProjectileAnimationStart(UltimateAttackProjectile);
+	TryFireProjectile(this, TEXT("UltimateAttack"), UltimateAttackProjectile);
 }
 
 void AARCharacter::ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class)
@@ -216,6 +217,8 @@ void AARCharacter::ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>
 
 void AARCharacter::ProjectileAnimationEnd()
 {
+	check(CurrentProjectileClass);
+
 	auto projectile_class = CurrentProjectileClass;
 	CurrentProjectileClass = nullptr;
 
@@ -235,7 +238,7 @@ void AARCharacter::ProjectileAnimationEnd()
 
 void AARCharacter::PrimaryInteract()
 {
-	if (InteractionComponent)
+	if (ensureAlways(InteractionComponent))
 	{
 		InteractionComponent->PrimaryInteract(CameraTarget);
 	}
