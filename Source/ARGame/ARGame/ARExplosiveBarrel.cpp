@@ -42,10 +42,6 @@ void AARExplosiveBarrel::PostInitializeComponents()
 
 	Mesh->OnComponentHit.AddDynamic(this, &AARExplosiveBarrel::OnActorHit);
 }
-void AARExplosiveBarrel::Explode()
-{
-	ExplosionForce->FireImpulse();
-}
 
 void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 									UPrimitiveComponent* OtherComponent, FVector Normal,
@@ -60,4 +56,9 @@ void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* O
 
 	FString Temp = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
 	DrawDebugString(GetWorld(), Hit.ImpactPoint, Temp, nullptr, FColor::Green, 2.0f, true);
+}
+
+void AARExplosiveBarrel::Explode()
+{
+	ExplosionForce->FireImpulse();
 }

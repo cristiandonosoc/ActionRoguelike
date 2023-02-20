@@ -13,6 +13,15 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 	float prev = Health;
 	Health += delta;
 	UE_LOG(LogTemp, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, Health);
+
+	// Trigger the delegate.
+	FOnHealthChangedPayload payload = {};
+	payload.Target = this;
+	payload.MaxHealth = MaxHealth;
+	payload.NewHealth = Health;
+	payload.Delta = delta;
+	OnHealthChanged.Broadcast(std::move(payload));
+	
 	return true;
 }
 
