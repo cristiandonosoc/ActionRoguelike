@@ -7,7 +7,7 @@
 
 #include "ARAttributeComponent.generated.h"
 
-UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ARGAME_API UARAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
