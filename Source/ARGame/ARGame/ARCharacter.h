@@ -8,6 +8,8 @@
 #include "ARCharacter.generated.h"
 
 class AARBaseProjectile;
+class UARAttributeComponent;
+
 class UAnimMontage;
 class UARInteractionComponent;
 class UCameraComponent;
@@ -46,6 +48,18 @@ public:
 	void PrimaryInteract();
 
 protected:
+	UPROPERTY(VisibleAnywhere, Category="Camera")
+	TObjectPtr<USpringArmComponent> SpringArm;
+	
+	UPROPERTY(VisibleAnywhere, Category="Camera")
+	TObjectPtr<UCameraComponent> Camera;
+	
+	UPROPERTY(VisibleAnywhere, Category="Interaction")
+	TObjectPtr<UARInteractionComponent> InteractionComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Attributes")
+	TObjectPtr<UARAttributeComponent> Attributes;
+	
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
 	
@@ -55,20 +69,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
+	UPROPERTY(EditAnywhere, Category = "Attacks")
 	UAnimMontage* AttackAnimation;
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
+	UPROPERTY(EditAnywhere, Category = "Attacks")
 	float AttackDelay = 0.4f;
 
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Camera;
-
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArm;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UARInteractionComponent> InteractionComponent;
 
 private:
 	// This is the timer associated with the wait needed to spawn the projectile.

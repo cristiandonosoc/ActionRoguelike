@@ -3,9 +3,10 @@
 
 #include "ARCharacter.h"
 
+#include "ARAttributeComponent.h"
 #include "ARBase/BuildDefines.h"
 #include "ARBaseProjectile.h"
-#include "ARGame/ARInteractionComponent.h"
+#include "ARInteractionComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -27,12 +28,12 @@ AARCharacter::AARCharacter()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
-
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-
-	this->bUseControllerRotationYaw = false;
+	bUseControllerRotationYaw = false;
 
 	InteractionComponent = CreateDefaultSubobject<UARInteractionComponent>("InteractionComponent");
+
+	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 }
 
 // Called when the game starts or when spawned

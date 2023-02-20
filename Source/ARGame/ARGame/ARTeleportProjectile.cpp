@@ -15,8 +15,6 @@ AARTeleportProjectile::AARTeleportProjectile()
 	// you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	CollisionSphere->OnComponentHit.AddDynamic(this, &AARTeleportProjectile::OnActorHit);
-
 	ExplosionEffect = CreateDefaultSubobject<UParticleSystemComponent>("ExplosionEffect");
 	ExplosionEffect->SetupAttachment(CollisionSphere);
 	ExplosionEffect->DeactivateSystem();
@@ -40,27 +38,18 @@ void AARTeleportProjectile::BeginPlay()
 									false);
 }
 
-
 // Called every frame
 void AARTeleportProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void AARTeleportProjectile::OnActorHit(UPrimitiveComponent* hit_component, AActor* other_actor,
-									   UPrimitiveComponent* other_component, FVector normal,
-									   const FHitResult& hit)
+void AARTeleportProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_component,
+													  AActor* other_actor,
+													  UPrimitiveComponent* other_comp,
+													  FVector normal_impulse, const FHitResult& hit)
 {
-	// Check if we're colliding with the instigator.
-	// If so, we ignore the collision.
-	if (APawn* instigator = GetInstigator())
-	{
-		AActor* actor = Cast<AActor>(instigator);
-		if (actor == other_actor)
-		{
-			return;
-		}
-	}
+	Super::OnBeginHit_Implementation(hit_component, other_actor, other_comp, normal_impulse, hit);
 
 	ExplosionTimerStart();
 }

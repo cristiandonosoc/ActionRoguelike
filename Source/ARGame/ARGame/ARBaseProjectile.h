@@ -24,10 +24,35 @@ public:
 	virtual void Tick(float delta) override;
 
 protected:
+	virtual void PostInitializeComponents() override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	// OnBeginHitInternal is the way we propagate the overlap result to derived classes.
+	// It does some common checks before triggering the actual event |OnBeginHit|.
+	// This is called by the collision sphere and then propagated as results to the projectiles.
+	UFUNCTION()
+	void OnBeginHitInternal(UPrimitiveComponent* hit_component, AActor* other_actor,
+							UPrimitiveComponent* other_comp, FVector normal_impulse,
+							const FHitResult& hit);
+
+	// OnBeginHit is the wrapper expose function that we hook to the collision/blueprint system.
+	// Derived projectiles are expected to override |OnBeginHitDerived|.
+	UFUNCTION(BlueprintNativeEvent)
+	void OnBeginHit(UPrimitiveComponent* hit_component, AActor* other_actor,
+					UPrimitiveComponent* other_comp, FVector normal_impulse, const FHitResult& hit);
+
+
+	virtual void OnBeginHit_Implementation(UPrimitiveComponent* hit_component, AActor* other_actor,
+										   UPrimitiveComponent* other_comp, FVector normal_impulse,
+										   const FHitResult& hit)
+	{
+		// NOTE: Meant to be derived if needed.
+	}
+
+
+protected:
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> CollisionSphere;
 
 	UPROPERTY(VisibleAnywhere)
