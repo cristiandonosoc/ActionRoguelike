@@ -10,7 +10,7 @@ public class ARGame : ModuleRules
 
 		// Unreal deps.
 		PublicDependencyModuleNames.AddRange(new string[]
-			{ "Core", "CoreUObject", "Engine", "InputCore" });
+			{ "Core", "CoreUObject", "Engine", "InputCore", "AIModule", "GameplayTasks" });
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
 		// ARGame deps.
