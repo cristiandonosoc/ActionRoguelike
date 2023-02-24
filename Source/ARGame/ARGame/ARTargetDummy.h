@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ARAttributeComponent.h"
 
 #include "ARTargetDummy.generated.h"
 
+struct FOnHealthChangedPayload;
 class UARAttributeComponent;
 
 class UStaticMeshComponent;
@@ -29,7 +29,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnHealthChanged(FOnHealthChangedPayload payload);
+	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 
 protected:
 	UPROPERTY(VisibleAnywhere)

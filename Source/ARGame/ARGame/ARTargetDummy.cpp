@@ -3,6 +3,7 @@
 
 #include "ARTargetDummy.h"
 
+#include "ARAttributeComponent.h"
 
 // Sets default values
 AARTargetDummy::AARTargetDummy()
@@ -24,7 +25,7 @@ void AARTargetDummy::BeginPlay()
 {
 	Super::BeginPlay();
 }
-void AARTargetDummy::OnHealthChanged(FOnHealthChangedPayload payload)
+void AARTargetDummy::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
 	UE_LOG(LogTemp, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
 

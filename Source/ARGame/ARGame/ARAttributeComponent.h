@@ -30,7 +30,7 @@ struct FOnHealthChangedPayload
 	float Delta;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, FOnHealthChangedPayload, payload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&, payload);
 
 UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ARGAME_API UARAttributeComponent : public UActorComponent
@@ -44,6 +44,9 @@ public:
 	// Returns whether the change was applied.
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(float delta);
+
+	UFUNCTION(BlueprintCallable)
+	bool IsAlive() const;
 
 protected:
 	// Called when the game starts

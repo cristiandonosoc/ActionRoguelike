@@ -7,8 +7,8 @@
 
 #include "ARInteractionComponent.generated.h"
 
-// UARInteractionComponent handles the intereactivity part of the character.
-// 
+// UARInteractionComponent handles the interactivity part of the character.
+//
 // Currently it is not meant to be ticked directly, but rather it is meant to be called
 // directly from the character. This is because the character holds much more information
 // about the world, camera and where the player is looking at.

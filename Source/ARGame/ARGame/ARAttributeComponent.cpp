@@ -20,9 +20,13 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 	payload.MaxHealth = MaxHealth;
 	payload.NewHealth = Health;
 	payload.Delta = delta;
-	OnHealthChanged.Broadcast(std::move(payload));
-	
+	OnHealthChanged.Broadcast(payload);
+
 	return true;
+}
+bool UARAttributeComponent::IsAlive() const
+{
+	return Health > 0.0f;
 }
 
 

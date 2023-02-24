@@ -35,6 +35,12 @@ AARCharacter::AARCharacter()
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 }
+void AARCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	Attributes->OnHealthChanged.AddDynamic(this, &AARCharacter::OnHealthChanged);
+}
 
 // Called when the game starts or when spawned
 void AARCharacter::BeginPlay()
@@ -243,4 +249,12 @@ void AARCharacter::PrimaryInteract()
 	{
 		InteractionComponent->PrimaryInteract(CameraTarget);
 	}
+}
+void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
+{
+	if (payload.NewHealth < 0.0f && payload.Delta < 0.0f)
+	{
+		DisableInput(Cast<APlayerController>(GetController()));
+	}
+
 }

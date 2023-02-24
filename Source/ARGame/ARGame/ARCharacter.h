@@ -7,6 +7,7 @@
 
 #include "ARCharacter.generated.h"
 
+struct FOnHealthChangedPayload;
 class AARBaseProjectile;
 class UARAttributeComponent;
 
@@ -25,6 +26,8 @@ public:
 	AARCharacter();
 
 protected:
+	virtual void PostInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -44,25 +47,29 @@ public:
 
 	void ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class);
 	void ProjectileAnimationEnd();
-	
+
 	void PrimaryInteract();
+
+protected:
+	UFUNCTION()
+	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 
 protected:
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TObjectPtr<USpringArmComponent> SpringArm;
-	
+
 	UPROPERTY(VisibleAnywhere, Category="Camera")
 	TObjectPtr<UCameraComponent> Camera;
-	
+
 	UPROPERTY(VisibleAnywhere, Category="Interaction")
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> DashAttackProjectile;
 
@@ -83,7 +90,7 @@ private:
 
 	// This is the class of the current projectile we're spawning.
 	TSubclassOf<AARBaseProjectile> CurrentProjectileClass;
-	
+
 	// This is where the player is looking from the camera at any given frame.
 	// This is used by other systems to correctly point their target
 	FVector CameraTarget;
