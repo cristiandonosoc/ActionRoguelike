@@ -39,9 +39,9 @@ void AARTeleportProjectile::BeginPlay()
 }
 
 // Called every frame
-void AARTeleportProjectile::Tick(float DeltaTime)
+void AARTeleportProjectile::Tick(float delta)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(delta);
 }
 
 void AARTeleportProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_component,

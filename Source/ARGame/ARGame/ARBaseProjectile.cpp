@@ -3,6 +3,7 @@
 
 #include "ARBaseProjectile.h"
 
+#include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -27,6 +28,9 @@ AARBaseProjectile::AARBaseProjectile()
 	ProjectileMovement->InitialSpeed = 1000.0f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bInitialVelocityInLocalSpace = true;
+
+	Audio = CreateDefaultSubobject<UAudioComponent>("Audio");
+	Audio->SetupAttachment(CollisionSphere);
 }
 
 void AARBaseProjectile::PostInitializeComponents()

@@ -7,6 +7,7 @@
 
 #include "ARBaseProjectile.generated.h"
 
+class UAudioComponent;
 class USphereComponent;
 class UProjectileMovementComponent;
 class UParticleSystemComponent;
@@ -60,4 +61,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UParticleSystemComponent* Effect;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAudioComponent> Audio;
 };
