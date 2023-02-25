@@ -23,7 +23,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// BEGIN IARGameplayInterface
-	void Interact_Implementation(APawn* Interactor);
+	virtual bool Interact_Implementation(APawn* interactor) override;
 
 	// END IARGameplayInterface
 

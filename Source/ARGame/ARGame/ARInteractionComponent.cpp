@@ -55,8 +55,12 @@ void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 			{
 				TNonNullPtr<APawn> pawn = Cast<APawn>(owner.Get());
 
-				IARGameplayInterface::Execute_Interact(hit_actor, pawn);
-				interacted = true;
+				interacted = IARGameplayInterface::Execute_Interact(hit_actor, pawn);
+				if (interacted)
+				{
+					break;
+				}
+					
 				break;
 			}
 		}

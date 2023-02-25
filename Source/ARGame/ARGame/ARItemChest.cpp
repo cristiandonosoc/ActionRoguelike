@@ -19,12 +19,19 @@ AARItemChest::AARItemChest()
 }
 
 // Called when the game starts or when spawned
-void AARItemChest::BeginPlay() { Super::BeginPlay(); }
+void AARItemChest::BeginPlay()
+{
+	Super::BeginPlay();
+}
 
 // Called every frame
-void AARItemChest::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
+void AARItemChest::Tick(float delta)
+{
+	Super::Tick(delta);
+}
 
-void AARItemChest::Interact_Implementation(APawn* Interactor)
+bool AARItemChest::Interact_Implementation(APawn* interactor)
 {
 	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0.0f, 0.0f));
+	return true;
 }
