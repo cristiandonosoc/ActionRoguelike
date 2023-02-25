@@ -12,6 +12,8 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 {
 	float prev = Health;
 	Health += delta;
+	Health = FMath::Clamp(Health, 0, MaxHealth);
+	
 	UE_LOG(LogTemp, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, Health);
 
 	// Trigger the delegate.

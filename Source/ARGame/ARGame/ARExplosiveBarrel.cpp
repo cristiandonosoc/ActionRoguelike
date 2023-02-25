@@ -43,19 +43,19 @@ void AARExplosiveBarrel::PostInitializeComponents()
 	Mesh->OnComponentHit.AddDynamic(this, &AARExplosiveBarrel::OnActorHit);
 }
 
-void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
-									UPrimitiveComponent* OtherComponent, FVector Normal,
-									const FHitResult& Hit)
+void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* hit_component, AActor* other_actor,
+									UPrimitiveComponent* other_component, FVector normal,
+									const FHitResult& hit)
 {
 	UE_LOG(LogTemp, Log, TEXT("OnActorHit in Explosive Barrel"));
 
 	Explode();
 
-	UE_LOG(LogTemp, Warning, TEXT("Other Actor: %s, at time: %f"), *GetNameSafe(OtherActor),
+	UE_LOG(LogTemp, Warning, TEXT("Other Actor: %s, at time: %f"), *GetNameSafe(other_actor),
 		   GetWorld()->TimeSeconds);
 
-	FString Temp = FString::Printf(TEXT("Hit at location: %s"), *Hit.ImpactPoint.ToString());
-	DrawDebugString(GetWorld(), Hit.ImpactPoint, Temp, nullptr, FColor::Green, 2.0f, true);
+	FString Temp = FString::Printf(TEXT("Hit at location: %s"), *hit.ImpactPoint.ToString());
+	DrawDebugString(GetWorld(), hit.ImpactPoint, Temp, nullptr, FColor::Green, 2.0f, true);
 }
 
 void AARExplosiveBarrel::Explode()

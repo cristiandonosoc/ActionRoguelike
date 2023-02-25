@@ -31,10 +31,10 @@ protected:
 protected:
 	UFUNCTION(BlueprintCallable)
 	void Explode();
-	
+
 	UFUNCTION()
-	void OnActorHit(UPrimitiveComponent *HitComponent, AActor *OtherActor,
-					UPrimitiveComponent *OtherComponent, FVector Normal, const FHitResult &Hit);
+	void OnActorHit(UPrimitiveComponent* hit_component, AActor* other_actor,
+					UPrimitiveComponent* other_component, FVector normal, const FHitResult& hit);
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> Mesh;

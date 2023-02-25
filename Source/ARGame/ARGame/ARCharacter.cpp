@@ -106,8 +106,12 @@ void Debug_DisplayTarget(const AARCharacter& character, const FVector& target)
 // to the camera so that the player still points into the "horizon".
 FVector ObtainCameraTarget(const AARCharacter& character)
 {
-	// Targeting.
-	TNonNullPtr<APlayerController> pc = character.GetLocalViewingPlayerController();
+	// If there is no player controller, we simply return zero.
+	APlayerController* pc = character.GetLocalViewingPlayerController();
+	if (!pc)
+	{
+		return FVector::Zero();
+	}
 
 	FVector camera_location;
 	FRotator camera_rotator;
@@ -250,6 +254,7 @@ void AARCharacter::PrimaryInteract()
 		InteractionComponent->PrimaryInteract(CameraTarget);
 	}
 }
+
 void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
 	if (payload.NewHealth < 0.0f && payload.Delta < 0.0f)
@@ -257,4 +262,12 @@ void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 		DisableInput(Cast<APlayerController>(GetController()));
 	}
 
+	// Attempt to set the flash effect.
+	if (Attributes->IsAlive())
+	{
+		if (USkeletalMeshComponent* mesh = GetMesh())
+		{
+			mesh->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+		}
+	}
 }
