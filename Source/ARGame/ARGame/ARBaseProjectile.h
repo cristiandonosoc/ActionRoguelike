@@ -59,8 +59,11 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovement;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Effects")
 	UParticleSystemComponent* Effect;
+	
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	TObjectPtr<UParticleSystem> MuzzleEffect;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UAudioComponent> Audio;

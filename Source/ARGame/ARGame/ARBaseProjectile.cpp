@@ -6,6 +6,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
 
@@ -23,6 +24,8 @@ AARBaseProjectile::AARBaseProjectile()
 
 	Effect = CreateDefaultSubobject<UParticleSystemComponent>("Effect");
 	Effect->SetupAttachment(CollisionSphere);
+
+	MuzzleEffect = CreateDefaultSubobject<UParticleSystem>("MuzzleEffect");
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
 	ProjectileMovement->InitialSpeed = 1000.0f;
@@ -46,6 +49,16 @@ void AARBaseProjectile::BeginPlay()
 
 	// We ignore the instigator when throwing the projectile.
 	CollisionSphere->IgnoreActorWhenMoving(GetInstigator(), true);
+
+
+	// If there is a muzzle effect, we play it.
+	// TODO(cdc): This is really part of a weapon and probably should not be part of the projectile.
+	if (MuzzleEffect)
+	{
+		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, CollisionSphere, "Muzzle",
+											   GetActorLocation(), GetActorRotation(), FVector(1),
+											   EAttachLocation::KeepWorldPosition);
+	}
 }
 
 void AARBaseProjectile::OnBeginHitInternal(UPrimitiveComponent* hit_component, AActor* other_actor,

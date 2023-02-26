@@ -11,7 +11,9 @@
 #include "DrawDebugHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystem.h"
 #include "Templates/NonNullPointer.h"
 
 // Sets default values
@@ -35,6 +37,7 @@ AARCharacter::AARCharacter()
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 }
+
 void AARCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
@@ -238,6 +241,7 @@ void AARCharacter::ProjectileAnimationEnd()
 
 	// We make it spawn with the rotation of the camera target.
 	FRotator rotation = UKismetMathLibrary::FindLookAtRotation(hand_location, CameraTarget);
+
 	FTransform spawn_transform = FTransform(rotation, hand_location);
 
 	FActorSpawnParameters params = {};

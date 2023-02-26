@@ -10,10 +10,11 @@
 struct FOnHealthChangedPayload;
 class AARBaseProjectile;
 class UARAttributeComponent;
+class UARInteractionComponent;
 
 class UAnimMontage;
-class UARInteractionComponent;
 class UCameraComponent;
+class UParticleSystem;
 class USpringArmComponent;
 
 UCLASS()
@@ -76,8 +77,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
 
-	UPROPERTY(EditAnywhere, Category = "Attacks")
+	UPROPERTY(EditAnywhere, Category = "Animations")
 	UAnimMontage* AttackAnimation;
+
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	float AttackDelay = 0.4f;
