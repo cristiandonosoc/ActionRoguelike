@@ -41,6 +41,12 @@ public:
 	// Sets default values for this component's properties
 	UARAttributeComponent();
 
+	// Checks whether the health change attempt would apply.
+	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to
+	// query this to see if they need to perform the action (eg. Health pack).
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool WouldHealthChangeApply(float delta) const;
+
 	// Returns whether the change was applied.
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool ApplyHealthChange(float delta);

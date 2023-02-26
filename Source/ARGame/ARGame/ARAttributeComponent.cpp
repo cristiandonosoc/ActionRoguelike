@@ -4,16 +4,47 @@
 #include "ARAttributeComponent.h"
 
 // Sets default values for this component's properties
-UARAttributeComponent::UARAttributeComponent()
+UARAttributeComponent::UARAttributeComponent() {}
+
+bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 {
+	if (delta == 0.0f)
+	{
+		return false;
+	}
+
+	// If they're healing, we see if it's needed.
+	if (delta > 0.0f)
+	{
+		if (Health >= MaxHealth)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	// Check if damage can be done.
+	if (Health < 0.0f)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool UARAttributeComponent::ApplyHealthChange(float delta)
 {
+	if (!WouldHealthChangeApply(delta))
+	{
+		return false;
+	}
+
+	// Now that the health change has been validated, we can apply it.
+	// TODO(cdc): Communicate as well the actual delta if it was clamped.
 	float prev = Health;
 	Health += delta;
 	Health = FMath::Clamp(Health, 0, MaxHealth);
-	
+
 	UE_LOG(LogTemp, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, Health);
 
 	// Trigger the delegate.
