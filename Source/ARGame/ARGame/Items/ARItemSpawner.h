@@ -37,12 +37,16 @@ protected:
 	void OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 						UPrimitiveComponent* other_comp, int32 other_body_index, bool from_sweep,
 						const FHitResult& sweep_result);
+
+	UFUNCTION()
+	void OnEndOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
+					  UPrimitiveComponent* other_comp, int32 other_body_index);
 private:
 	UFUNCTION()
 	void SpawnItem();
+	void ScheduleItemSpawning(float delay);
 
 protected:
-
 	// Item tracks the object to spawn in this spawner.
 	UPROPERTY(EditAnywhere, Category = "Item")
 	TSoftClassPtr<AARBaseItem> ItemClass;
@@ -54,7 +58,7 @@ protected:
 	// RespawnDelay is how much the spawner will wait to spawn the item *after* the player has left
 	// the collision.
 	UPROPERTY(EditAnywhere, Category = "Item")
-	float RespawnDelay = 0.0f;
+	float RespawnDelay = 1.0f;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCapsuleComponent> CollisionCapsule;

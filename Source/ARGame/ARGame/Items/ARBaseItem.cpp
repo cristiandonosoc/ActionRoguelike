@@ -24,3 +24,9 @@ void AARBaseItem::Tick(float delta)
 {
 	Super::Tick(delta);
 }
+
+void AARBaseItem::TriggerUse(NotNullPtr<APawn> interactor)
+{
+	// We forward the call to the objects.
+	Use_Implementation(interactor);
+}

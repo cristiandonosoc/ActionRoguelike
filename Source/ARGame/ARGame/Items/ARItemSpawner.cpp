@@ -24,6 +24,7 @@ void AARItemSpawner::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	CollisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AARItemSpawner::OnBeginOverlap);
+	//CollisionCapsule->OnComponentEndOverlap.AddDynamic(this, &AARItemSpawner::OnEndOverlap);
 }
 
 // Called when the game starts or when spawned
@@ -31,16 +32,8 @@ void AARItemSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// If there is no delay, we spawn the item immediately.
-	// Otherwise, we add a timer.
-	if (InitialDelay == 0.0f)
-	{
-		SpawnItem();
-		return;
-	}
-
-	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AARItemSpawner::SpawnItem,
-									InitialDelay, false);
+	// We schedule the item to be spawned.
+	ScheduleItemSpawning(InitialDelay);
 }
 
 // Called every frame
@@ -74,31 +67,64 @@ void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, A
 
 	Interact_Implementation(pawn);
 }
+void AARItemSpawner::OnEndOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
+								  UPrimitiveComponent* other_comp, int32 other_body_index)
+{
+	// The item should be destroyed by now.
+	//check(!SpawnedItem);
+
+	// We schedule the next version of the item to be spawned.
+	//ScheduleItemSpawning(RespawnDelay);
+}
+
 void AARItemSpawner::SpawnItem()
 {
-	if (!ensure(ItemClass))
+	bool is_set = !ItemClass.IsNull();
+	if (!ensure(is_set))
 	{
 		return;
 	}
-	
-	check(!SpawnedItem);	// There should not be an item present.
+
+	check(!SpawnedItem); // There should not be an item present.
 
 	FActorSpawnParameters params = {};
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	NotNullPtr<AARBaseItem> item = GetWorld()->SpawnActor<AARBaseItem>(ItemClass.Get(), GetActorTransform(), params);
+	params.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	NotNullPtr<AARBaseItem> item =
+		GetWorld()->SpawnActor<AARBaseItem>(ItemClass.Get(), GetActorTransform(), params);
 	SpawnedItem = item.Get();
 }
+
+void AARItemSpawner::ScheduleItemSpawning(float delay)
+{
+	check(!SpawnedItem);
+
+	// We check if we need to spawn the object immediately.
+	if (delay == 0.0f)
+	{
+		SpawnItem();
+	}
+
+	// Otherwise, we schedule it for spawning.
+	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AARItemSpawner::SpawnItem, delay,
+									false);
+}
+
 
 bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 {
 	// If there is no spawned item, we don't want to count as interacting.
-	if (SpawnedItem)
+	if (!SpawnedItem)
 	{
 		return false;
 	}
 
-	
-	UE_LOG(LogTemp, Log, TEXT("INTERACTING!"));
+	// We use the object and we destroy it.
+	SpawnedItem->TriggerUse(interactor);
+	SpawnedItem->Destroy();
+	SpawnedItem = nullptr;
+
+	ScheduleItemSpawning(RespawnDelay);
 
 	return true;
 }

@@ -46,7 +46,7 @@ protected:
 
 	virtual void OnBeginHit_Implementation(UPrimitiveComponent* hit_component, AActor* other_actor,
 										   UPrimitiveComponent* other_comp, FVector normal_impulse,
-										   const FHitResult& hit)
+										   const FHitResult& hit) 
 	{
 		// NOTE: Meant to be derived if needed.
 	}
