@@ -80,6 +80,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	UAnimMontage* AttackAnimation;
 
+	UPROPERTY(EditAnywhere, Category = "Animations")
+	TSubclassOf<UCameraShakeBase> CameraShake;
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	float AttackDelay = 0.4f;

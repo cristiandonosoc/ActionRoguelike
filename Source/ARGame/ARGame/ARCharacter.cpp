@@ -266,12 +266,18 @@ void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 		DisableInput(Cast<APlayerController>(GetController()));
 	}
 
-	// Attempt to set the flash effect.
-	if (Attributes->IsAlive())
+	// Attempt to set the flash effect, camera shake, etc.
+	if (payload.Delta < 0.0f)
 	{
 		if (USkeletalMeshComponent* mesh = GetMesh())
 		{
 			mesh->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+		}
+
+		if (CameraShake)
+		{
+			GetLocalViewingPlayerController()->PlayerCameraManager->PlayWorldCameraShake(
+				GetWorld(), CameraShake.Get(), GetActorLocation(), 0.0f, 10000.0f, 0.1f);
 		}
 	}
 }
