@@ -25,6 +25,7 @@ void AARItemSpawner::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	CollisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AARItemSpawner::OnBeginOverlap);
+	CollisionCapsule->OnComponentEndOverlap.AddDynamic(this, &AARItemSpawner::OnBeginEnd);
 }
 
 // Called when the game starts or when spawned
@@ -59,17 +60,30 @@ void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, A
 	// Check if this is the player colliding with the spawner.
 	NotNullPtr<APlayerController> pc = GetWorld()->GetFirstPlayerController();
 	APawn* pawn = pc->GetPawn();
-	if (!pawn)
+	if (!pawn || pawn != other_actor)
 	{
 		return;
 	}
 
-	if (pawn != other_actor)
-	{
-		return;
-	}
-
+	// We track the pawn that is overlapping.
+	CurrentlyOverlappingPlayerPawn = pawn;
 	Interact_Implementation(pawn);
+}
+
+void AARItemSpawner::OnBeginEnd(UPrimitiveComponent* overlapped_component, AActor* other_actor,
+								UPrimitiveComponent* other_comp, int32 other_body_index)
+{
+
+	// See if the player is leaving, so that we can stop tracking this.
+	NotNullPtr<APlayerController> pc = GetWorld()->GetFirstPlayerController();
+	APawn* pawn = pc->GetPawn();
+	if (!pawn || pawn != other_actor)
+	{
+		return;
+	}
+
+	// The player left our overlap, so we stop tracking it.
+	CurrentlyOverlappingPlayerPawn = nullptr;
 }
 
 void AARItemSpawner::SpawnItem()
@@ -88,6 +102,13 @@ void AARItemSpawner::SpawnItem()
 	NotNullPtr<AARBaseItem> item =
 		GetWorld()->SpawnActor<AARBaseItem>(ItemClass.Get(), GetActorTransform(), params);
 	SpawnedItem = item.Get();
+
+	// We check if the player is currently overlapping, so that we trigger immediately the
+	// interaction.
+	if (APawn* player_pawn = CurrentlyOverlappingPlayerPawn.Get())
+	{
+		Interact_Implementation(player_pawn);
+	}
 }
 
 void AARItemSpawner::ScheduleItemSpawning(float delay)
@@ -108,7 +129,7 @@ void AARItemSpawner::ScheduleItemSpawning(float delay)
 bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 {
 	check(interactor);
-	
+
 	// If there is no spawned item, we don't want to count as interacting.
 	if (!SpawnedItem)
 	{
@@ -125,7 +146,7 @@ bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 	SpawnedItem->Use(interactor);
 	SpawnedItem->Destroy();
 	SpawnedItem = nullptr;
-	
+
 	ScheduleItemSpawning(RespawnDelay);
 
 	return true;

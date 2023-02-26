@@ -37,7 +37,11 @@ protected:
 	void OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 						UPrimitiveComponent* other_comp, int32 other_body_index, bool from_sweep,
 						const FHitResult& sweep_result);
-	
+
+	UFUNCTION()
+	void OnBeginEnd(UPrimitiveComponent* overlapped_component, AActor* other_actor,
+					UPrimitiveComponent* other_comp, int32 other_body_index);
+
 private:
 	UFUNCTION()
 	void SpawnItem();
@@ -65,4 +69,11 @@ private:
 	TObjectPtr<AARBaseItem> SpawnedItem;
 
 	FTimerHandle SpawnTimerHandle;
+
+	// Cache of the overlapping player pawn with this spawner.
+	// We need to do this because if the player never leaves the collision, it will not be detected
+	// as "entering" and therefore will not automatically interact with the object.
+	//
+	// With this we can track whether the player is "still there" once the object respawns.
+	TWeakObjectPtr<APawn> CurrentlyOverlappingPlayerPawn;
 };
