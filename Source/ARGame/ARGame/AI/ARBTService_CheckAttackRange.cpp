@@ -3,8 +3,8 @@
 #include "ARBTService_CheckAttackRange.h"
 
 #include "AIController.h"
+#include "ARBase/NotNullPtr.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Templates/NonNullPointer.h"
 
 void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& owner, uint8* node_memory,
 											 float delta)
@@ -24,8 +24,8 @@ void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& owner, uint
 		return;
 	}
 
-	TNonNullPtr<AAIController> ai_controller = owner.GetAIOwner();
-	TNonNullPtr<APawn> ai_pawn = ai_controller->GetPawn();
+	NotNullPtr<AAIController> ai_controller = owner.GetAIOwner();
+	NotNullPtr<APawn> ai_pawn = ai_controller->GetPawn();
 
 	float dist = FVector::Distance(target_actor->GetActorLocation(), ai_pawn->GetActorLocation());
 

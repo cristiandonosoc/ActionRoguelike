@@ -2,10 +2,13 @@
 
 #pragma once
 
+#include "ARGame/ARBaseProjectile.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 
 #include "ARAICharacter.generated.h"
+
+class AARBaseProjectile;
 
 UCLASS()
 class ARGAME_API AARAICharacter : public ACharacter
@@ -22,7 +25,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* player_input) override;
 
+	virtual bool PerformPrimaryAttack(const AActor& target);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
 };
