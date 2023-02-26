@@ -105,17 +105,24 @@ void AARItemSpawner::ScheduleItemSpawning(float delay)
 									false);
 }
 
-
 bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 {
+	check(interactor);
+	
 	// If there is no spawned item, we don't want to count as interacting.
 	if (!SpawnedItem)
 	{
 		return false;
 	}
 
+	// Check if the item can interact with this caller.
+	if (!SpawnedItem->CanUse(interactor))
+	{
+		return false;
+	}
+
 	// We use the object and we destroy it.
-	SpawnedItem->TriggerUse(interactor);
+	SpawnedItem->Use(interactor);
 	SpawnedItem->Destroy();
 	SpawnedItem = nullptr;
 	

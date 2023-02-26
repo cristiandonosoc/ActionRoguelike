@@ -16,7 +16,6 @@ AARBaseItem::AARBaseItem()
 void AARBaseItem::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -25,8 +24,14 @@ void AARBaseItem::Tick(float delta)
 	Super::Tick(delta);
 }
 
-void AARBaseItem::TriggerUse(NotNullPtr<APawn> interactor)
+bool AARBaseItem::CanUse_Implementation(APawn* interactor)
 {
-	// We forward the call to the objects.
-	Use(interactor);
+	check(interactor);
+	return true;
+}
+
+void AARBaseItem::Use_Implementation(APawn* interactor)
+{
+	check(CanUse(interactor));
+	check(interactor);
 }

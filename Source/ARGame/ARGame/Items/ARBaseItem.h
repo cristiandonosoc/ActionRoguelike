@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "ARBase/NotNullPtr.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
@@ -20,17 +19,19 @@ public:
 	// Called every frame
 	virtual void Tick(float delta) override;
 
-	// TriggerUse is meant to be called with a pawn to trigger the use call to the object, which
-	// will implement the event either in C++ or in blueprint.
-	// This is mostly to be called by ItemSpawner.
-	void TriggerUse(NotNullPtr<APawn> interactor);
+	UFUNCTION(BlueprintNativeEvent)
+	bool CanUse(APawn* interactor);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void Use(APawn* interactor);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintNativeEvent)
-	void Use(APawn* interactor);
-	
-	virtual void Use_Implementation(APawn* interactor) {}
+	virtual bool CanUse_Implementation(APawn* interactor);
+
+	// Use attempts to use the item on the given interactor.
+	// Use CanUse to check whether the item would be used on the given interactor.
+	virtual void Use_Implementation(APawn* interactor);
 };
