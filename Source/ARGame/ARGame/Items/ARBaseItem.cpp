@@ -28,5 +28,5 @@ void AARBaseItem::Tick(float delta)
 void AARBaseItem::TriggerUse(NotNullPtr<APawn> interactor)
 {
 	// We forward the call to the objects.
-	Use_Implementation(interactor);
+	Use(interactor);
 }

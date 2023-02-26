@@ -37,10 +37,7 @@ protected:
 	void OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 						UPrimitiveComponent* other_comp, int32 other_body_index, bool from_sweep,
 						const FHitResult& sweep_result);
-
-	UFUNCTION()
-	void OnEndOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
-					  UPrimitiveComponent* other_comp, int32 other_body_index);
+	
 private:
 	UFUNCTION()
 	void SpawnItem();

@@ -5,6 +5,7 @@
 
 
 #include "ARBase/NotNullPtr.h"
+#include "ARBase/Sybsystems/ARStreamingSubsystem.h"
 #include "ARBaseItem.h"
 #include "Components/CapsuleComponent.h"
 
@@ -24,13 +25,16 @@ void AARItemSpawner::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 	CollisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AARItemSpawner::OnBeginOverlap);
-	//CollisionCapsule->OnComponentEndOverlap.AddDynamic(this, &AARItemSpawner::OnEndOverlap);
 }
 
 // Called when the game starts or when spawned
 void AARItemSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// TODO(cdc): Do async loading.
+	NotNullPtr streamer = GetGameInstance()->GetSubsystem<UARStreamingSubsystem>();
+	streamer->RequestSyncLoad(ItemClass);
 
 	// We schedule the item to be spawned.
 	ScheduleItemSpawning(InitialDelay);
@@ -66,15 +70,6 @@ void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, A
 	}
 
 	Interact_Implementation(pawn);
-}
-void AARItemSpawner::OnEndOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
-								  UPrimitiveComponent* other_comp, int32 other_body_index)
-{
-	// The item should be destroyed by now.
-	//check(!SpawnedItem);
-
-	// We schedule the next version of the item to be spawned.
-	//ScheduleItemSpawning(RespawnDelay);
 }
 
 void AARItemSpawner::SpawnItem()
@@ -123,7 +118,7 @@ bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 	SpawnedItem->TriggerUse(interactor);
 	SpawnedItem->Destroy();
 	SpawnedItem = nullptr;
-
+	
 	ScheduleItemSpawning(RespawnDelay);
 
 	return true;
