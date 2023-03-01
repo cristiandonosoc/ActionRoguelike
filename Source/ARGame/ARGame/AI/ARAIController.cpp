@@ -5,7 +5,7 @@
 
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Templates/NonNullPointer.h"
+#include "ARBase/BuildDefines.h"
 
 void AARAIController::BeginPlay()
 {
@@ -15,9 +15,25 @@ void AARAIController::BeginPlay()
 	{
 		RunBehaviorTree(BehaviorTree);
 	}
+}
 
-	TNonNullPtr<APawn> player_pawn = UGameplayStatics::GetPlayerPawn(this, 0);
-	TNonNullPtr<UBlackboardComponent> blackboard = GetBlackboardComponent();
-	blackboard->SetValueAsVector("MoveToLocation", player_pawn->GetActorLocation());
-	blackboard->SetValueAsObject("TargetActor", player_pawn);
+namespace
+{
+
+void Debug_DrawSetActorLocation(NotNullPtr<UWorld> world, NotNullPtr<AActor> actor)
+{
+#if AR_BUILD_DEBUG
+	FString text = FString::Printf(TEXT("Player spotted: %s"), *actor->GetName());
+	DrawDebugString(world, actor->GetActorLocation(), *text, nullptr, FColor::White, 4.0f);
+#endif // AR_BUILD_DEBUG
+}
+
+} // namespace
+
+void AARAIController::SetTargetActor(NotNullPtr<AActor> actor)
+{
+	NotNullPtr<UBlackboardComponent> blackboard = GetBlackboardComponent();
+	blackboard->SetValueAsObject(TargetActorKey, actor);
+
+	Debug_DrawSetActorLocation(GetWorld(), actor);
 }

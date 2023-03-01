@@ -28,7 +28,7 @@ AARBaseProjectile::AARBaseProjectile()
 	MuzzleEffect = CreateDefaultSubobject<UParticleSystem>("MuzzleEffect");
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>("ProjectileMovement");
-	ProjectileMovement->InitialSpeed = 1000.0f;
+	ProjectileMovement->InitialSpeed = ProjectileSpeed;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bInitialVelocityInLocalSpace = true;
 

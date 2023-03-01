@@ -52,7 +52,10 @@ public:
 	bool ApplyHealthChange(float delta);
 
 	UFUNCTION(BlueprintCallable)
-	bool IsAlive() const;
+	bool IsAlive() const { return Health > 0.0f; }
+
+	UFUNCTION(BlueprintCallable)
+	float LifeRatio() const { return Health / MaxHealth; }
 
 protected:
 	// Called when the game starts

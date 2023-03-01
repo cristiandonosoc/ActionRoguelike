@@ -9,6 +9,8 @@
 #include "ARAICharacter.generated.h"
 
 class AARBaseProjectile;
+class UARAttributeComponent;
+class UPawnSensingComponent;
 
 UCLASS()
 class ARGAME_API AARAICharacter : public ACharacter
@@ -19,19 +21,21 @@ public:
 	// Sets default values for this character's properties
 	AARAICharacter();
 
-	// Called every frame
-	virtual void Tick(float delta) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* player_input) override;
+	virtual void BeginPlay() override;
 
 	virtual bool PerformPrimaryAttack(const AActor& target);
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnSeePawn(APawn* pawn);
 
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, Category = "Attributes")
+	TObjectPtr<UARAttributeComponent> Attributes;
+
+	UPROPERTY(EditAnywhere, Category = "AI")
+	TObjectPtr<UPawnSensingComponent> PawnSenses;
+
+	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
 };

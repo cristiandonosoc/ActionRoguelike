@@ -2,8 +2,10 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
 #include "AIController.h"
+#include "ARBase/NotNullPtr.h"
+#include "BehaviorTree/BehaviorTreeTypes.h"
+#include "CoreMinimal.h"
 
 #include "ARAIController.generated.h"
 
@@ -14,10 +16,16 @@ class ARGAME_API AARAIController : public AAIController
 {
 	GENERATED_BODY()
 
+public:
+	void SetTargetActor(NotNullPtr<AActor> actor);
+
 protected:
 	virtual void BeginPlay() override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	FName TargetActorKey = TEXT("TargetActor");
+
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 };

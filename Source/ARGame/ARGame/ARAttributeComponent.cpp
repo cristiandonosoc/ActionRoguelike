@@ -57,11 +57,6 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 
 	return true;
 }
-bool UARAttributeComponent::IsAlive() const
-{
-	return Health > 0.0f;
-}
-
 
 // Called when the game starts
 void UARAttributeComponent::BeginPlay()

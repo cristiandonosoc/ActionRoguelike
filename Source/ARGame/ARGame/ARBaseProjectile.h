@@ -53,6 +53,9 @@ protected:
 
 
 protected:
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	float ProjectileSpeed = 1000.0f;
+	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> CollisionSphere;
 

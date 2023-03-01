@@ -29,7 +29,7 @@ void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& owner, uint
 
 	float dist = FVector::Distance(target_actor->GetActorLocation(), ai_pawn->GetActorLocation());
 
-	bool within_range = dist < 2000.0f;
+	bool within_range = dist < AttackRange;
 
 	// We only check for line of sight if we're in range. No need to check otherwise.
 	if (within_range)

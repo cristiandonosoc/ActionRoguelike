@@ -1,36 +1,30 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "ARAICharacter.h"
 
-
+#include "ARAIController.h"
 #include "ARBase/NotNullPtr.h"
-
+#include "Perception/PawnSensingComponent.h"
 
 // Sets default values
 AARAICharacter::AARAICharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance
-	// if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	PawnSenses = CreateDefaultSubobject<UPawnSensingComponent>("PawnSenses");
 }
 
-// Called when the game starts or when spawned
 void AARAICharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PawnSenses->OnSeePawn.AddDynamic(this, &AARAICharacter::OnSeePawn);
 }
 
-// Called every frame
-void AARAICharacter::Tick(float delta)
+void AARAICharacter::OnSeePawn(APawn* pawn)
 {
-	Super::Tick(delta);
-}
-
-// Called to bind functionality to input
-void AARAICharacter::SetupPlayerInputComponent(UInputComponent* player_input)
-{
-	Super::SetupPlayerInputComponent(player_input);
+	NotNullPtr ai = Cast<AARAIController>(GetController());
+	ai->SetTargetActor(pawn);
 }
 
 bool AARAICharacter::PerformPrimaryAttack(const AActor& target)
@@ -59,13 +53,14 @@ bool AARAICharacter::PerformPrimaryAttack(const AActor& target)
 	NotNullPtr pawn = Cast<APawn>(this);
 	params.Instigator = pawn;
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	AActor* proj = GetWorld()->SpawnActor<AActor>(PrimaryAttackProjectile.Get(), spawn_transform, params);
+	AActor* proj =
+		GetWorld()->SpawnActor<AActor>(PrimaryAttackProjectile.Get(), spawn_transform, params);
 
 	// If the projectile could not be created, we mark the attack as failed.
 	if (!proj)
 	{
 		return false;
 	}
-	
+
 	return true;
 }
