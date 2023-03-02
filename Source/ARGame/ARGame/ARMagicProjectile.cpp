@@ -61,9 +61,8 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 	// We see if the object we hit can receive damage.
 	if (other_actor)
 	{
-		auto* attributes = Cast<UARAttributeComponent>(
-			other_actor->GetComponentByClass(UARAttributeComponent::StaticClass()));
-		if (attributes)
+		if (auto* attributes = Cast<UARAttributeComponent>(
+				other_actor->GetComponentByClass(UARAttributeComponent::StaticClass())))
 		{
 			attributes->ApplyHealthChange(-Damage); // We apply a negative delta.
 		}
