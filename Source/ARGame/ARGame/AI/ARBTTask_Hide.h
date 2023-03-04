@@ -19,6 +19,7 @@ class ARGAME_API UARBTTask_Hide : public UBTTaskNode
 public:
 	struct Context
 	{
+		int32 QueryID = INDEX_NONE;
 		TSharedPtr<FEnvQueryResult> Result;
 	};
 
@@ -35,7 +36,6 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UEnvQuery> FindHidingSpotEQS;
-	int32 QueryId = INDEX_NONE;
 
 private:
 
