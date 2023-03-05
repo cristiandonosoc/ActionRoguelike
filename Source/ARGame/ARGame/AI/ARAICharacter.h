@@ -43,4 +43,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
+
+	UPROPERTY(EditAnywhere, Category = "Attacks", meta=(ClampMin=0.0, ClampMax=10.0f))
+	float PrimaryAttackSpread = 2.0f;
 };

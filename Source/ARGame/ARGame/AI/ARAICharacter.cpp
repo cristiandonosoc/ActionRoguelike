@@ -34,7 +34,7 @@ void AARAICharacter::OnSeePawn(APawn* pawn)
 
 namespace
 {
-} // namesapce
+} // namespace
 
 void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
@@ -43,7 +43,7 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 		// Stop BT.
 		NotNullPtr ai = Cast<AARAIController>(GetController());
 		ai->GetBrainComponent()->StopLogic(TEXT("Killed"));
-		
+
 		// Rag-doll.
 		// We make all bones simulate physics.
 		auto* mesh = GetMesh();
@@ -89,6 +89,13 @@ bool AARAICharacter::PerformPrimaryAttack(const AActor& target)
 	direction.Normalize();
 
 	FRotator rotation = direction.Rotation();
+
+	// Add the spread
+	if (PrimaryAttackSpread > 0.0f)
+	{
+		rotation.Pitch += FMath::RandRange(-PrimaryAttackSpread, PrimaryAttackSpread);
+		rotation.Yaw += FMath::RandRange(-PrimaryAttackSpread, PrimaryAttackSpread);
+	}
 
 	FTransform spawn_transform = FTransform(rotation, muzzle_location);
 
