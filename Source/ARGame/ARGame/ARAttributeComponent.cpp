@@ -3,6 +3,19 @@
 
 #include "ARAttributeComponent.h"
 
+bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
+{
+	auto& attributes = GetAttributes(actor);
+	return attributes.IsAlive();
+}
+
+UARAttributeComponent& UARAttributeComponent::GetAttributes(NotNullPtr<AActor> actor)
+{
+	auto* comp = actor->FindComponentByClass<UARAttributeComponent>();
+	check(comp);
+	return *comp;
+}
+
 // Sets default values for this component's properties
 UARAttributeComponent::UARAttributeComponent() {}
 
@@ -35,7 +48,10 @@ bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 namespace
 {
 
-[[inline]] uint8 SetFlag(uint8 flags, uint8 mask) { return flags | mask; }
+FORCEINLINE uint8 SetFlag(uint8 flags, uint8 mask)
+{
+	return flags | mask;
+}
 
 } // namespace
 
@@ -68,7 +84,7 @@ bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 	{
 		payload.Flags = SetFlag(payload.Flags, FOnHealthChangedPayload::FLAG_KILLED);
 	}
-	
+
 	OnHealthChanged.Broadcast(payload);
 
 	return true;

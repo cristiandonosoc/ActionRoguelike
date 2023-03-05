@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "ARBase/NotNullPtr.h"
 #include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 
@@ -51,6 +52,11 @@ UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent
 class ARGAME_API UARAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
+public:
+	// Helper statics.
+	// NOTE: These assume that the actor will have the attribute component, so it will assert on it.
+	static bool IsActorAlive(NotNullPtr<AActor> actor);
+	static UARAttributeComponent& GetAttributes(NotNullPtr<AActor> actor);
 
 public:
 	// Sets default values for this component's properties

@@ -30,13 +30,9 @@ int32 CountAliveBots(NotNullPtr<UWorld> world)
 	int32 result = 0;
 	for (TActorIterator<AARAICharacter> it(world); it; ++it)
 	{
-		if (auto* at = it->GetComponentByClass(UARAttributeComponent::StaticClass()))
+		if (UARAttributeComponent::IsActorAlive(*it))
 		{
-			NotNullPtr attributes = Cast<UARAttributeComponent>(at);
-			if (attributes->IsAlive())
-			{
-				result++;
-			}
+			result++;
 		}
 	}
 
