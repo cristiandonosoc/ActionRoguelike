@@ -6,6 +6,7 @@
 #include "AI/ARAICharacter.h"
 #include "ARAttributeComponent.h"
 #include "ARBase/NotNullPtr.h"
+#include "ARBase/Sybsystems/ARStreamingSubsystem.h"
 #include "EngineUtils.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 
@@ -14,6 +15,10 @@ AARGameModeBase::AARGameModeBase() {}
 void AARGameModeBase::StartPlay()
 {
 	Super::StartPlay();
+	
+	// TODO(cdc): Do async loading.
+	NotNullPtr streamer = GetGameInstance()->GetSubsystem<UARStreamingSubsystem>();
+	streamer->RequestSyncLoad(BotClassToSpawn);
 
 	// On start, we start a timer to spawn a new bot.
 	GetWorldTimerManager().SetTimer(SpawnBotTimerHandle, this,
