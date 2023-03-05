@@ -6,6 +6,8 @@
 #include "ARBase/NotNullPtr.h"
 #include "ARGame/AI/ARAIController.h"
 #include "ARGame/ARAttributeComponent.h"
+#include "ARGame/Widgets/ARWidgetSubsystem.h"
+#include "Blueprint/UserWidget.h"
 #include "BrainComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
@@ -38,6 +40,19 @@ namespace
 
 void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
+	if (payload.ActualDelta < 0.0f)
+	{
+		if (auto* mesh = GetMesh())
+		{
+			mesh->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
+		}
+
+		if (auto* widget_subsystem = GetGameInstance()->GetSubsystem<UARWidgetSubsystem>())
+		{
+			widget_subsystem->CreateDamagePopup(this, FMath::Abs(payload.ActualDelta));
+		}
+	}
+
 	if (payload.Killed())
 	{
 		// Stop BT.
@@ -46,8 +61,7 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 
 		// Rag-doll.
 		// We make all bones simulate physics.
-		auto* mesh = GetMesh();
-		if (mesh)
+		if (auto* mesh = GetMesh())
 		{
 			mesh->SetAllBodiesSimulatePhysics(true);
 			mesh->SetCollisionProfileName(TEXT("Ragdoll"));

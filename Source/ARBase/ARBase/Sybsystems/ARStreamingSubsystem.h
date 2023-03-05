@@ -16,10 +16,21 @@ class ARBASE_API UARStreamingSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-
-	void RequestSyncLoad(const TSoftClassPtr<UObject>& class_ptr);
+	template <typename T>
+	TSubclassOf<T> RequestSyncLoad(const TSoftClassPtr<T>& class_ptr);
 
 private:
 	FStreamableManager StreamManager;
 };
+
+
+template <typename T>
+TSubclassOf<T> UARStreamingSubsystem::RequestSyncLoad(const TSoftClassPtr<T>& class_ptr)
+{
+	if (class_ptr.IsValid())
+	{
+		return class_ptr.Get();
+	}
+	
+	return StreamManager.LoadSynchronous(class_ptr);
+}
