@@ -8,6 +8,8 @@
 
 #include "ARAICharacter.generated.h"
 
+
+struct FOnHealthChangedPayload;
 class AARBaseProjectile;
 class UARAttributeComponent;
 class UPawnSensingComponent;
@@ -29,8 +31,11 @@ protected:
 	UFUNCTION()
 	void OnSeePawn(APawn* pawn);
 
+	UFUNCTION()
+	void OnHealthChanged(const FOnHealthChangedPayload& payload);
+
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Attributes")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
 
 	UPROPERTY(EditAnywhere, Category = "AI")

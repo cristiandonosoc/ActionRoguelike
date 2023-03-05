@@ -30,7 +30,7 @@ void AARTargetDummy::OnHealthChanged(const FOnHealthChangedPayload& payload)
 	UE_LOG(LogTemp, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
 
 	// We only flash on negative hits.
-	if (payload.Delta > 0)
+	if (payload.ActualDelta > 0)
 	{
 		return;
 	}

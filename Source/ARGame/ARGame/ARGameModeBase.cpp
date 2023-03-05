@@ -82,7 +82,7 @@ void AARGameModeBase::OnSpawnBotTimerElapsed()
 	FEnvQueryRequest env_request(SpawnLocationEnvQuery, this);
 	int32 query_id = env_request.Execute(EEnvQueryRunMode::RandomBest25Pct, this,
 										 &AARGameModeBase::OnSpawnLocationEnvQueryResult);
-	check(query_id != 0);
+	check(query_id != INDEX_NONE);
 }
 
 void AARGameModeBase::OnSpawnLocationEnvQueryResult(TSharedPtr<FEnvQueryResult> result)
@@ -117,5 +117,9 @@ void AARGameModeBase::OnSpawnLocationEnvQueryResult(TSharedPtr<FEnvQueryResult> 
 		return;
 	}
 
-	// TODO: Possess with the controller!
+	// Draw a vertical cylinder where the bot was spawned.
+	constexpr float HEIGHT = 1000.0f;
+	FVector start = target_location - FVector(0, 0, -HEIGHT);
+	FVector end = target_location - FVector(0, 0, HEIGHT);
+	DrawDebugCylinder(GetWorld(), start, end, 50.0f, 32, FColor::Blue, false, 10.0f);
 }

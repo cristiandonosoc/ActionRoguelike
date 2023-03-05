@@ -32,6 +32,13 @@ bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 	return true;
 }
 
+namespace
+{
+
+[[inline]] uint8 SetFlag(uint8 flags, uint8 mask) { return flags | mask; }
+
+} // namespace
+
 bool UARAttributeComponent::ApplyHealthChange(float delta)
 {
 	if (!WouldHealthChangeApply(delta))
@@ -42,8 +49,8 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 	// Now that the health change has been validated, we can apply it.
 	// TODO(cdc): Communicate as well the actual delta if it was clamped.
 	float prev = Health;
-	Health += delta;
-	Health = FMath::Clamp(Health, 0, MaxHealth);
+	float expectedResult = prev + delta;
+	Health = FMath::Clamp(expectedResult, 0, MaxHealth);
 
 	UE_LOG(LogTemp, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, Health);
 
@@ -52,16 +59,16 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 	payload.Target = this;
 	payload.MaxHealth = MaxHealth;
 	payload.NewHealth = Health;
-	payload.Delta = delta;
+	payload.OriginalDelta = delta;
+	payload.ActualDelta = Health - prev;
+
+	// Check the flags.
+	if (Health == 0.0f && prev > 0.0f)
+	{
+		payload.Flags = SetFlag(payload.Flags, FOnHealthChangedPayload::FLAG_KILLED);
+	}
+	
 	OnHealthChanged.Broadcast(payload);
 
 	return true;
-}
-
-// Called when the game starts
-void UARAttributeComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
 }

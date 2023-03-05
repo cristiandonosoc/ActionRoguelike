@@ -14,6 +14,8 @@ struct FOnHealthChangedPayload
 {
 	GENERATED_BODY();
 
+	static constexpr uint8 FLAG_KILLED = 0b00000001;
+
 	UPROPERTY(BlueprintReadOnly)
 	TWeakObjectPtr<AActor> Instigator;
 
@@ -26,8 +28,21 @@ struct FOnHealthChangedPayload
 	UPROPERTY(BlueprintReadOnly)
 	float NewHealth;
 
+	// OriginalDelta is the original change requested.
+	// Depending on the current value, it could be different.
+	// See |ActualDelta| for the real change made by the event.
 	UPROPERTY(BlueprintReadOnly)
-	float Delta;
+	float OriginalDelta;
+
+	// ActualDelta is the real change to the value performed by the event.
+	UPROPERTY(BlueprintReadOnly)
+	float ActualDelta;
+
+	UPROPERTY(BlueprintReadOnly)
+	uint8 Flags;
+
+	// Convenient getters.
+	bool Killed() const { return Flags & FLAG_KILLED; }
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&, payload);
@@ -56,10 +71,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	float LifeRatio() const { return Health / MaxHealth; }
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
 public:
 	UPROPERTY(BlueprintAssignable)

@@ -1,9 +1,12 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ARAICharacter.h"
 
-#include "ARAIController.h"
+#include "ARGame/AI/ARAICharacter.h"
+
 #include "ARBase/NotNullPtr.h"
+#include "ARGame/AI/ARAIController.h"
+#include "ARGame/ARAttributeComponent.h"
+#include "BrainComponent.h"
 #include "Perception/PawnSensingComponent.h"
 
 // Sets default values
@@ -11,6 +14,7 @@ AARAICharacter::AARAICharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 	PawnSenses = CreateDefaultSubobject<UPawnSensingComponent>("PawnSenses");
 }
 
@@ -19,12 +23,34 @@ void AARAICharacter::BeginPlay()
 	Super::BeginPlay();
 
 	PawnSenses->OnSeePawn.AddDynamic(this, &AARAICharacter::OnSeePawn);
+	Attributes->OnHealthChanged.AddDynamic(this, &AARAICharacter::OnHealthChanged);
 }
 
 void AARAICharacter::OnSeePawn(APawn* pawn)
 {
 	NotNullPtr ai = Cast<AARAIController>(GetController());
 	ai->SetTargetActor(pawn);
+}
+void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
+{
+	if (payload.Killed())
+	{
+		// Stop BT.
+		NotNullPtr ai = Cast<AARAIController>(GetController());
+		ai->GetBrainComponent()->StopLogic(TEXT("Killed"));
+		
+		// Rag-doll.
+		// We make all bones simulate physics.
+		auto* mesh = GetMesh();
+		if (mesh)
+		{
+			mesh->SetAllBodiesSimulatePhysics(true);
+			mesh->SetCollisionProfileName(TEXT("Ragdoll"));
+		}
+
+		// Destroy the character after a while.
+		SetLifeSpan(10.0f);
+	}
 }
 
 bool AARAICharacter::PerformPrimaryAttack(const AActor& target)

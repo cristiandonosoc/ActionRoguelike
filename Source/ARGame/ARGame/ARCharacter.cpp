@@ -261,13 +261,14 @@ void AARCharacter::PrimaryInteract()
 
 void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
-	if (payload.NewHealth < 0.0f && payload.Delta < 0.0f)
+	if (payload.Killed())
 	{
 		DisableInput(Cast<APlayerController>(GetController()));
 	}
+	
 
 	// Attempt to set the flash effect, camera shake, etc.
-	if (payload.Delta < 0.0f)
+	if (payload.ActualDelta < 0.0f)
 	{
 		if (USkeletalMeshComponent* mesh = GetMesh())
 		{
