@@ -64,7 +64,8 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 		if (auto* attributes = Cast<UARAttributeComponent>(
 				other_actor->GetComponentByClass(UARAttributeComponent::StaticClass())))
 		{
-			attributes->ApplyHealthChange(-Damage); // We apply a negative delta.
+			// We forward our instigator forward.
+			attributes->ApplyHealthChange(GetInstigator(), -Damage); // We apply a negative delta.
 		}
 	}
 

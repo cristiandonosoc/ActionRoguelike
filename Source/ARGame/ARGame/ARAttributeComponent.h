@@ -63,8 +63,9 @@ public:
 	bool WouldHealthChangeApply(float delta) const;
 
 	// Returns whether the change was applied.
+	// |instigator| can be null.
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(float delta);
+	bool ApplyHealthChange(AActor* instigator, float delta);
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const { return Health > 0.0f; }

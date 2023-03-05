@@ -31,6 +31,11 @@ void AARAICharacter::OnSeePawn(APawn* pawn)
 	NotNullPtr ai = Cast<AARAIController>(GetController());
 	ai->SetTargetActor(pawn);
 }
+
+namespace
+{
+} // namesapce
+
 void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
 	if (payload.Killed())
@@ -50,6 +55,18 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 
 		// Destroy the character after a while.
 		SetLifeSpan(10.0f);
+
+		return;
+	}
+
+	// If there is an instigator, make the AI react to it.
+	if (APawn* instigator = Cast<APawn>(payload.Instigator.Get()))
+	{
+		if (instigator != this)
+		{
+			NotNullPtr ai = Cast<AARAIController>(GetController());
+			ai->SetTargetActor(instigator);
+		}
 	}
 }
 

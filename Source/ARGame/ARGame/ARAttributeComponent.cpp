@@ -39,7 +39,7 @@ namespace
 
 } // namespace
 
-bool UARAttributeComponent::ApplyHealthChange(float delta)
+bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 {
 	if (!WouldHealthChangeApply(delta))
 	{
@@ -56,6 +56,7 @@ bool UARAttributeComponent::ApplyHealthChange(float delta)
 
 	// Trigger the delegate.
 	FOnHealthChangedPayload payload = {};
+	payload.Instigator = instigator;
 	payload.Target = this;
 	payload.MaxHealth = MaxHealth;
 	payload.NewHealth = Health;

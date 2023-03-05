@@ -55,6 +55,6 @@ void AARHealthPack::Use_Implementation(APawn* interactor)
 	NotNullPtr attributes = Cast<UARAttributeComponent>(
 		interactor->GetComponentByClass(UARAttributeComponent::StaticClass()));
 
-	bool affected = attributes->ApplyHealthChange(HealAmount);
+	bool affected = attributes->ApplyHealthChange(this, HealAmount);
 	check(affected);
 }
