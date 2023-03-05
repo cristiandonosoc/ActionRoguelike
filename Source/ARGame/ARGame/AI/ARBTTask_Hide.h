@@ -12,6 +12,8 @@ class AARAICharacter;
 struct FEnvQueryResult;
 class UEnvQuery;
 
+// TODO(cdc): This is currently broken because of the way it is performing the MoveTo.
+//            Recommended to not use.
 UCLASS()
 class ARGAME_API UARBTTask_Hide : public UBTTaskNode
 {
