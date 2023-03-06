@@ -6,7 +6,7 @@
 #include "ARBase/NotNullPtr.h"
 #include "ARGame/AI/ARAIController.h"
 #include "ARGame/ARAttributeComponent.h"
-#include "ARGame/Widgets/ARWidgetSubsystem.h"
+#include "ARGame/Widgets/ARWidgetManager.h"
 #include "Blueprint/UserWidget.h"
 #include "BrainComponent.h"
 #include "Perception/PawnSensingComponent.h"
@@ -47,10 +47,8 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 			mesh->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
 		}
 
-		if (auto* widget_subsystem = GetGameInstance()->GetSubsystem<UARWidgetSubsystem>())
-		{
-			widget_subsystem->CreateDamagePopup(this, FMath::Abs(payload.ActualDelta));
-		}
+		auto* popup = UARWidgetManager::CreateDamagePopupWidget(this, payload.ActualDelta);
+		popup->AddToViewport();
 	}
 
 	if (payload.Killed())

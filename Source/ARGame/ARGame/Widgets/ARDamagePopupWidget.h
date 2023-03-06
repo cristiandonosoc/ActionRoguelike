@@ -2,20 +2,21 @@
 
 #pragma once
 
-#include "Blueprint/UserWidget.h"
+#include "ARActorAttachedWidget.h"
+#include "ARGame/Subsystems/ARWidgetSubsystem.h"
 #include "CoreMinimal.h"
 
 #include "ARDamagePopupWidget.generated.h"
 
 UCLASS()
-class ARGAME_API UARDamagePopupWidget : public UUserWidget
+class ARGAME_API UARDamagePopupWidget : public UARActorAttachedWidget
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	AActor* CPP_AttachedTo;
+	static EARWidgetType GetStaticType() { return EARWidgetType::DamagePopup; }
 
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float CPP_Damage;
+	float Damage;
 };

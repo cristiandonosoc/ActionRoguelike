@@ -2,15 +2,13 @@
 
 #pragma once
 
-#include "ARGame/Widgets/ARWidgetSubsystem.h"
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 
 #include "ARGameInstance.generated.h"
 
-/**
- * 
- */
+class UDataTable;
+
 UCLASS()
 class ARGAME_API UARGameInstance : public UGameInstance
 {

@@ -4,6 +4,31 @@
 #include "ARGame/ARGameInstance.h"
 
 #include "ARBase/NotNullPtr.h"
+#include "ARGame/Subsystems/ARWidgetSubsystem.h"
+
+namespace
+{
+
+template <typename T>
+TMap<FName, T*> GetAllRowsWithName(NotNullPtr<UDataTable> dt)
+{
+	if (!dt->GetRowStruct() || !dt->GetRowStruct()->IsChildOf(T::StaticStruct()))
+	{
+		return {};
+	}
+
+	TMap<FName, T> rows;
+	rows.Reserve(dt->GetRowMap().Num());
+
+	for (const auto& [key, ptr] : dt->GetRowMap())
+	{
+		rows.Add(key, reinterpret_cast<T*>(ptr));
+	}
+
+	return rows;
+}
+
+} // namespace
 
 void UARGameInstance::OnStart()
 {
@@ -11,10 +36,10 @@ void UARGameInstance::OnStart()
 
 	if (ensure(WidgetConfigData))
 	{
-		NotNullPtr widget_manager = GetSubsystem<UARWidgetSubsystem>();
 		TArray<FWidgetSubsystemConfig*> rows;
-		WidgetConfigData->GetAllRows(TEXT("Widget manager initialization"), rows);
-		check(rows.Num() == 1);
-		widget_manager->InitializeWidgets(*rows[0]);
+		WidgetConfigData->GetAllRows<FWidgetSubsystemConfig>(TEXT("UARGAMEInstance Start"), rows);
+
+		NotNullPtr widget_manager = GetSubsystem<UARWidgetSubsystem>();
+		widget_manager->LoadWidgetClasses(std::move(rows));
 	}
 }
