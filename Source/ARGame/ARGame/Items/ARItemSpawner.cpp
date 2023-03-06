@@ -5,7 +5,7 @@
 
 
 #include "ARBase/NotNullPtr.h"
-#include "ARBase/Sybsystems/ARStreamingSubsystem.h"
+#include "ARBase/Subsystems/ARStreamingSubsystem.h"
 #include "ARBaseItem.h"
 #include "Components/CapsuleComponent.h"
 

@@ -6,7 +6,7 @@
 
 #include "ARGame/Widgets/ARActorAttachedWidget.h"
 #include "ARBase/NotNullPtr.h"
-#include "ARBase/Sybsystems/ARStreamingSubsystem.h"
+#include "ARBase/Subsystems/ARStreamingSubsystem.h"
 #include "Blueprint/UserWidget.h"
 
 

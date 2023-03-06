@@ -6,7 +6,7 @@
 #include "AI/ARAICharacter.h"
 #include "ARAttributeComponent.h"
 #include "ARBase/NotNullPtr.h"
-#include "ARBase/Sybsystems/ARStreamingSubsystem.h"
+#include "ARBase/Subsystems/ARStreamingSubsystem.h"
 #include "EngineUtils.h"
 #include "EnvironmentQuery/EnvQueryManager.h"
 
