@@ -32,7 +32,10 @@ void UARActorAttachedWidget::NativeTick(const FGeometry& geometry, float delta)
 {
 	Super::NativeTick(geometry, delta);
 
-	check(AttachedTo);
+	if (!AttachedTo)
+	{
+		return;
+	}
 
 	if (!ParentSizeBox)
 	{

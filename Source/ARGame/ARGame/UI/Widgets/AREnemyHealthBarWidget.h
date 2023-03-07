@@ -7,17 +7,20 @@
 
 #include <CoreMinimal.h>
 
-#include "ARDamagePopupWidget.generated.h"
+#include "AREnemyHealthBarWidget.generated.h"
 
 UCLASS()
-class ARGAME_API UARDamagePopupWidget : public UARActorAttachedWidget
+class ARGAME_API UAREnemyHealthBarWidget : public UARActorAttachedWidget
 {
 	GENERATED_BODY()
-
+	
 public:
-	static EARWidgetType GetStaticType() { return EARWidgetType::DamagePopup; }
+	static EARWidgetType GetStaticType() { return EARWidgetType::EnemyHealthBar; }
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Damage;
+	float CurrentHealth;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float MaxHealth;
 };

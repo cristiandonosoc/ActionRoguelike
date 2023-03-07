@@ -30,7 +30,7 @@ public:
 	FVector2D OnScreenTranslateOffset = FVector2D::ZeroVector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D OnScreenScale = FVector2D::ZeroVector;
+	FVector2D OnScreenScale = {1.0f, 1.0f};
 
 protected:
 	

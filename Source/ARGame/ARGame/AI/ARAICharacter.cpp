@@ -8,6 +8,7 @@
 #include <ARGame/UI/ARWidgetManager.h>
 #include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
 
+#include <ARGame/UI/Widgets/AREnemyHealthBarWidget.h>
 #include <Blueprint/UserWidget.h>
 #include <BrainComponent.h>
 #include <Perception/PawnSensingComponent.h>
@@ -35,12 +36,25 @@ void AARAICharacter::OnSeePawn(APawn* pawn)
 	ai->SetTargetActor(pawn);
 }
 
-namespace
-{
-} // namespace
-
 void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
+	if (!HealthBarWidget)
+	{
+		HealthBarWidget = UARWidgetManager::CreateEnemyHealthBarWidget(
+			this, Attributes->GetCurrentHealth(), Attributes->GetMaxHealth());
+		if (HealthBarWidget)
+		{
+			// TODO(cdc): Make this translation configurable.
+			HealthBarWidget->TranslationOffset = FVector(0, 0, 75);
+			HealthBarWidget->AddToViewport();
+		}
+	}
+	else
+	{
+		HealthBarWidget->CurrentHealth = Attributes->GetCurrentHealth();
+		HealthBarWidget->MaxHealth = Attributes->GetMaxHealth();
+	}
+
 	if (payload.ActualDelta < 0.0f)
 	{
 		if (auto* mesh = GetMesh())
@@ -65,6 +79,8 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 			mesh->SetAllBodiesSimulatePhysics(true);
 			mesh->SetCollisionProfileName(TEXT("Ragdoll"));
 		}
+
+		HealthBarWidget->RemoveFromParent();
 
 		// Destroy the character after a while.
 		SetLifeSpan(10.0f);

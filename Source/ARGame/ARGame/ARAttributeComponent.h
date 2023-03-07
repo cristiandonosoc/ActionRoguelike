@@ -47,7 +47,8 @@ struct FOnHealthChangedPayload
 	bool Killed() const { return Flags & FLAG_KILLED; }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&, payload);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&,
+											payload);
 
 UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class ARGAME_API UARAttributeComponent : public UActorComponent
@@ -62,6 +63,9 @@ public:
 public:
 	// Sets default values for this component's properties
 	UARAttributeComponent();
+
+	float GetCurrentHealth() const { return Health; }
+	float GetMaxHealth() const { return MaxHealth; }
 
 	// Checks whether the health change attempt would apply.
 	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to

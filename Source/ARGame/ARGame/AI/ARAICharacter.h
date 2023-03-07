@@ -9,6 +9,7 @@
 
 #include "ARAICharacter.generated.h"
 
+class UAREnemyHealthBarWidget;
 struct FOnHealthChangedPayload;
 class AARBaseProjectile;
 class UARAttributeComponent;
@@ -46,4 +47,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attacks", meta = (ClampMin = 0.0, ClampMax = 10.0f))
 	float PrimaryAttackSpread = 2.0f;
+
+	TObjectPtr<UAREnemyHealthBarWidget> HealthBarWidget;
 };
