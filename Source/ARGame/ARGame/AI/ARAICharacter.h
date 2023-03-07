@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include "ARGame/ARBaseProjectile.h"
-#include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include <ARGame/ARBaseProjectile.h>
+
+#include <CoreMinimal.h>
+#include <GameFramework/Character.h>
 
 #include "ARAICharacter.generated.h"
-
 
 struct FOnHealthChangedPayload;
 class AARBaseProjectile;
@@ -44,6 +44,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
 
-	UPROPERTY(EditAnywhere, Category = "Attacks", meta=(ClampMin=0.0, ClampMax=10.0f))
+	UPROPERTY(EditAnywhere, Category = "Attacks", meta = (ClampMin = 0.0, ClampMax = 10.0f))
 	float PrimaryAttackSpread = 2.0f;
 };

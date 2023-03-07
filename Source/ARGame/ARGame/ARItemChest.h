@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "ARGameplayInterface.h"
-#include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include <ARGame/ARGameplayInterface.h>
+
+#include <CoreMinimal.h>
+#include <GameFramework/Actor.h>
 
 #include "ARItemChest.generated.h"
 

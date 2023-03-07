@@ -1,7 +1,6 @@
 ﻿#pragma once
 
-#include "CoreMinimal.h"
-#include "Modules/ModuleManager.h"
+#include <CoreMinimal.h>
 
 class FBaseModule : public IModuleInterface
 {

@@ -1,8 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "ARBaseItem.h"
-
+#include <ARGame/Items/ARBaseItem.h>
 
 // Sets default values
 AARBaseItem::AARBaseItem()

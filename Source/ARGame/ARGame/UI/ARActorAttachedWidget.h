@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "ARBase/NotNullPtr.h"
-#include "Blueprint/UserWidget.h"
+#include <ARBase/NotNullPtr.h>
 
+#include <Blueprint/UserWidget.h>
 
 #include "ARActorAttachedWidget.generated.h"
 
@@ -15,8 +15,6 @@ UCLASS()
 class UARActorAttachedWidget : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
 
 protected:
 	virtual void NativeTick(const FGeometry& geometry, float delta) override;

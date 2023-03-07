@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Engine/DataTable.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include <CoreMinimal.h>
+#include <Engine/DataTable.h>
+#include <Subsystems/GameInstanceSubsystem.h>
 
 #include "ARWidgetSubsystem.generated.h"
 
@@ -12,12 +12,14 @@
 class UARActorAttachedWidget;
 class UUserWidget;
 
+// EARWidgetType holds all the widgets that can be spawned via the widget subsystem.
 UENUM(BlueprintType)
 enum class EARWidgetType : uint8
 {
-	NONE, 
+	NONE,
 	DamagePopup,
-	
+	EnemyHealthBar,
+
 	COUNT UMETA(Hidden),
 };
 

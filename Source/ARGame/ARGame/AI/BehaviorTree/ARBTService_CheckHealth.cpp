@@ -1,12 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ARGame/AI/ARBTService_CheckHealth.h"
+#include <ARGame/AI/BehaviorTree/ARBTService_CheckHealth.h>
 
-#include "ARAICharacter.h"
-#include "ARAIController.h"
-#include "ARBase/NotNullPtr.h"
-#include "ARGame/ARAttributeComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include <ARBase/NotNullPtr.h>
+#include <ARGame/AI/ARAICharacter.h>
+#include <ARGame/AI/ARAIController.h>
+#include <ARGame/ARAttributeComponent.h>
+
+#include <BehaviorTree/BlackboardComponent.h>
 
 void UARBTService_CheckHealth::TickNode(UBehaviorTreeComponent& owner, uint8* node_memory,
 										float delta)

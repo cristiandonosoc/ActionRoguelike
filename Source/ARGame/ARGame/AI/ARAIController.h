@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "AIController.h"
-#include "ARBase/NotNullPtr.h"
-#include "BehaviorTree/BehaviorTreeTypes.h"
-#include "CoreMinimal.h"
+#include <ARBase/NotNullPtr.h>
+
+#include <AIController.h>
+#include <CoreMinimal.h>
 
 #include "ARAIController.generated.h"
 

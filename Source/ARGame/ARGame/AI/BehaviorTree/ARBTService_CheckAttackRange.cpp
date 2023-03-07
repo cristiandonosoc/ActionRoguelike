@@ -1,10 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ARBTService_CheckAttackRange.h"
+#include <ARGame/AI/BehaviorTree/ARBTService_CheckAttackRange.h>
 
-#include "AIController.h"
-#include "ARBase/NotNullPtr.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include <ARBase/NotNullPtr.h>
+
+#include <AIController.h>
+#include <BehaviorTree/BlackboardComponent.h>
 
 void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& owner, uint8* node_memory,
 											 float delta)
@@ -18,7 +19,8 @@ void UARBTService_CheckAttackRange::TickNode(UBehaviorTreeComponent& owner, uint
 		return;
 	}
 
-	AActor* target_actor = Cast<AActor>(blackboard->GetValueAsObject(TargetActorKey.SelectedKeyName));
+	AActor* target_actor =
+		Cast<AActor>(blackboard->GetValueAsObject(TargetActorKey.SelectedKeyName));
 	if (!target_actor)
 	{
 		return;

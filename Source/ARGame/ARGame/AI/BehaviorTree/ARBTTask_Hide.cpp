@@ -1,14 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/AI/BehaviorTree/ARBTTask_Hide.h>
 
-#include "ARGame/AI/ARBTTask_Hide.h"
+#include <ARBase/NotNullPtr.h>
+
+#include <AIController.h>
+#include <EnvironmentQuery/EnvQueryManager.h>
 
 #include <map>
-
-#include "AIController.h"
-#include "ARBase/NotNullPtr.h"
-#include "EnvironmentQuery/EnvQueryManager.h"
-
 
 namespace ARBTTask_Hide_Private
 {
@@ -27,7 +26,6 @@ static NotNullPtr<QueryManager> GetQueryManager()
 }
 
 } // namespace ARBTTask_Hide_Private
-
 
 UARBTTask_Hide::UARBTTask_Hide(const FObjectInitializer& oi) : Super(oi)
 {

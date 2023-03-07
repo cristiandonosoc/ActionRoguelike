@@ -1,7 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-
-#include "ARAttributeComponent.h"
+#include <ARGame/ARAttributeComponent.h>
 
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
 {

@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
-#include "UObject/Interface.h"
+#include <CoreMinimal.h>
+#include <UObject/Interface.h>
+
 #include "ARGameplayInterface.generated.h"
 
 // This class does not need to be modified.

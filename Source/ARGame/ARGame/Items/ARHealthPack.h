@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "ARBaseItem.h"
-#include "CoreMinimal.h"
+#include <ARGame/Items/ARBaseItem.h>
+
+#include <CoreMinimal.h>
 
 #include "ARHealthPack.generated.h"
 
@@ -16,7 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	AARHealthPack();
 
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,7 +28,7 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	float HealAmount;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UStaticMeshComponent> Mesh;
 };

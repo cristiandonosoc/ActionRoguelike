@@ -1,14 +1,14 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
+#include <ARGame/ARGameModeBase.h>
 
-#include "ARGameModeBase.h"
+#include <ARGame/AI/ARAICharacter.h>
+#include <ARGame/ARAttributeComponent.h>
+#include <ARBase/NotNullPtr.h>
+#include <ARBase/Subsystems/ARStreamingSubsystem.h>
 
-#include "AI/ARAICharacter.h"
-#include "ARAttributeComponent.h"
-#include "ARBase/NotNullPtr.h"
-#include "ARBase/Subsystems/ARStreamingSubsystem.h"
-#include "EngineUtils.h"
-#include "EnvironmentQuery/EnvQueryManager.h"
+#include <EngineUtils.h>
+#include <EnvironmentQuery/EnvQueryManager.h>
 
 AARGameModeBase::AARGameModeBase() {}
 

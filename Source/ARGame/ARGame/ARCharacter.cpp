@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/ARCharacter.h>
 
-#include "ARCharacter.h"
+#include <ARBase/BuildDefines.h>
+#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/ARBaseProjectile.h>
+#include <ARGame/ARInteractionComponent.h>
 
-#include "ARAttributeComponent.h"
-#include "ARBase/BuildDefines.h"
-#include "ARBaseProjectile.h"
-#include "ARInteractionComponent.h"
-#include "Camera/CameraComponent.h"
-#include "DrawDebugHelpers.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Particles/ParticleSystem.h"
-#include "Templates/NonNullPointer.h"
+#include <Camera/CameraComponent.h>
+#include <DrawDebugHelpers.h>
+#include <GameFramework/CharacterMovementComponent.h>
+#include <GameFramework/SpringArmComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
+#include <Particles/ParticleSystem.h>
+#include <Templates/NonNullPointer.h>
 
 // Sets default values
 AARCharacter::AARCharacter()
@@ -265,7 +265,7 @@ void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 	{
 		DisableInput(Cast<APlayerController>(GetController()));
 	}
-	
+
 
 	// Attempt to set the flash effect, camera shake, etc.
 	if (payload.ActualDelta < 0.0f)

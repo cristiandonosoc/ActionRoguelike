@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "BehaviorTree/BTTaskNode.h"
-#include "CoreMinimal.h"
+#include <BehaviorTree/BTTaskNode.h>
+#include <CoreMinimal.h>
 
 #include "ARBTTask_RangeAttack.generated.h"
 

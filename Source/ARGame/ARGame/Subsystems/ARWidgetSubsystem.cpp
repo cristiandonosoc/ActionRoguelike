@@ -1,14 +1,11 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/Subsystems/ARWidgetSubsystem.h>
 
-#include "ARWidgetSubsystem.h"
-
-
-#include "ARGame/Widgets/ARActorAttachedWidget.h"
-#include "ARBase/NotNullPtr.h"
-#include "ARBase/Subsystems/ARStreamingSubsystem.h"
-#include "Blueprint/UserWidget.h"
-
+#include <ARBase/NotNullPtr.h>
+#include <ARBase/Subsystems/ARStreamingSubsystem.h>
+#include <ARGame/UI/ARActorAttachedWidget.h>
+#include <Blueprint/UserWidget.h>
 
 void UARWidgetSubsystem::LoadWidgetClasses(const TArray<FWidgetSubsystemConfig*>& rows)
 {

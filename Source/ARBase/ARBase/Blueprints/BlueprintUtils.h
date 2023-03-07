@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
 #include "BlueprintUtils.generated.h"
 

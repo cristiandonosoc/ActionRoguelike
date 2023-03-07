@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "ARBaseProjectile.h"
-#include "CoreMinimal.h"
+#include <ARGame/ARBaseProjectile.h>
+
+#include <CoreMinimal.h>
 
 #include "ARMagicProjectile.generated.h"
 

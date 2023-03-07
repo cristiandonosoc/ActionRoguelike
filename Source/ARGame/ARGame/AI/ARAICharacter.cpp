@@ -1,15 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/AI/ARAICharacter.h>
 
-#include "ARGame/AI/ARAICharacter.h"
+#include <ARBase/NotNullPtr.h>
+#include <ARGame/AI/ARAIController.h>
+#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/UI/ARWidgetManager.h>
+#include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
 
-#include "ARBase/NotNullPtr.h"
-#include "ARGame/AI/ARAIController.h"
-#include "ARGame/ARAttributeComponent.h"
-#include "ARGame/Widgets/ARWidgetManager.h"
-#include "Blueprint/UserWidget.h"
-#include "BrainComponent.h"
-#include "Perception/PawnSensingComponent.h"
+#include <Blueprint/UserWidget.h>
+#include <BrainComponent.h>
+#include <Perception/PawnSensingComponent.h>
 
 // Sets default values
 AARAICharacter::AARAICharacter()

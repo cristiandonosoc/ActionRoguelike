@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "BehaviorTree/BTTaskNode.h"
-#include "CoreMinimal.h"
+#include <BehaviorTree/BTTaskNode.h>
+#include <CoreMinimal.h>
 
 #include "ARBTTask_Hide.generated.h"
 
@@ -29,17 +29,15 @@ public:
 
 protected:
 	virtual uint16 GetInstanceMemorySize() const override;
-	
+
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& owner,
 											uint8* node_memory) override;
 	virtual void TickTask(UBehaviorTreeComponent& owner, uint8* node_memory, float delta) override;
-
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UEnvQuery> FindHidingSpotEQS;
 
 private:
-
 	void ReceiveResult(TSharedPtr<FEnvQueryResult>);
 };

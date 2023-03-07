@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include "ARActorAttachedWidget.h"
-#include "ARGame/Subsystems/ARWidgetSubsystem.h"
-#include "CoreMinimal.h"
+#include <ARGame/UI/ARActorAttachedWidget.h>
+#include <ARGame/Subsystems/ARWidgetSubsystem.h>
+
+#include <CoreMinimal.h>
 
 #include "ARDamagePopupWidget.generated.h"
 

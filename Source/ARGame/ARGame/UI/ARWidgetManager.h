@@ -2,11 +2,12 @@
 
 #pragma once
 
-#include "ARDamagePopupWidget.h"
-#include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include <CoreMinimal.h>
+#include <UObject/Object.h>
 
 #include "ARWidgetManager.generated.h"
+
+class UARDamagePopupWidget;
 
 UCLASS()
 class ARGAME_API UARWidgetManager : public UObject

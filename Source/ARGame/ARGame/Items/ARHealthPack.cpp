@@ -1,11 +1,9 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/Items/ARHealthPack.h>
 
-#include "ARHealthPack.h"
-
-
-#include "ARBase/NotNullPtr.h"
-#include "ARGame/ARAttributeComponent.h"
+#include <ARBase/NotNullPtr.h>
+#include <ARGame/ARAttributeComponent.h>
 
 
 // Sets default values

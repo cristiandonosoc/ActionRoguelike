@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/ARMagicProjectile.h>
 
-#include "ARMagicProjectile.h"
+#include <ARGame/ARAttributeComponent.h>
+#include <ARBase/BuildDefines.h>
 
-#include "ARAttributeComponent.h"
-#include "ARBase/BuildDefines.h"
-#include "Components/AudioComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystem.h"
-#include "Sound/SoundCue.h"
+#include <Components/AudioComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include <Particles/ParticleSystem.h>
+#include <Sound/SoundCue.h>
 
 // Sets default values
 AARMagicProjectile::AARMagicProjectile()

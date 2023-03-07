@@ -2,14 +2,11 @@
 
 #pragma once
 
-#include "BehaviorTree/BTService.h"
-#include "CoreMinimal.h"
+#include <BehaviorTree/BTService.h>
+#include <CoreMinimal.h>
 
 #include "ARBTService_CheckAttackRange.generated.h"
 
-/**
- *
- */
 UCLASS()
 class ARGAME_API UARBTService_CheckAttackRange : public UBTService
 {
@@ -21,7 +18,7 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere)
 	float AttackRange = 2000.0f;
-	
+
 	UPROPERTY(EditAnywhere)
 	FBlackboardKeySelector TargetActorKey;
 

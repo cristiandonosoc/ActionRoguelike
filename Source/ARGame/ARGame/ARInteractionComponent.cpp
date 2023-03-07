@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/ARInteractionComponent.h>
 
-#include "ARInteractionComponent.h"
+#include <ARGame/ARGameplayInterface.h>
 
-#include "ARGameplayInterface.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Templates/NonNullPointer.h"
+#include <Kismet/KismetMathLibrary.h>
+#include <Templates/NonNullPointer.h>
 
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()

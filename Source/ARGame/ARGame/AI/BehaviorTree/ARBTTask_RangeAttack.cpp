@@ -1,13 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/AI/BehaviorTree/ARBTTask_RangeAttack.h>
 
-#include "ARBTTask_RangeAttack.h"
+#include <ARGame/AI/ARAICharacter.h>
 
-#include "AIController.h"
-#include "ARAICharacter.h"
-#include "ARBase/NotNullPtr.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "GameFramework/Character.h"
+#include <AIController.h>
+#include <ARBase/NotNullPtr.h>
+#include <BehaviorTree/BlackboardComponent.h>
 
 EBTNodeResult::Type UARBTTask_RangeAttack::ExecuteTask(UBehaviorTreeComponent& owner,
 													   uint8* node_memory)

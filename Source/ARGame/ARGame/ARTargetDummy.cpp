@@ -1,9 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/ARTargetDummy.h>
 
-#include "ARTargetDummy.h"
-
-#include "ARAttributeComponent.h"
+#include <ARGame/ARAttributeComponent.h>
 
 // Sets default values
 AARTargetDummy::AARTargetDummy()

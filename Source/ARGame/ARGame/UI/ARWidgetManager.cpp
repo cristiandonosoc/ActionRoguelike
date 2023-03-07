@@ -1,12 +1,10 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
+#include <ARGame/UI/ARWidgetManager.h>
 
-#include "ARWidgetManager.h"
-
-
-#include "ARBase/NotNullPtr.h"
-#include "ARDamagePopupWidget.h"
-#include "ARGame/Subsystems/ARWidgetSubsystem.h"
+#include <ARBase/NotNullPtr.h>
+#include <ARGame/Subsystems/ARWidgetSubsystem.h>
+#include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
 
 namespace
 {
