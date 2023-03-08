@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <ARBase/NotNullPtr.h>
+
 #include <CoreMinimal.h>
 #include <GameFramework/GameModeBase.h>
 
@@ -22,6 +24,14 @@ public:
 	AARGameModeBase();
 
 	virtual void StartPlay() override;
+
+	// Global event for when an actor has been killed (mostly defined by AttributeComponent).
+	// NOTE: |killer| can be null.
+	virtual void OnActorKilled(NotNullPtr<AActor> victim, AActor* killer);
+
+protected:
+	UFUNCTION()
+	void RespawnPlayerTimerElapsed(AController* player_controller);
 
 private:
 	void OnSpawnBotTimerElapsed();

@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include <ARGame/ARAttributeComponent.h>
+#include <ARGame/ARGameModeBase.h>
 
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
 {
@@ -82,6 +83,10 @@ bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 	if (Health == 0.0f && prev > 0.0f)
 	{
 		payload.Flags = SetFlag(payload.Flags, FOnHealthChangedPayload::FLAG_KILLED);
+
+		// Let the game mode know this character was killed.
+		NotNullPtr game_mode = GetWorld()->GetAuthGameMode<AARGameModeBase>();
+		game_mode->OnActorKilled(GetOwner(), instigator);
 	}
 
 	OnHealthChanged.Broadcast(payload);

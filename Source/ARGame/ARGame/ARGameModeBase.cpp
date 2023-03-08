@@ -2,11 +2,12 @@
 
 #include <ARGame/ARGameModeBase.h>
 
-#include <ARGame/AI/ARAICharacter.h>
-#include <ARGame/ARAttributeComponent.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
+#include <ARGame/AI/ARAICharacter.h>
+#include <ARGame/ARAttributeComponent.h>
 
+#include <ARGame/ARCharacter.h>
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
 
@@ -15,7 +16,7 @@ AARGameModeBase::AARGameModeBase() {}
 void AARGameModeBase::StartPlay()
 {
 	Super::StartPlay();
-	
+
 	// TODO(cdc): Do async loading.
 	NotNullPtr streamer = GetGameInstance()->GetSubsystem<UARStreamingSubsystem>();
 	streamer->RequestSyncLoad(BotClassToSpawn);
@@ -24,6 +25,35 @@ void AARGameModeBase::StartPlay()
 	GetWorldTimerManager().SetTimer(SpawnBotTimerHandle, this,
 									&AARGameModeBase::OnSpawnBotTimerElapsed, SpawnBotInterval,
 									true);
+}
+
+void AARGameModeBase::OnActorKilled(NotNullPtr<AActor> victim, AActor* killer)
+{
+	UE_LOG(LogTemp, Log, TEXT("Actor %s died, killed by %s"), *GetNameSafe(victim),
+		   *GetNameSafe(killer));
+
+
+	// Check if it's a player.
+	AARCharacter* player = Cast<AARCharacter>(victim.Get());
+	if (!player)
+	{
+		return;
+	}
+
+	// Create a respawn delay.
+	FTimerHandle respawn_handle;
+	FTimerDelegate delegate;
+	delegate.BindUFunction(this, "RespawnPlayerTimerElapsed", player->GetController());
+	GetWorldTimerManager().SetTimer(respawn_handle, std::move(delegate), 2.0f, false);
+}
+
+void AARGameModeBase::RespawnPlayerTimerElapsed(AController* player_controller)
+{
+	if (ensure(player_controller))
+	{
+		player_controller->UnPossess();
+		RestartPlayer(player_controller);
+	}
 }
 
 namespace
