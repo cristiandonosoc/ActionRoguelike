@@ -1,8 +1,8 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARTargetDummy.h>
+#include <ARGame/Gameplay/Entities/ARTargetDummy.h>
 
-#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
 
 // Sets default values
 AARTargetDummy::AARTargetDummy()
@@ -16,7 +16,6 @@ AARTargetDummy::AARTargetDummy()
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 	Attributes->OnHealthChanged.AddDynamic(this, &AARTargetDummy::OnHealthChanged);
-
 }
 
 // Called when the game starts or when spawned

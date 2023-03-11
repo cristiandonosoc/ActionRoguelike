@@ -1,11 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include <ARGame/AI/BehaviorTree/ARBTService_CheckHealth.h>
 
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/AI/ARAICharacter.h>
 #include <ARGame/AI/ARAIController.h>
-#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
 
 #include <BehaviorTree/BlackboardComponent.h>
 

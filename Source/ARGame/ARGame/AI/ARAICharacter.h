@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ARGame/ARBaseProjectile.h>
+#include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
@@ -11,7 +11,6 @@
 
 class UAREnemyHealthBarWidget;
 struct FOnHealthChangedPayload;
-class AARBaseProjectile;
 class UARAttributeComponent;
 class UPawnSensingComponent;
 

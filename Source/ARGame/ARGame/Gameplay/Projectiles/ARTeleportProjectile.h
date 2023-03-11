@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ARGame/ARBaseProjectile.h>
+#include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 #include <CoreMinimal.h>
 
 #include "ARTeleportProjectile.generated.h"

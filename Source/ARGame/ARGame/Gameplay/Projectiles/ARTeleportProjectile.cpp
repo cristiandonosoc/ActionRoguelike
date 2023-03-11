@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARTeleportProjectile.h>
+#include <ARGame/Gameplay/Projectiles/ARTeleportProjectile.h>
 
 #include <ARBase/NotNullPtr.h>
 

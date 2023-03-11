@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARAttributeComponent.h>
-#include <ARGame/ARGameModeBase.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Base/ARGameModeBase.h>
 
 static TAutoConsoleVariable<float>
 	CVarDamageMultiplier(TEXT("ar.Attributes.DamageMultiplier"), 1.0f,
@@ -65,7 +65,7 @@ bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 	{
 		delta *= CVarDamageMultiplier.GetValueOnGameThread();
 	}
-	
+
 	if (!WouldHealthChangeApply(delta))
 	{
 		return false;

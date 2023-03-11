@@ -4,7 +4,7 @@
 
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/AI/ARAIController.h>
-#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/UI/ARWidgetManager.h>
 #include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
 
@@ -76,7 +76,7 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetCharacterMovement()->DisableMovement();
-		
+
 
 		// Rag-doll.
 		// We make all bones simulate physics.

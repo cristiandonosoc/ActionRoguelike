@@ -1,12 +1,12 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include <ARGame/ARGameModeBase.h>
+#include <ARGame/Gameplay/Base/ARGameModeBase.h>
 
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/AI/ARAICharacter.h>
-#include <ARGame/ARAttributeComponent.h>
-#include <ARGame/ARCharacter.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARCharacter.h>
 
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
@@ -87,7 +87,7 @@ void AARGameModeBase::OnSpawnBotTimerElapsed()
 		UE_LOG(LogTemp, Error, TEXT("GameMode: CVarSpawnBots not set"));
 		return;
 	}
-	
+
 	if (!SpawnLocationEnvQuery)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameMode: SpawnLocationEnvQuery not set"));

@@ -2,8 +2,8 @@
 
 #include <ARGame/Items/ARHealthPack.h>
 
-#include <ARGame/AI/ARAttributeFunctionLibrary.h>
-#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 
 // Sets default values
 AARHealthPack::AARHealthPack()

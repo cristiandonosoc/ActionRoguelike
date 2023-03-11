@@ -1,15 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARCharacter.h>
+#include <ARGame/Gameplay/ARCharacter.h>
 
-#include <ARBase/BuildDefines.h>
-#include <ARGame/ARAttributeComponent.h>
-#include <ARGame/ARBaseProjectile.h>
 #include <ARGame/ARDebugCategories.h>
-#include <ARGame/ARInteractionComponent.h>
+#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARInteractionComponent.h>
+#include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <Camera/CameraComponent.h>
-#include <DrawDebugHelpers.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Kismet/GameplayStatics.h>

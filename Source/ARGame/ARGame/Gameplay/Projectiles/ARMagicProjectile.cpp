@@ -1,10 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARMagicProjectile.h>
+#include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
 
 #include <ARBase/BuildDefines.h>
-#include <ARGame/AI/ARAttributeFunctionLibrary.h>
-#include <ARGame/ARAttributeComponent.h>
+#include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 
 #include <Components/AudioComponent.h>
 #include <Kismet/GameplayStatics.h>

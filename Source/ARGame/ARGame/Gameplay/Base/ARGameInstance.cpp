@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARGameInstance.h>
+#include <ARGame/Gameplay/Base/ARGameInstance.h>
 
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/Subsystems/ARWidgetSubsystem.h>

@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARItemChest.h>
+#include <ARGame/Gameplay/Entities/ARItemChest.h>
 
 // Sets default values
 AARItemChest::AARItemChest()

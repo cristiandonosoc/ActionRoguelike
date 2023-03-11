@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/ARBaseProjectile.h>
+#include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <Components/AudioComponent.h>
 #include <Components/SphereComponent.h>

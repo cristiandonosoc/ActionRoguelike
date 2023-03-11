@@ -1,9 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#include <ARGame/ARInteractionComponent.h>
+#include <ARGame/Gameplay/ARInteractionComponent.h>
 
 #include <ARGame/ARDebugCategories.h>
-#include <ARGame/ARGameplayInterface.h>
+#include <ARGame/Gameplay/ARGameplayInterface.h>
 
 #include <Kismet/KismetMathLibrary.h>
 #include <Templates/NonNullPointer.h>

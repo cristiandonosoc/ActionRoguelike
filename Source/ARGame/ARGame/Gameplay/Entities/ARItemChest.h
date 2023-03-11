@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <ARGame/ARGameplayInterface.h>
+#include <ARGame/Gameplay/ARGameplayInterface.h>
 
 #include <CoreMinimal.h>
 #include <GameFramework/Actor.h>
