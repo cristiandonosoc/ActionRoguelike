@@ -11,6 +11,8 @@
 #include <ARGame/UI/Widgets/AREnemyHealthBarWidget.h>
 #include <Blueprint/UserWidget.h>
 #include <BrainComponent.h>
+#include <Components/CapsuleComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
 #include <Perception/PawnSensingComponent.h>
 
 // Sets default values
@@ -71,6 +73,10 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 		// Stop BT.
 		NotNullPtr ai = Cast<AARAIController>(GetController());
 		ai->GetBrainComponent()->StopLogic(TEXT("Killed"));
+
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCharacterMovement()->DisableMovement();
+		
 
 		// Rag-doll.
 		// We make all bones simulate physics.

@@ -2,8 +2,9 @@
 
 #include <ARGame/ARMagicProjectile.h>
 
-#include <ARGame/ARAttributeComponent.h>
 #include <ARBase/BuildDefines.h>
+#include <ARGame/AI/ARAttributeFunctionLibrary.h>
+#include <ARGame/ARAttributeComponent.h>
 
 #include <Components/AudioComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -29,7 +30,6 @@ void AARMagicProjectile::BeginPlay()
 		Audio->SetSound(TravelSound);
 		Audio->Play(0.0f);
 	}
-
 }
 
 // Called every frame
@@ -61,12 +61,8 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 	// We see if the object we hit can receive damage.
 	if (other_actor)
 	{
-		if (auto* attributes = Cast<UARAttributeComponent>(
-				other_actor->GetComponentByClass(UARAttributeComponent::StaticClass())))
-		{
-			// We forward our instigator forward.
-			attributes->ApplyHealthChange(GetInstigator(), -Damage); // We apply a negative delta.
-		}
+		UARAttributeFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), other_actor, Damage,
+															hit);
 	}
 
 	FVector location = GetActorLocation();

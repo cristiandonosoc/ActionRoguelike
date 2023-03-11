@@ -2,9 +2,8 @@
 
 #include <ARGame/Items/ARHealthPack.h>
 
-#include <ARBase/NotNullPtr.h>
+#include <ARGame/AI/ARAttributeFunctionLibrary.h>
 #include <ARGame/ARAttributeComponent.h>
-
 
 // Sets default values
 AARHealthPack::AARHealthPack()
@@ -48,11 +47,9 @@ void AARHealthPack::Use_Implementation(APawn* interactor)
 {
 	Super::Use_Implementation(interactor);
 
+	bool affected = UARAttributeFunctionLibrary::ApplyHeal(this, interactor, HealAmount);
+
 	// At this point, it should be validated by CanUse that this interactor can interact with
 	// this pawn.
-	NotNullPtr attributes = Cast<UARAttributeComponent>(
-		interactor->GetComponentByClass(UARAttributeComponent::StaticClass()));
-
-	bool affected = attributes->ApplyHealthChange(this, HealAmount);
 	check(affected);
 }
