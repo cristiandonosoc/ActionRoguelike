@@ -23,8 +23,4 @@ public:
 
 	// target is where the camera is targeting.
 	void PrimaryInteract(const FVector& camera_target);
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 };

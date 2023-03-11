@@ -6,10 +6,14 @@
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/AI/ARAICharacter.h>
 #include <ARGame/ARAttributeComponent.h>
-
 #include <ARGame/ARCharacter.h>
+
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
+
+static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ar.GameMode.SpawnBots"), true,
+												TEXT("Enable spawning of bots via a timer"),
+												ECVF_Cheat);
 
 AARGameModeBase::AARGameModeBase() {}
 
@@ -78,6 +82,12 @@ int32 CountAliveBots(NotNullPtr<UWorld> world)
 
 void AARGameModeBase::OnSpawnBotTimerElapsed()
 {
+	if (!CVarSpawnBots.GetValueOnGameThread())
+	{
+		UE_LOG(LogTemp, Error, TEXT("GameMode: CVarSpawnBots not set"));
+		return;
+	}
+	
 	if (!SpawnLocationEnvQuery)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameMode: SpawnLocationEnvQuery not set"));

@@ -2,25 +2,25 @@
 
 #include <ARGame/ARInteractionComponent.h>
 
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/ARGameplayInterface.h>
 
 #include <Kismet/KismetMathLibrary.h>
 #include <Templates/NonNullPointer.h>
 
+AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::INTERACTION, true,
+						   "All the displays for player interactions");
+
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You
-	// can turn these features off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
 }
 
 void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 {
 	constexpr float interaction_distance = 1000.0f;
-	
+
 	TNonNullPtr<AActor> owner = GetOwner();
 
 	// Get the position/rotation of the character's eye.
@@ -40,16 +40,17 @@ void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 
 	FCollisionObjectQueryParams params = {};
 	params.AddObjectTypesToQuery(ECC_WorldDynamic);
-	
+
 	bool interacted = false;
-	
+
 	TArray<FHitResult> out_hits;
 	GetWorld()->SweepMultiByObjectType(out_hits, start, end, FQuat::Identity, params, shape);
 	for (const auto& hit : out_hits)
 	{
 		if (AActor* hit_actor = hit.GetActor())
 		{
-			DrawDebugSphere(GetWorld(), hit.Location, radius, 16, FColor::Yellow, false, 2, 0, 2);
+			ARDebugDraw::Sphere(ARDebugCategories::INTERACTION, GetWorld(), hit.Location, radius,
+								16, FColor::Yellow, 2, 2);
 
 			if (hit_actor->Implements<UARGameplayInterface>())
 			{
@@ -60,21 +61,13 @@ void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 				{
 					break;
 				}
-					
+
 				break;
 			}
 		}
 	}
 
 	FColor color = interacted ? FColor::Green : FColor::Red;
-	DrawDebugCylinder(GetWorld(), start, end, radius, 16, color, false, 2, 0, 2);
-}
-
-
-// Called when the game starts
-void UARInteractionComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
+	ARDebugDraw::Cylinder(ARDebugCategories::INTERACTION, GetWorld(), start, end, radius, 16, color,
+						  2, 2);
 }

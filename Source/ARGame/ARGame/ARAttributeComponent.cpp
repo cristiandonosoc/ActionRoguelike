@@ -3,6 +3,10 @@
 #include <ARGame/ARAttributeComponent.h>
 #include <ARGame/ARGameModeBase.h>
 
+static TAutoConsoleVariable<float>
+	CVarDamageMultiplier(TEXT("ar.Attributes.DamageMultiplier"), 1.0f,
+						 TEXT("How much damage should be multiplied on"), ECVF_Cheat);
+
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
 {
 	auto& attributes = GetAttributes(actor);
@@ -57,6 +61,11 @@ FORCEINLINE uint8 SetFlag(uint8 flags, uint8 mask)
 
 bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 {
+	if (delta < 0.0f)
+	{
+		delta *= CVarDamageMultiplier.GetValueOnGameThread();
+	}
+	
 	if (!WouldHealthChangeApply(delta))
 	{
 		return false;
