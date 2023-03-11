@@ -5,6 +5,7 @@
 #include <ARBase/BuildDefines.h>
 #include <ARGame/ARAttributeComponent.h>
 #include <ARGame/ARBaseProjectile.h>
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/ARInteractionComponent.h>
 
 #include <Camera/CameraComponent.h>
@@ -15,6 +16,9 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Particles/ParticleSystem.h>
 #include <Templates/NonNullPointer.h>
+
+AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::PLAYER_CHARACTER, false,
+						   "All the display about the player character");
 
 // Sets default values
 AARCharacter::AARCharacter()
@@ -51,6 +55,11 @@ void AARCharacter::BeginPlay()
 	Super::BeginPlay();
 }
 
+FVector AARCharacter::GetPawnViewLocation() const
+{
+	return Camera->GetComponentLocation();
+}
+
 // Called to bind functionality to input
 void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
 {
@@ -73,32 +82,23 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
 namespace
 {
 
-void Debug_DisplayCharacterRotation(const AARCharacter& character)
+void DisplayCharacterRotation(const AARCharacter& character)
 {
-#if AR_BUILD_DEBUG
 	constexpr float draw_scale = 100.0f;
 	constexpr float thickness = 5.0f;
 
-	FVector start = character.GetActorLocation() + (character.GetActorRightVector() * 100.0f);
+	FVector start = character.GetActorLocation() + character.GetActorRightVector() * 100.0f;
 
-	FVector actor_forward = start + (character.GetActorForwardVector() * 100.0f);
-	FVector controller_forward = start + (character.GetControlRotation().Vector() * 100.0f);
+	FVector actor_forward = start + character.GetActorForwardVector() * 100.0f;
+	FVector controller_forward = start + character.GetControlRotation().Vector() * 100.0f;
 
 	// Draw the lines.
-	TNonNullPtr<UWorld> world = character.GetWorld();
+	NotNullPtr<UWorld> world = character.GetWorld();
 
-	DrawDebugDirectionalArrow(world, start, actor_forward, draw_scale, FColor::Yellow, false, 0.0f,
-							  0, thickness);
-	DrawDebugDirectionalArrow(world, start, controller_forward, draw_scale, FColor::Green, false,
-							  0.0f, 0, thickness);
-#endif
-}
-
-void Debug_DisplayTarget(const AARCharacter& character, const FVector& target)
-{
-#if AR_BUILD_DEBUG
-	DrawDebugSphere(character.GetWorld(), target, 20.0f, 16, FColor::Orange, false, 0, 0, 2);
-#endif
+	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start, actor_forward,
+								  draw_scale, FColor::Yellow, 0, thickness);
+	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start,
+								  controller_forward, draw_scale, FColor::Green, 0, thickness);
 }
 
 // ObtainCameraTarget obtains where the player is looking at. Useful for several calculations to
@@ -136,7 +136,8 @@ FVector ObtainCameraTarget(const AARCharacter& character)
 	{
 		if (AActor* hit_actor = out_hit.GetActor(); hit_actor)
 		{
-			Debug_DisplayTarget(character, out_hit.Location);
+			ARDebugDraw::Sphere(ARDebugCategories::PLAYER_CHARACTER, character.GetWorld(),
+								out_hit.Location, 20.0f, 16, FColor::Orange, 0, 2);
 			return out_hit.Location;
 		}
 	}
@@ -157,7 +158,10 @@ void AARCharacter::Tick(float delta)
 
 	CameraTarget = ObtainCameraTarget(*this);
 
-	Debug_DisplayCharacterRotation(*this);
+	if (ARDebugDraw::IsCategoryEnabled(ARDebugCategories::PLAYER_CHARACTER))
+	{
+		DisplayCharacterRotation(*this);
+	}
 }
 
 

@@ -119,6 +119,12 @@ __DebugCategoryRegisterer::__DebugCategoryRegisterer(int32 category, std::string
 	categories[category] = std::move(data);
 }
 
+bool ARDebugDraw::IsCategoryEnabled(int32 category)
+{
+	const auto& data = FindCategoryData(category);
+	return data.Enabled;
+}
+
 void ARDebugDraw::EnableCategory(int32 category, bool enabled)
 {
 	auto& data = FindCategoryData(category);
@@ -141,6 +147,17 @@ void ARDebugDraw::Cylinder(int32 category, NotNullPtr<UWorld> world, const FVect
 	}
 
 	DrawDebugCylinder(world, start, end, radius, segments, color, false, lifetime, 0, thickness);
+}
+void ARDebugDraw::DirectionalArrow(int32 category, NotNullPtr<UWorld> world, const FVector& start,
+								   const FVector& end, float arrow_size, const FColor& color,
+								   float lifetime, float thickness)
+{
+	if (!IsCategoryEnabled(category))
+	{
+		return;
+	}
+
+	DrawDebugDirectionalArrow(world, start, end, arrow_size, color, false, lifetime, 0, thickness);
 }
 
 void ARDebugDraw::Sphere(int32 category, NotNullPtr<UWorld> world, const FVector& center,

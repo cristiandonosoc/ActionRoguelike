@@ -4,8 +4,8 @@
 
 #include "BlueprintUtils.generated.h"
 
-UCLASS(Abstract, BlueprintType)
-class UBlueprintUtils final : public UObject
+UCLASS()
+class UBlueprintUtils final : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
