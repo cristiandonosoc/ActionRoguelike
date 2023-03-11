@@ -8,6 +8,7 @@
 #include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 
+#include <ARGame/Gameplay/Base/ARPlayerState.h>
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
 
@@ -31,24 +32,52 @@ void AARGameModeBase::StartPlay()
 									true);
 }
 
-void AARGameModeBase::OnActorKilled(NotNullPtr<AActor> victim, AActor* killer)
+namespace
 {
-	UE_LOG(LogTemp, Log, TEXT("Actor %s died, killed by %s"), *GetNameSafe(victim),
-		   *GetNameSafe(killer));
 
+void SchedulePlayerForRevive(NotNullPtr<AARGameModeBase> game_mode, NotNullPtr<AARCharacter> player)
+{
+	// Create a respawn delay.
+	FTimerHandle respawn_handle;
+	FTimerDelegate delegate;
+	delegate.BindUFunction(game_mode.Get(), "RespawnPlayerTimerElapsed", player->GetController());
+	game_mode->GetWorldTimerManager().SetTimer(respawn_handle, std::move(delegate),
+											   game_mode->GetReviveInterval(), false);
+}
 
-	// Check if it's a player.
-	AARCharacter* player = Cast<AARCharacter>(victim.Get());
-	if (!player)
+void PayCreditsToKiller(NotNullPtr<AActor> killer, uint32 credits)
+{
+	if (credits <= 0)
+	{
+		return;
+	}
+	
+	if (!killer->Implements<UARCreditHolder>())
 	{
 		return;
 	}
 
-	// Create a respawn delay.
-	FTimerHandle respawn_handle;
-	FTimerDelegate delegate;
-	delegate.BindUFunction(this, "RespawnPlayerTimerElapsed", player->GetController());
-	GetWorldTimerManager().SetTimer(respawn_handle, std::move(delegate), 2.0f, false);
+	IARCreditHolder::Execute_AddCredits(killer, credits);
+}
+
+} // namespace
+
+void AARGameModeBase::OnActorKilled(NotNullPtr<AActor> victim, AActor* killer, uint32 credits)
+{
+	UE_LOG(LogTemp, Log, TEXT("Actor %s died, killed by %s"), *GetNameSafe(victim),
+		   *GetNameSafe(killer));
+
+	// Check if it's a player.
+	if (AARCharacter* player = Cast<AARCharacter>(victim.Get()))
+	{
+		SchedulePlayerForRevive(this, player);
+	}
+
+	if (!killer)
+	{
+		return;
+	}
+	PayCreditsToKiller(killer, credits);
 }
 
 void AARGameModeBase::RespawnPlayerTimerElapsed(AController* player_controller)

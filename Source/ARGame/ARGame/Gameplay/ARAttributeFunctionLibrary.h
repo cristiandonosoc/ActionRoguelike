@@ -9,6 +9,7 @@ class ARGAME_API UARAttributeFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
+	// Attributes.
 public:
 	UFUNCTION(BlueprintPure, Category = "Gameplay")
 	static bool ApplyDamage(AActor* instigator, AActor* target, float damage);

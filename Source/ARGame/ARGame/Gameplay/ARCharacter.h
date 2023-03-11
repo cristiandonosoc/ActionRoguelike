@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <ARGame/Gameplay/ARGameplayInterface.h>
+
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
 
@@ -18,20 +20,13 @@ class UParticleSystem;
 class USpringArmComponent;
 
 UCLASS()
-class ARGAME_API AARCharacter : public ACharacter
+class ARGAME_API AARCharacter : public ACharacter, public IARCreditHolder
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
 	AARCharacter();
-
-protected:
-	virtual void PostInitializeComponents() override;
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual FVector GetPawnViewLocation() const override;
 
 public:
 	// Called every frame
@@ -52,21 +47,33 @@ public:
 
 	void PrimaryInteract();
 
+	// INTERFACE_BEGIN(IARCreditHolder)
+	int32 GetCurrentCredits_Implementation() override;
+	virtual int32 AddCredits_Implementation(int32 credits) override;
+	virtual bool PayCredits_Implementation(int32 price) override;
+	// INTERFACE_END(IARCreditHolder)
+
 protected:
+	virtual void PostInitializeComponents() override;
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual FVector GetPawnViewLocation() const override;
+	
 	UFUNCTION()
 	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 
 protected:
-	UPROPERTY(VisibleAnywhere, Category="Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<USpringArmComponent> SpringArm;
 
-	UPROPERTY(VisibleAnywhere, Category="Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<UCameraComponent> Camera;
 
-	UPROPERTY(VisibleAnywhere, Category="Interaction")
+	UPROPERTY(VisibleAnywhere, Category = "Interaction")
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
@@ -86,7 +93,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	float AttackDelay = 0.4f;
-
 
 private:
 	// This is the timer associated with the wait needed to spawn the projectile.

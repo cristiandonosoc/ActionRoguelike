@@ -50,11 +50,11 @@ void UARInteractionComponent::PrimaryInteract(const FVector& camera_target)
 			ARDebugDraw::Sphere(ARDebugCategories::INTERACTION, GetWorld(), hit.Location, radius,
 								16, FColor::Yellow, 2, 2);
 
-			if (hit_actor->Implements<UARGameplayInterface>())
+			if (hit_actor->Implements<UARInteractable>())
 			{
 				TNonNullPtr<APawn> pawn = Cast<APawn>(owner.Get());
 
-				interacted = IARGameplayInterface::Execute_Interact(hit_actor, pawn);
+				interacted = IARInteractable::Execute_Interact(hit_actor, pawn);
 				if (interacted)
 				{
 					break;

@@ -4,6 +4,7 @@
 
 #include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
+#include <ARGame/Gameplay/ARCharacter.h>
 
 // Sets default values
 AARHealthPack::AARHealthPack()
@@ -24,7 +25,10 @@ void AARHealthPack::BeginPlay()
 
 bool AARHealthPack::CanUse_Implementation(APawn* interactor)
 {
-	Super::CanUse_Implementation(interactor);
+	if (!Super::CanUse_Implementation(interactor))
+	{
+		return false;
+	}
 
 	// Check if the user has some health attributes.
 	auto* attributes = Cast<UARAttributeComponent>(

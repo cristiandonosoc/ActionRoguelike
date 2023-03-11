@@ -5,6 +5,7 @@
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARInteractionComponent.h>
+#include <ARGame/Gameplay/Base/ARPlayerState.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <Camera/CameraComponent.h>
@@ -259,6 +260,31 @@ void AARCharacter::PrimaryInteract()
 	{
 		InteractionComponent->PrimaryInteract(CameraTarget);
 	}
+}
+
+int32 AARCharacter::GetCurrentCredits_Implementation()
+{
+	NotNullPtr game_state = GetPlayerStateChecked<AARPlayerState>();
+	return game_state->GetCredits();
+}
+
+int32 AARCharacter::AddCredits_Implementation(int32 credits)
+{
+	check(credits > 0);
+	NotNullPtr game_state = GetPlayerStateChecked<AARPlayerState>();
+	return game_state->ChangeCredits(credits);
+}
+
+bool AARCharacter::PayCredits_Implementation(int32 price)
+{
+	check(price > 0);
+	NotNullPtr game_state = GetPlayerStateChecked<AARPlayerState>();
+	if (game_state->GetCredits() < price)
+	{
+		return false;
+	}
+	game_state->ChangeCredits(-price);
+	return true;
 }
 
 void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)

@@ -12,7 +12,7 @@
 class UStaticMeshComponent;
 
 UCLASS()
-class ARGAME_API AARItemChest : public AActor, public IARGameplayInterface
+class ARGAME_API AARItemChest : public AActor, public IARInteractable
 {
 	GENERATED_BODY()
 

@@ -13,8 +13,15 @@ USTRUCT(BlueprintType)
 struct FOnHealthChangedPayload
 {
 	GENERATED_BODY();
-
+	
 	static constexpr uint8 FLAG_KILLED = 0b00000001;
+
+public:
+	// Convenient flags getters.
+	bool Killed() const { return Flags & FLAG_KILLED; }
+	void SetKilled() { Flags |= FLAG_KILLED; }
+
+public:
 
 	UPROPERTY(BlueprintReadOnly)
 	TWeakObjectPtr<AActor> Instigator;
@@ -40,9 +47,6 @@ struct FOnHealthChangedPayload
 
 	UPROPERTY(BlueprintReadOnly)
 	uint8 Flags;
-
-	// Convenient getters.
-	bool Killed() const { return Flags & FLAG_KILLED; }
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&,
@@ -92,6 +96,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float MaxHealth = 200;
+
+	// How many credits the owner gives when killed.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	int32 KilledCredits = 0;
 
 	// HealthMax, Stamina, Strength
 };

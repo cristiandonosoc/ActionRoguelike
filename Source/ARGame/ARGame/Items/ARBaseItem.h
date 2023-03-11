@@ -29,9 +29,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// INTERFACE_BEGIN(AARBaseItem)
 	virtual bool CanUse_Implementation(APawn* interactor);
-
-	// Use attempts to use the item on the given interactor.
-	// Use CanUse to check whether the item would be used on the given interactor.
 	virtual void Use_Implementation(APawn* interactor);
+	// INTERFACE_END(AARBaseItem)
+
+protected:
+	// How many credits are needed to use this item.
+	UPROPERTY(EditDefaultsOnly)
+	int32 Price = 0;
 };

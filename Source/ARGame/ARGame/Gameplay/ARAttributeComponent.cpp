@@ -2,6 +2,7 @@
 
 #include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/Gameplay/Base/ARGameModeBase.h>
+#include <Particles/Collision/ParticleModuleCollisionGPU.h>
 
 static TAutoConsoleVariable<float>
 	CVarDamageMultiplier(TEXT("ar.Attributes.DamageMultiplier"), 1.0f,
@@ -49,16 +50,6 @@ bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 	return true;
 }
 
-namespace
-{
-
-FORCEINLINE uint8 SetFlag(uint8 flags, uint8 mask)
-{
-	return flags | mask;
-}
-
-} // namespace
-
 bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 {
 	if (delta < 0.0f)
@@ -91,11 +82,11 @@ bool UARAttributeComponent::ApplyHealthChange(AActor* instigator, float delta)
 	// Check the flags.
 	if (Health == 0.0f && prev > 0.0f)
 	{
-		payload.Flags = SetFlag(payload.Flags, FOnHealthChangedPayload::FLAG_KILLED);
+		payload.SetKilled();
 
 		// Let the game mode know this character was killed.
 		NotNullPtr game_mode = GetWorld()->GetAuthGameMode<AARGameModeBase>();
-		game_mode->OnActorKilled(GetOwner(), instigator);
+		game_mode->OnActorKilled(GetOwner(), instigator, KilledCredits);
 	}
 
 	OnHealthChanged.Broadcast(payload);

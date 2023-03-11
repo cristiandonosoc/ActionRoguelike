@@ -27,7 +27,9 @@ public:
 
 	// Global event for when an actor has been killed (mostly defined by AttributeComponent).
 	// NOTE: |killer| can be null.
-	virtual void OnActorKilled(NotNullPtr<AActor> victim, AActor* killer);
+	virtual void OnActorKilled(NotNullPtr<AActor> victim, AActor* killer, uint32 credits);
+
+	float GetReviveInterval() const { return ReviveInterval; }
 
 protected:
 	UFUNCTION()
@@ -38,6 +40,9 @@ private:
 	void OnSpawnLocationEnvQueryResult(TSharedPtr<FEnvQueryResult> result);
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Player")
+	float ReviveInterval = 2.0f;
+	
 	// Time in seconds to spawn a new AI bot.
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	float SpawnBotInterval = 5.0f;
@@ -53,7 +58,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AI")
 	TSoftClassPtr<AARAICharacter> BotClassToSpawn;
-
 
 private:
 	FTimerHandle SpawnBotTimerHandle;

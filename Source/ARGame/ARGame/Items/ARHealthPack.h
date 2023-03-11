@@ -17,13 +17,14 @@ public:
 	// Sets default values for this actor's properties
 	AARHealthPack();
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// INTERFACE_BEGIN(ARBaseItem)
 	virtual bool CanUse_Implementation(APawn* interactor) override;
 	virtual void Use_Implementation(APawn* interactor) override;
+	// INTERFACE_END(ARBaseItem)
 
 protected:
 	UPROPERTY(EditDefaultsOnly)

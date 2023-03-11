@@ -14,7 +14,7 @@ class UCapsuleComponent;
 // ItemSpawner is meant to have certain types of items on it and have them spawn and track when
 // they need to be respawned or not.
 UCLASS()
-class ARGAME_API AARItemSpawner : public AActor, public IARGameplayInterface
+class ARGAME_API AARItemSpawner : public AActor, public IARInteractable
 {
 	GENERATED_BODY()
 
