@@ -1,6 +1,6 @@
 ﻿#include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 
-#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 namespace
 {

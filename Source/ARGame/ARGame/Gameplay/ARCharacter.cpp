@@ -3,9 +3,10 @@
 #include <ARGame/Gameplay/ARCharacter.h>
 
 #include <ARGame/ARDebugCategories.h>
-#include <ARGame/Gameplay/ARAttributeComponent.h>
-#include <ARGame/Gameplay/ARInteractionComponent.h>
 #include <ARGame/Gameplay/Base/ARPlayerState.h>
+#include <ARGame/Gameplay/Components/ARActionComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <Camera/CameraComponent.h>
@@ -39,6 +40,8 @@ AARCharacter::AARCharacter()
 	InteractionComponent = CreateDefaultSubobject<UARInteractionComponent>("InteractionComponent");
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
+
+	Actions = CreateDefaultSubobject<UARActionComponent>("Actions");
 }
 
 void AARCharacter::PostInitializeComponents()
@@ -73,6 +76,9 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
 	player_input->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
 	player_input->BindAction("DashAttack", IE_Pressed, this, &AARCharacter::DashAttack);
 	player_input->BindAction("UltimateAttack", IE_Pressed, this, &AARCharacter::UltimateAttack);
+
+	player_input->BindAction("Sprint", IE_Pressed, this, &AARCharacter::SprintStart);
+	player_input->BindAction("Sprint", IE_Released, this, &AARCharacter::SprintEnd);
 
 	player_input->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	player_input->BindAction("Interact", IE_Pressed, this, &AARCharacter::PrimaryInteract);
@@ -219,6 +225,16 @@ void AARCharacter::DashAttack()
 void AARCharacter::UltimateAttack()
 {
 	TryFireProjectile(this, TEXT("UltimateAttack"), UltimateAttackProjectile);
+}
+
+void AARCharacter::SprintStart()
+{
+	Actions->StartAction("sprint", this);
+}
+
+void AARCharacter::SprintEnd()
+{
+	Actions->StopAction("sprint", this);
 }
 
 void AARCharacter::ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class)

@@ -2,7 +2,7 @@
 
 #include <ARGame/Gameplay/Entities/ARTargetDummy.h>
 
-#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 // Sets default values
 AARTargetDummy::AARTargetDummy()

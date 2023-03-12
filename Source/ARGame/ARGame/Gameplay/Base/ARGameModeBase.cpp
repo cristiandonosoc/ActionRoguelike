@@ -5,10 +5,9 @@
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/AI/ARAICharacter.h>
-#include <ARGame/Gameplay/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARCharacter.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
-#include <ARGame/Gameplay/Base/ARPlayerState.h>
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
 
@@ -51,7 +50,7 @@ void PayCreditsToKiller(NotNullPtr<AActor> killer, uint32 credits)
 	{
 		return;
 	}
-	
+
 	if (!killer->Implements<UARCreditHolder>())
 	{
 		return;

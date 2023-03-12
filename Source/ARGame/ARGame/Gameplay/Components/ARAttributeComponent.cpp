@@ -1,6 +1,6 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/Gameplay/Base/ARGameModeBase.h>
 #include <Particles/Collision/ParticleModuleCollisionGPU.h>
 

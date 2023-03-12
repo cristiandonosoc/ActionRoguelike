@@ -2,7 +2,7 @@
 
 #include <ARGame/Items/ARHealthPack.h>
 
-#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 

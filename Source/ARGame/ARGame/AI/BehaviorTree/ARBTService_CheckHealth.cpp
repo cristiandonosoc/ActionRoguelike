@@ -3,7 +3,7 @@
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/AI/ARAICharacter.h>
 #include <ARGame/AI/ARAIController.h>
-#include <ARGame/Gameplay/ARAttributeComponent.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 #include <BehaviorTree/BlackboardComponent.h>
 

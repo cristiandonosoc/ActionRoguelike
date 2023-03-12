@@ -1,4 +1,4 @@
-#include <ARGame/Gameplay/ARInteractionComponent.h>
+#include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>

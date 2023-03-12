@@ -11,6 +11,7 @@
 
 struct FOnHealthChangedPayload;
 class AARBaseProjectile;
+class UARActionComponent;
 class UARAttributeComponent;
 class UARInteractionComponent;
 
@@ -42,6 +43,9 @@ public:
 	void DashAttack();
 	void UltimateAttack();
 
+	void SprintStart();
+	void SprintEnd();
+
 	void ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class);
 	void ProjectileAnimationEnd();
 
@@ -59,7 +63,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual FVector GetPawnViewLocation() const override;
-	
+
 	UFUNCTION()
 	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 
@@ -76,6 +80,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
 
+	UPROPERTY(EditAnywhere, Category = "Actions")
+	TObjectPtr<UARActionComponent> Actions;
+
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> PrimaryAttackProjectile;
 
@@ -85,18 +92,18 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
 
+	UPROPERTY(EditAnywhere, Category = "Attacks")
+	float AttackDelay = 0.4f;
+
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	UAnimMontage* AttackAnimation;
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	TSubclassOf<UCameraShakeBase> CameraShake;
 
-	UPROPERTY(EditAnywhere, Category = "Attacks")
-	float AttackDelay = 0.4f;
-
 private:
 	// This is the timer associated with the wait needed to spawn the projectile.
-	// TOOD(cdc): Use animation notifications.
+	// TODO(cdc): Use animation notifications.
 	FTimerHandle ProjectileTimerHandle;
 
 	// This is the class of the current projectile we're spawning.
