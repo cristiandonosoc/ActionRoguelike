@@ -5,7 +5,7 @@
 
 #include "ARAction.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class ARGAME_API UARAction : public UObject
 {
 	GENERATED_BODY()

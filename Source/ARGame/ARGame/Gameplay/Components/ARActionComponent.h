@@ -17,15 +17,15 @@ public:
 	UARActionComponent();
 
 public:
-	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void AddAction(TSubclassOf<UARAction> action_class);
 
 	// |all_instances| determines whether we're starting all the instances of just the first one.
-	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	bool StartAction(const FName& name, AActor* instigator, bool all_instances = false);
 
 	// |all_instances| determines whether we're starting all the instances of just the first one.
-	UFUNCTION(BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	bool StopAction(const FName& name, AActor* instigator, bool all_instances = false);
 
 protected:

@@ -80,7 +80,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
 
-	UPROPERTY(EditAnywhere, Category = "Actions")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 	TObjectPtr<UARActionComponent> Actions;
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
