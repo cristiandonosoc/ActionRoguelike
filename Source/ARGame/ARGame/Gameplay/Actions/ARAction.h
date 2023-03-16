@@ -19,6 +19,8 @@ public:
 
 	const FName& GetActionName() const { return ActionName; }
 
+	virtual UWorld* GetWorld() const override;
+
 protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual void Start_Implementation(AActor* instigator);

@@ -1,7 +1,7 @@
 ﻿#include <ARGame/Gameplay/Components/ARActionComponent.h>
 
 #include <ARBase/NotNullPtr.h>
-#include <ARGame/Gameplay/ARAction.h>
+#include <ARGame/Gameplay/Actions/ARAction.h>
 
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()

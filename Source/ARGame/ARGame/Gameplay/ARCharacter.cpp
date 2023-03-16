@@ -15,7 +15,6 @@
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Particles/ParticleSystem.h>
-#include <Templates/NonNullPointer.h>
 
 AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::PLAYER_CHARACTER, false,
 						   "All the display about the player character");
@@ -197,16 +196,11 @@ void AARCharacter::MoveRight(float val)
 namespace
 {
 
-void TryFireProjectile(AARCharacter* character, const FString& name,
-					   const TSubclassOf<AARBaseProjectile>& projectile_class)
+void TryRunProjectile(NotNullPtr<AARCharacter> character, const FName& action_name)
 {
-	if (ensure(projectile_class))
+	if (!character->GetActions()->StartAction(action_name, character, false))
 	{
-		character->ProjectileAnimationStart(projectile_class);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s not set"), *name);
+		UE_LOG(LogTemp, Warning, TEXT("%s not set"), *action_name.ToString());
 	}
 }
 
@@ -214,17 +208,17 @@ void TryFireProjectile(AARCharacter* character, const FString& name,
 
 void AARCharacter::PrimaryAttack()
 {
-	TryFireProjectile(this, TEXT("PrimaryAttack"), PrimaryAttackProjectile);
+	TryRunProjectile(this, "PrimaryAttack");
 }
 
 void AARCharacter::DashAttack()
 {
-	TryFireProjectile(this, TEXT("DashAttack"), DashAttackProjectile);
+	TryRunProjectile(this, "DashAttack");
 }
 
 void AARCharacter::UltimateAttack()
 {
-	TryFireProjectile(this, TEXT("UltimateAttack"), UltimateAttackProjectile);
+	TryRunProjectile(this, "UltimateAttack");
 }
 
 void AARCharacter::SprintStart()
@@ -235,39 +229,6 @@ void AARCharacter::SprintStart()
 void AARCharacter::SprintEnd()
 {
 	Actions->StopAction("sprint", this);
-}
-
-void AARCharacter::ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class)
-{
-	// We play the attack animation and then we setup a timer to spawn the projectile once we're
-	// done with that animation.
-	// TODO(cdc): Use anim notify.
-	CurrentProjectileClass = projectile_class;
-	PlayAnimMontage(AttackAnimation);
-	GetWorldTimerManager().SetTimer(ProjectileTimerHandle, this,
-									&AARCharacter::ProjectileAnimationEnd, AttackDelay, false);
-}
-
-void AARCharacter::ProjectileAnimationEnd()
-{
-	check(CurrentProjectileClass);
-
-	auto projectile_class = CurrentProjectileClass;
-	CurrentProjectileClass = nullptr;
-
-	// Obtain the place in the hand where we will spawn from.
-	FVector hand_location = GetMesh()->GetSocketLocation("Muzzle_01");
-
-	// We make it spawn with the rotation of the camera target.
-	FRotator rotation = UKismetMathLibrary::FindLookAtRotation(hand_location, CameraTarget);
-
-	FTransform spawn_transform = FTransform(rotation, hand_location);
-
-	FActorSpawnParameters params = {};
-	TNonNullPtr<APawn> pawn = Cast<APawn>(this);
-	params.Instigator = pawn;
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	GetWorld()->SpawnActor<AActor>(projectile_class.Get(), spawn_transform, params);
 }
 
 void AARCharacter::PrimaryInteract()

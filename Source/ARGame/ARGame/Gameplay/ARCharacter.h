@@ -4,6 +4,7 @@
 
 #include <ARGame/Gameplay/ARGameplayInterface.h>
 
+#include <ARBase/NotNullPtr.h>
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
 
@@ -46,9 +47,6 @@ public:
 	void SprintStart();
 	void SprintEnd();
 
-	void ProjectileAnimationStart(const TSubclassOf<AARBaseProjectile>& projectile_class);
-	void ProjectileAnimationEnd();
-
 	void PrimaryInteract();
 
 	// INTERFACE_BEGIN(IARCreditHolder)
@@ -56,6 +54,9 @@ public:
 	virtual int32 AddCredits_Implementation(int32 credits) override;
 	virtual bool PayCredits_Implementation(int32 price) override;
 	// INTERFACE_END(IARCreditHolder)
+
+	NotNullPtr<UARActionComponent> GetActions() { return Actions.Get(); }
+	const FVector& GetCameraTarget() const { return CameraTarget; }
 
 protected:
 	virtual void PostInitializeComponents() override;
@@ -92,23 +93,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
 
-	UPROPERTY(EditAnywhere, Category = "Attacks")
-	float AttackDelay = 0.4f;
-
-	UPROPERTY(EditAnywhere, Category = "Animations")
-	UAnimMontage* AttackAnimation;
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	TSubclassOf<UCameraShakeBase> CameraShake;
 
 private:
-	// This is the timer associated with the wait needed to spawn the projectile.
-	// TODO(cdc): Use animation notifications.
-	FTimerHandle ProjectileTimerHandle;
-
-	// This is the class of the current projectile we're spawning.
-	TSubclassOf<AARBaseProjectile> CurrentProjectileClass;
-
 	// This is where the player is looking from the camera at any given frame.
 	// This is used by other systems to correctly point their target
 	FVector CameraTarget;

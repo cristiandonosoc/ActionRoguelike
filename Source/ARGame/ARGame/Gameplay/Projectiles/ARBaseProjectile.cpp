@@ -53,9 +53,8 @@ void AARBaseProjectile::BeginPlay()
 	// TODO(cdc): This is really part of a weapon and probably should not be part of the projectile.
 	if (MuzzleEffect)
 	{
-		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, CollisionSphere, "Muzzle",
-											   GetActorLocation(), GetActorRotation(), FVector(1),
-											   EAttachLocation::KeepWorldPosition);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleEffect, GetActorLocation(),
+												 GetActorRotation());
 	}
 }
 
