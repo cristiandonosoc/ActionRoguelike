@@ -1,12 +1,32 @@
 ﻿#include <ARGame/Gameplay/Components/ARActionComponent.h>
 
 #include <ARBase/NotNullPtr.h>
+#include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
 
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+}
+
+void UARActionComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	// TODO(cdc): Do async loading.
+	NotNullPtr streamer = GetWorld()->GetGameInstance()->GetSubsystem<UARStreamingSubsystem>();
+	auto paths = UARStreamingSubsystem::ExtractSoftObjectPaths(DefaultActions);
+	streamer->RequestSyncLoad(paths);
+
+	// Now that the classes are loaded, we can create the objects.
+	for (const TSoftClassPtr<UARAction> action_soft_class : DefaultActions)
+	{
+		UClass* uclass = action_soft_class.Get();
+		check(uclass);
+
+		AddAction(TSubclassOf<UARAction>(uclass));
+	}
 }
 
 void UARActionComponent::AddAction_Implementation(TSubclassOf<UARAction> action_class)

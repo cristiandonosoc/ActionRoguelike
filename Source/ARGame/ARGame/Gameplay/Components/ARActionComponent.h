@@ -16,6 +16,8 @@ public:
 	// Sets default values for this component's properties
 	UARActionComponent();
 
+	virtual void BeginPlay() override;
+
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void AddAction(TSubclassOf<UARAction> action_class);
@@ -38,6 +40,10 @@ protected:
 	// INTERFACE_END(UARActionComponent)
 
 protected:
+	// Default actions will be created upon startup.
+	UPROPERTY(EditAnywhere, Category = "Actions")
+	TArray<TSoftClassPtr<UARAction>> DefaultActions;
+	
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UARAction>> Actions;
 };

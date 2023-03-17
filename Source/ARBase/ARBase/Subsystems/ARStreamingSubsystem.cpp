@@ -1,3 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
+
+void UARStreamingSubsystem::RequestSyncLoad(const TArray<FSoftObjectPath>& paths)
+{
+	StreamManager.RequestSyncLoad(paths, false);
+}
