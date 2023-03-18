@@ -22,7 +22,6 @@ public:
 	void SetKilled() { Flags |= FLAG_KILLED; }
 
 public:
-
 	UPROPERTY(BlueprintReadOnly)
 	TWeakObjectPtr<AActor> Instigator;
 

@@ -2,6 +2,8 @@
 
 #include <Components/ActorComponent.h>
 #include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
+#include <Kismet/BlueprintPlatformLibrary.h>
 
 #include "ARActionComponent.generated.h"
 
@@ -17,6 +19,9 @@ public:
 	UARActionComponent();
 
 	virtual void BeginPlay() override;
+	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+							   FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
@@ -30,6 +35,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	bool StopAction(const FName& name, AActor* instigator, bool all_instances = false);
 
+
+	FGameplayTagContainer& GetActiveGameplayTags() { return ActiveGameplayTags; }
+
 protected:
 	// INTERFACE_BEGIN(UARActionComponent)
 	virtual void AddAction_Implementation(TSubclassOf<UARAction> action_class);
@@ -40,10 +48,13 @@ protected:
 	// INTERFACE_END(UARActionComponent)
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	FGameplayTagContainer ActiveGameplayTags;
+
 	// Default actions will be created upon startup.
 	UPROPERTY(EditAnywhere, Category = "Actions")
 	TArray<TSoftClassPtr<UARAction>> DefaultActions;
-	
+
 	UPROPERTY(EditAnywhere)
 	TArray<TObjectPtr<UARAction>> Actions;
 };

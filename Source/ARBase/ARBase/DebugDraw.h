@@ -43,23 +43,25 @@ public:
 	FORCEINLINE static bool IsCategoryEnabled(int32 category) { return false; }
 #endif // AR_DEBUG_DRAW_ENABLED
 
-
 	static void EnableCategory(int32 category, bool enabled) AR_DEBUG_DRAW_IMPLEMENTATION;
 	static void ToggleCategory(int32 category) AR_DEBUG_DRAW_IMPLEMENTATION;
 
 	// Draw Functions.
 
+	static void Text(int32 category, const FString& msg, const FColor& color,
+					 float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
+
 	static void Cylinder(int32 category, NotNullPtr<UWorld> world, const FVector& start,
 						 const FVector& end, float radius, float segments, const FColor& color,
-						 float lifetime, float thickness) AR_DEBUG_DRAW_IMPLEMENTATION;
+						 float thickness, float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
 
 	static void DirectionalArrow(int32 category, NotNullPtr<UWorld> world, const FVector& start,
 								 const FVector& end, float arrow_size, const FColor& color,
-								 float lifetime, float thickness);
+								 float thickness, float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
 
 	static void Sphere(int32 category, NotNullPtr<UWorld> world, const FVector& center,
-					   float radius, float segments, const FColor& color, float lifetime,
-					   float thickness) AR_DEBUG_DRAW_IMPLEMENTATION;
+					   float radius, float segments, const FColor& color, float thickness,
+					   float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
 };
 
 class ARBASE_API __DebugCategoryRegisterer

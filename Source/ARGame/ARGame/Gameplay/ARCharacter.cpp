@@ -100,9 +100,9 @@ void DisplayCharacterRotation(const AARCharacter& character)
 	NotNullPtr<UWorld> world = character.GetWorld();
 
 	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start, actor_forward,
-								  draw_scale, FColor::Yellow, 0, thickness);
+								  draw_scale, FColor::Yellow, thickness);
 	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start,
-								  controller_forward, draw_scale, FColor::Green, 0, thickness);
+								  controller_forward, draw_scale, FColor::Green, thickness);
 }
 
 // ObtainCameraTarget obtains where the player is looking at. Useful for several calculations to
@@ -141,7 +141,7 @@ FVector ObtainCameraTarget(const AARCharacter& character)
 		if (AActor* hit_actor = out_hit.GetActor(); hit_actor)
 		{
 			ARDebugDraw::Sphere(ARDebugCategories::PLAYER_CHARACTER, character.GetWorld(),
-								out_hit.Location, 20.0f, 16, FColor::Orange, 0, 2);
+								out_hit.Location, 20.0f, 16, FColor::Orange, 2);
 			return out_hit.Location;
 		}
 	}

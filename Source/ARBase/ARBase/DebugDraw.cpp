@@ -61,17 +61,6 @@ DebugCategoryData& FindCategoryData(int32 category)
 	return it->second;
 }
 
-bool IsCategoryEnabled(int32 category)
-{
-	const auto& data = FindCategoryData(category);
-	if (!data.Enabled)
-	{
-		return false;
-	}
-
-	return true;
-}
-
 } // namespace
 
 __DebugCategoryRegisterer::__DebugCategoryRegisterer(int32 category, std::string&& name,
@@ -136,10 +125,19 @@ void ARDebugDraw::ToggleCategory(int32 category)
 	auto& data = FindCategoryData(category);
 	data.Enabled = !data.Enabled;
 }
+void ARDebugDraw::Text(int32 category, const FString& msg, const FColor& color, float lifetime)
+{
+	if (!IsCategoryEnabled(category))
+	{
+		return;
+	}
+
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color, msg);
+}
 
 void ARDebugDraw::Cylinder(int32 category, NotNullPtr<UWorld> world, const FVector& start,
 						   const FVector& end, float radius, float segments, const FColor& color,
-						   float lifetime, float thickness)
+						   float thickness, float lifetime)
 {
 	if (!IsCategoryEnabled(category))
 	{
@@ -150,7 +148,7 @@ void ARDebugDraw::Cylinder(int32 category, NotNullPtr<UWorld> world, const FVect
 }
 void ARDebugDraw::DirectionalArrow(int32 category, NotNullPtr<UWorld> world, const FVector& start,
 								   const FVector& end, float arrow_size, const FColor& color,
-								   float lifetime, float thickness)
+								   float thickness, float lifetime)
 {
 	if (!IsCategoryEnabled(category))
 	{
@@ -161,8 +159,8 @@ void ARDebugDraw::DirectionalArrow(int32 category, NotNullPtr<UWorld> world, con
 }
 
 void ARDebugDraw::Sphere(int32 category, NotNullPtr<UWorld> world, const FVector& center,
-						 float radius, float segments, const FColor& color, float lifetime,
-						 float thickness)
+						 float radius, float segments, const FColor& color, float thickness,
+						 float lifetime)
 {
 	if (!IsCategoryEnabled(category))
 	{
