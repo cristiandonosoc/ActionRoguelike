@@ -3,6 +3,8 @@
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
 
 #include <ARBase/BuildDefines.h>
+#include <ARBase/DebugDraw.h>
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 
 #include <Components/AudioComponent.h>
@@ -62,13 +64,17 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 	{
 		UARAttributeFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), other_actor, Damage,
 															hit);
+
+		ARDebugDraw::DirectionalArrow(ARDebugCategories::PROJECTILES, GetWorld(), hit.TraceStart,
+									  hit.TraceEnd, 20, FColor::Red, 2, 2);
 	}
 
 	FVector location = GetActorLocation();
 	FRotator rotation = GetActorRotation();
 
 	// We draw the debug collision.
-	Debug_DrawDebugSphere(GetWorld(), location, 20, 16, FColor::Yellow, false, 1, 0, 1);
+	ARDebugDraw::Sphere(ARDebugCategories::PROJECTILES, GetWorld(), location, 20, 16,
+						FColor::Yellow, 1, 1);
 
 	// Spawn a particle effect for the collision.
 	if (ensure(ExplosionParticle))

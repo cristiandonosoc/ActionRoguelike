@@ -2,11 +2,15 @@
 
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
+#include <ARGame/ARDebugCategories.h>
 #include <Components/AudioComponent.h>
 #include <Components/SphereComponent.h>
 #include <GameFramework/ProjectileMovementComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Particles/ParticleSystemComponent.h>
+
+AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::PROJECTILES, true,
+						   "All the display about projectiles");
 
 // Sets default values
 AARBaseProjectile::AARBaseProjectile()

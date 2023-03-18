@@ -35,7 +35,10 @@ bool UARAttributeFunctionLibrary::ApplyDirectionalDamage(AActor* instigator, AAc
 	UPrimitiveComponent* primitive = hit.GetComponent();
 	if (primitive && primitive->IsSimulatingPhysics(hit.BoneName))
 	{
-		primitive->AddImpulseAtLocation(hit.Location, -hit.ImpactNormal * 30000.0f, hit.BoneName);
+		FVector direction = hit.TraceEnd - hit.TraceStart;
+		direction.Normalize();
+
+		primitive->AddImpulseAtLocation(hit.Location, direction * 30000.0f, hit.BoneName);
 	}
 
 	return true;

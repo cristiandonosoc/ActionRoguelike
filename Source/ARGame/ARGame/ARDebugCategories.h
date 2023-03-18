@@ -10,4 +10,5 @@ class ARDebugCategories
 public:
 	static constexpr uint32 INTERACTION = 0;
 	static constexpr uint32 PLAYER_CHARACTER = 1;
+	static constexpr uint32 PROJECTILES = 2;
 };
