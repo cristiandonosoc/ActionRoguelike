@@ -5,6 +5,7 @@
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
 #include "ARMagicProjectile.generated.h"
 
@@ -34,6 +35,9 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
 	float Damage = 80;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
+	FGameplayTag ParryTag;
 
 	UPROPERTY(EditAnywhere, Category = "Particles")
 	TObjectPtr<UParticleSystem> ExplosionParticle;
