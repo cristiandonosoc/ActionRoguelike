@@ -53,18 +53,36 @@ void UARActionComponent::AddAction_Implementation(TSubclassOf<UARAction> action_
 	Actions.Add(std::move(action));
 }
 
+void UARActionComponent::RemoveAction_Implementation(const FName& name)
+{
+	int32 index = INDEX_NONE;
+	for (int32 i = 0; i < Actions.Num(); i++)
+	{
+		if (Actions[i]->GetActionName() == name)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	check(index != INDEX_NONE);
+	check(Actions[index]->GetIsRunning());
+
+	Actions.RemoveAt(index);
+}
+
 bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* instigator,
 													bool all_instances)
 {
 	// We search for one action that matches the parameters.
 	bool found = false;
-	for (const TObjectPtr<UARAction> action : Actions)
+	for (const TObjectPtr<UARAction>& action : Actions)
 	{
 		if (action->GetActionName() != name)
 		{
 			continue;
 		}
-		
+
 		found = true;
 		if (!action->CanStart(instigator))
 		{
@@ -93,7 +111,7 @@ bool UARActionComponent::StopAction_Implementation(const FName& name, AActor* in
 												   bool all_instances)
 {
 	bool found = false;
-	for (const TObjectPtr<UARAction> action : Actions)
+	for (const TObjectPtr<UARAction>& action : Actions)
 	{
 		if (action->GetActionName() != name)
 		{

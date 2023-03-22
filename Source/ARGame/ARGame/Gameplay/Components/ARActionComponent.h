@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	void AddAction(TSubclassOf<UARAction> action_class);
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	void RemoveAction(const FName& name);
+
 	// |all_instances| determines whether we're starting all the instances of just the first one.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
 	bool StartAction(const FName& name, AActor* instigator, bool all_instances = false);
@@ -41,6 +44,7 @@ public:
 protected:
 	// INTERFACE_BEGIN(UARActionComponent)
 	virtual void AddAction_Implementation(TSubclassOf<UARAction> action_class);
+	virtual void RemoveAction_Implementation(const FName& name);
 	virtual bool StartAction_Implementation(const FName& name, AActor* instigator,
 											bool all_instances);
 	virtual bool StopAction_Implementation(const FName& name, AActor* instigator,

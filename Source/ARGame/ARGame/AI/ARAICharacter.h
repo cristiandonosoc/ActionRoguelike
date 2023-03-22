@@ -9,6 +9,7 @@
 
 #include "ARAICharacter.generated.h"
 
+class UARActionComponent;
 class UAREnemyHealthBarWidget;
 struct FOnHealthChangedPayload;
 class UARAttributeComponent;
@@ -37,6 +38,9 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
+	TObjectPtr<UARActionComponent> Actions;
 
 	UPROPERTY(EditAnywhere, Category = "AI")
 	TObjectPtr<UPawnSensingComponent> PawnSenses;

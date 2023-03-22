@@ -4,11 +4,12 @@
 
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/AI/ARAIController.h>
+#include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/UI/ARWidgetManager.h>
 #include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
-
 #include <ARGame/UI/Widgets/AREnemyHealthBarWidget.h>
+
 #include <Blueprint/UserWidget.h>
 #include <BrainComponent.h>
 #include <Components/CapsuleComponent.h>
@@ -21,6 +22,7 @@ AARAICharacter::AARAICharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
+	Actions = CreateDefaultSubobject<UARActionComponent>("Actions");
 	PawnSenses = CreateDefaultSubobject<UPawnSensingComponent>("PawnSenses");
 }
 
