@@ -23,10 +23,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// BEGIN IARGameplayInterface
+	// INTERFACE_BEGIN(IARGameplayInterface)
+	virtual bool CanInteract_Implementation(APawn* interactor) override;
 	virtual bool Interact_Implementation(APawn* interactor) override;
-
-	// END IARGameplayInterface
+	// INTERFACE_END(IARGameplayInterface)
 
 protected:
 	// Called when the game starts or when spawned

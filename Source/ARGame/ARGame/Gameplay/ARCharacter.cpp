@@ -235,7 +235,7 @@ void AARCharacter::PrimaryInteract()
 {
 	if (ensureAlways(InteractionComponent))
 	{
-		InteractionComponent->PrimaryInteract(CameraTarget);
+		InteractionComponent->PrimaryInteract();
 	}
 }
 

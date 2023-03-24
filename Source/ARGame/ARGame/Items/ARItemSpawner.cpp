@@ -45,6 +45,7 @@ void AARItemSpawner::Tick(float delta)
 	Super::Tick(delta);
 }
 
+
 void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 									UPrimitiveComponent* other_comp, int32 other_body_index,
 									bool from_sweep, const FHitResult& sweep_result)
@@ -65,7 +66,7 @@ void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, A
 
 	// We track the pawn that is overlapping.
 	CurrentlyOverlappingPlayerPawn = pawn;
-	Interact_Implementation(pawn);
+	IARInteractable::Execute_Interact(this, pawn);
 }
 
 void AARItemSpawner::OnBeginEnd(UPrimitiveComponent* overlapped_component, AActor* other_actor,
@@ -105,7 +106,7 @@ void AARItemSpawner::SpawnItem()
 	// interaction.
 	if (APawn* player_pawn = CurrentlyOverlappingPlayerPawn.Get())
 	{
-		Interact_Implementation(player_pawn);
+		Interact(player_pawn);
 	}
 }
 
@@ -124,7 +125,7 @@ void AARItemSpawner::ScheduleItemSpawning(float delay)
 									false);
 }
 
-bool AARItemSpawner::Interact_Implementation(APawn* interactor)
+bool AARItemSpawner::CanInteract_Implementation(APawn* interactor)
 {
 	check(interactor);
 
@@ -136,6 +137,17 @@ bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 
 	// Check if the item can interact with this caller.
 	if (!SpawnedItem->CanUse(interactor))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+
+bool AARItemSpawner::Interact_Implementation(APawn* interactor)
+{
+	if (!IARInteractable::Execute_CanInteract(this, interactor))
 	{
 		return false;
 	}

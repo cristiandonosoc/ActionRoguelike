@@ -24,7 +24,10 @@ public:
 
 	virtual void Tick(float delta) override;
 
+	// INTERFACE_BEGIN(IARInteractable)
+	virtual bool CanInteract_Implementation(APawn* interactor) override;
 	virtual bool Interact_Implementation(APawn* interactor) override;
+	// INTERFACE_END(IARInteractable)
 
 protected:
 	virtual void PostInitializeComponents() override;

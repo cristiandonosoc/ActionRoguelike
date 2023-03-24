@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include <ARBase/NotNullPtr.h>
 #include <Components/ActorComponent.h>
 #include <CoreMinimal.h>
 
 #include "ARInteractionComponent.generated.h"
+
+class IARInteractable;
+class UARActorAttachedWidget;
 
 // UARInteractionComponent handles the interactivity part of the character.
 //
@@ -18,9 +22,35 @@ class ARGAME_API UARInteractionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
+	static constexpr float kInteractionDistance = 1000.0f;
+	static constexpr float kInteractionRadius = 30.0f;
+
+	static constexpr float kFocusCheckPeriod = 0.25f;
+
 	// Sets default values for this component's properties
 	UARInteractionComponent();
 
-	// target is where the camera is targeting.
-	void PrimaryInteract(const FVector& camera_target);
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void TickComponent(float delta, ELevelTick tick_type,
+							   FActorComponentTickFunction* tick_function) override;
+
+
+	// Interact against the current best interactable.
+	void PrimaryInteract();
+
+protected:
+	UFUNCTION()
+	void FindBestInteractable();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UARActorAttachedWidget> DefaultWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UARActorAttachedWidget> Widget;
+
+private:
+	FTimerHandle FindFocusTimerHandle;
+	TWeakObjectPtr<AActor> FocusedInteractable;
 };

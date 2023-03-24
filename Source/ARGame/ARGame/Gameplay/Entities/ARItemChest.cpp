@@ -28,6 +28,11 @@ void AARItemChest::Tick(float delta)
 	Super::Tick(delta);
 }
 
+bool AARItemChest::CanInteract_Implementation(APawn* interactor)
+{
+	return true;
+}
+
 bool AARItemChest::Interact_Implementation(APawn* interactor)
 {
 	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0.0f, 0.0f));
