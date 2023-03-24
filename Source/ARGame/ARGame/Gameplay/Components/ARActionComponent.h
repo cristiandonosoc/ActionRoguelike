@@ -19,16 +19,19 @@ public:
 	UARActionComponent();
 
 	virtual void BeginPlay() override;
-	
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 							   FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
-	void AddAction(TSubclassOf<UARAction> action_class);
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void AddAction(TSubclassOf<UARAction> action_class, AActor* instigator);
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
+	UFUNCTION(BlueprintCallable, Category = "Action")
 	void RemoveAction(const FName& name);
+
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	bool HasAction(const FName& name) const;
 
 	// |all_instances| determines whether we're starting all the instances of just the first one.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
@@ -43,8 +46,6 @@ public:
 
 protected:
 	// INTERFACE_BEGIN(UARActionComponent)
-	virtual void AddAction_Implementation(TSubclassOf<UARAction> action_class);
-	virtual void RemoveAction_Implementation(const FName& name);
 	virtual bool StartAction_Implementation(const FName& name, AActor* instigator,
 											bool all_instances);
 	virtual bool StopAction_Implementation(const FName& name, AActor* instigator,

@@ -9,6 +9,7 @@
 
 #include "ARMagicProjectile.generated.h"
 
+class UARActionEffect;
 class UParticleSystem;
 class USoundCue;
 
@@ -38,6 +39,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
 	FGameplayTag ParryTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
+	TSubclassOf<UARActionEffect> ActionEffect;
 
 	UPROPERTY(EditAnywhere, Category = "Particles")
 	TObjectPtr<UParticleSystem> ExplosionParticle;

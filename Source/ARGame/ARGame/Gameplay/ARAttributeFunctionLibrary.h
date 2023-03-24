@@ -11,13 +11,13 @@ class ARGAME_API UARAttributeFunctionLibrary : public UBlueprintFunctionLibrary
 
 	// Attributes.
 public:
-	UFUNCTION(BlueprintPure, Category = "Gameplay")
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyDamage(AActor* instigator, AActor* target, float damage);
 
-	UFUNCTION(BlueprintPure, Category = "Gameplay")
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyDirectionalDamage(AActor* instigator, AActor* target, float damage,
 									   const FHitResult& hit);
 
-	UFUNCTION(BlueprintPure, Category = "Gameplay")
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	static bool ApplyHeal(AActor* instigator, AActor* target, float heal);
 };

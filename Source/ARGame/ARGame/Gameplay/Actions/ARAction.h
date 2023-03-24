@@ -23,10 +23,13 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	void Stop(AActor* instigator);
 
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	UARActionComponent* GetOwningComponent() const;
+
 	const FName& GetActionName() const { return ActionName; }
+	bool GetAutoStarts() const { return AutoStarts; }
 	bool GetIsRunning() const { return IsRunning; }
 
-	UARActionComponent& GetOwningComponent();
 	virtual UWorld* GetWorld() const override;
 
 protected:
@@ -39,6 +42,10 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	FName ActionName;
+
+	// Whether this gets started as soon as someone adds the ability to the action component.
+	UPROPERTY(EditDefaultsOnly, Category = "Action")
+	bool AutoStarts = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Action")
 	bool CanBeStartedMultipleTimes = false;

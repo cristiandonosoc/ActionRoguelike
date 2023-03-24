@@ -10,6 +10,9 @@ class ARGAME_API UARActionEffect : public UARAction
 {
 	GENERATED_BODY()
 
+public:
+	UARActionEffect();
+
 protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual void Start_Implementation(AActor* instigator) override;

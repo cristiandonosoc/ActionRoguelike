@@ -6,6 +6,7 @@
 #include <ARBase/DebugDraw.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
+#include <ARGame/Gameplay/Actions/ARActionEffect.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 
 #include <Components/AudioComponent.h>
@@ -48,13 +49,14 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 {
 	Super::OnBeginHit_Implementation(hit_component, other_actor, other_comp, normal_impulse, hit);
 
+	auto* actions = other_actor->FindComponentByClass<UARActionComponent>();
+
 	// We see if the object we hit can receive damage.
 	if (other_actor)
 	{
-
-		// We check for parrying.
-		if (auto* actions = other_actor->FindComponentByClass<UARActionComponent>())
+		if (actions)
 		{
+			// We check for parrying.
 			if (actions->GetActiveGameplayTags().HasTagExact(ParryTag))
 			{
 				// TODO(cdc): Spawn a projectile backwards.
@@ -82,6 +84,10 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 
 		UARAttributeFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), other_actor, Damage,
 															hit);
+		if (ActionEffect && actions)
+		{
+			actions->AddAction(ActionEffect, GetInstigator());
+		}
 
 		ARDebugDraw::DirectionalArrow(ARDebugCategories::PROJECTILES, GetWorld(), hit.TraceStart,
 									  hit.TraceEnd, 20, FColor::Red, 2, 2);

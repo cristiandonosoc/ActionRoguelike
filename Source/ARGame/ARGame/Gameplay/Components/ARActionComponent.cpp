@@ -28,7 +28,8 @@ void UARActionComponent::BeginPlay()
 		UClass* uclass = action_soft_class.Get();
 		check(uclass);
 
-		AddAction(TSubclassOf<UARAction>(uclass));
+		// We assume the action component holder is the instigator for these actions.
+		AddAction(TSubclassOf<UARAction>(uclass), GetOwner());
 	}
 }
 
@@ -45,15 +46,20 @@ void UARActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 }
 
-void UARActionComponent::AddAction_Implementation(TSubclassOf<UARAction> action_class)
+void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* instigator)
 {
 	check(action_class);
 
 	NotNullPtr action = NewObject<UARAction>(this, action_class.Get());
-	Actions.Add(std::move(action));
+	Actions.Add(action);
+
+	if (action->GetAutoStarts())
+	{
+		StartAction(action->GetActionName(), instigator, false);
+	}
 }
 
-void UARActionComponent::RemoveAction_Implementation(const FName& name)
+void UARActionComponent::RemoveAction(const FName& name)
 {
 	int32 index = INDEX_NONE;
 	for (int32 i = 0; i < Actions.Num(); i++)
@@ -69,6 +75,13 @@ void UARActionComponent::RemoveAction_Implementation(const FName& name)
 	check(Actions[index]->GetIsRunning());
 
 	Actions.RemoveAt(index);
+}
+bool UARActionComponent::HasAction(const FName& name) const
+{
+	return Actions.ContainsByPredicate([&name](const TObjectPtr<UARAction>& action)
+	{
+		return action->GetActionName() == name;
+	});
 }
 
 bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* instigator,
