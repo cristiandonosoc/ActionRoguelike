@@ -9,7 +9,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Templates/NonNullPointer.h>
 
-AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::INTERACTION, false,
+AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, false,
 						   "All the displays for player interactions");
 
 // Sets default values for this component's properties

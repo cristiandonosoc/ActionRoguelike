@@ -21,16 +21,22 @@ class UWorld;
 #endif // AR_BUILD_DEBUG
 // clang-format on
 
-// AR_REGISTER_DEBUG_CATEGORY registers a new category so that code can enable/disable the category
+// AR_DECLARE_DEBUG_CATEGORY registers a new category so that code can enable/disable the category
 // on runtime in a convenient manner.
 //
 // This way code can just call always debug draw from the code and they will only run if the
 // category is enabled.
 //
 // All of this code is automatically stripped out in release builds.
-#define AR_REGISTER_DEBUG_CATEGORY(category, default_enabled, description)                         \
-	static ::__DebugCategoryRegisterer AR_CONCAT(__debug_draw_category_registerer__, __LINE__)(    \
-		category, #category, default_enabled, description, __FILE__, __LINE__)
+//
+// IMPORTANT: |category_name| has to a something that can be "stringified" into a variable name.
+//            This is to ensure that we can get unique variables across names (as long as they don't
+//            collide on name and line number).
+//            Basically, just use something that can be used as a C++ variable name.
+#define AR_DECLARE_DEBUG_CATEGORY(category_name, category, default_enabled, description)           \
+	static ::__DebugCategoryRegisterer AR_CONCAT3(__debug_draw_category_registerer__,              \
+												  category_name, __LINE__)(                        \
+		category, #category_name, default_enabled, description, __FILE__, __LINE__);
 
 // ARDebugDraw represents all the debug draw capabilities that are automatically stripped out in
 // release builds, so gameplay code can always call.

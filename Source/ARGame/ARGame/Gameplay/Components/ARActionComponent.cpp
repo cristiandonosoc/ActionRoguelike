@@ -5,7 +5,7 @@
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
 
-AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::ACTIONS, true, "All about actions");
+AR_DECLARE_DEBUG_CATEGORY(ACTIONS, ARDebugCategories::ACTIONS, true, "All about actions");
 
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
@@ -79,9 +79,7 @@ void UARActionComponent::RemoveAction(const FName& name)
 bool UARActionComponent::HasAction(const FName& name) const
 {
 	return Actions.ContainsByPredicate([&name](const TObjectPtr<UARAction>& action)
-	{
-		return action->GetActionName() == name;
-	});
+									   { return action->GetActionName() == name; });
 }
 
 bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* instigator,

@@ -16,7 +16,7 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Particles/ParticleSystem.h>
 
-AR_REGISTER_DEBUG_CATEGORY(ARDebugCategories::PLAYER_CHARACTER, false,
+AR_DECLARE_DEBUG_CATEGORY(PLAYER_CHARACTER, ARDebugCategories::PLAYER_CHARACTER, false,
 						   "All the display about the player character");
 
 // Sets default values
