@@ -17,7 +17,7 @@
 #include <Particles/ParticleSystem.h>
 
 AR_DECLARE_DEBUG_CATEGORY(PLAYER_CHARACTER, ARDebugCategories::PLAYER_CHARACTER, false,
-						   "All the display about the player character");
+						  "All the display about the player character");
 
 // Sets default values
 AARCharacter::AARCharacter()
@@ -161,6 +161,16 @@ void AARCharacter::Tick(float delta)
 	Super::Tick(delta);
 
 	CameraTarget = ObtainCameraTarget(*this);
+	if (HasAuthority())
+	{
+		ARDebugDraw::Text(ARDebugCategories::ALWAYS,
+						  FString::Printf(TEXT("%s LOCATION: %s"), *GetNameSafe(this),
+										  *GetActorLocation().ToString()),
+						  FColor::Purple);
+
+		ARDebugDraw::Box(ARDebugCategories::ALWAYS, GetWorld(), GetActorLocation(),
+						 FVector(50, 50, 75), FColor::Purple, 2);
+	}
 
 	if (ARDebugDraw::IsCategoryEnabled(ARDebugCategories::PLAYER_CHARACTER))
 	{

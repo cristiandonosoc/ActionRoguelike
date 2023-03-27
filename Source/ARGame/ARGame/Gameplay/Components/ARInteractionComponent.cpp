@@ -9,19 +9,19 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Templates/NonNullPointer.h>
 
-AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, false,
-						   "All the displays for player interactions");
+AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, true,
+						  "All the displays for player interactions");
 
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 }
+
 void UARInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Create the query timer.
 	FTimerDelegate delegate;
 	delegate.BindUFunction(this, "FindBestInteractable");
 	GetWorld()->GetTimerManager().SetTimer(FindFocusTimerHandle, std::move(delegate),
@@ -78,7 +78,6 @@ AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
 
 	AActor* interactable = nullptr;
 
-
 	TArray<FHitResult> out_hits;
 	world->SweepMultiByObjectType(out_hits, start, end, FQuat::Identity, params, shape);
 	for (const auto& hit : out_hits)
@@ -91,15 +90,26 @@ AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
 
 				if (IARInteractable::Execute_CanInteract(hit_actor, pawn))
 				{
+					interactable = hit_actor;
 					ARDebugDraw::Sphere(ARDebugCategories::INTERACTION, world, hit.Location,
 										UARInteractionComponent::kInteractionRadius, 16,
 										FColor::Yellow, 2, 2);
-
-					interactable = hit_actor;
+					if (owner->HasAuthority())
+					{
+						ARDebugDraw::Text(
+							ARDebugCategories::INTERACTION,
+							FString::Printf(TEXT("Found interactable: %s (owner: %s)"),
+											*GetNameSafe(interactable), *GetNameSafe(owner)),
+							FColor::Black, 0.2f);
+					}
 				}
 			}
 		}
 	}
+
+	FColor color = interactable ? FColor::Green : FColor::Red;
+	ARDebugDraw::Cylinder(ARDebugCategories::ALWAYS, world, start, end,
+						  UARInteractionComponent::kInteractionRadius, 16, color, 2, 1);
 
 	return interactable;
 }
@@ -132,17 +142,22 @@ void ManageInteractableWidget(UARActorAttachedWidget* widget, AActor* interactab
 
 } // namespace
 
+void UARInteractionComponent::PrimaryInteract()
+{
+	Server_Interact();
+}
+
 void UARInteractionComponent::FindBestInteractable()
 {
 	NotNullPtr player_character = Cast<AARCharacter>(GetOwner());
-	FocusedInteractable = QueryBestInteractable(player_character);
-
-	ManageInteractableWidget(Widget.Get(), FocusedInteractable.Get());
+	auto* interactable = QueryBestInteractable(player_character);
+	ManageInteractableWidget(Widget.Get(), interactable);
 }
 
-void UARInteractionComponent::PrimaryInteract()
+void UARInteractionComponent::Server_Interact_Implementation()
 {
-	AActor* interactable = FocusedInteractable.Get();
+	NotNullPtr player_character = Cast<AARCharacter>(GetOwner());
+	AActor* interactable = QueryBestInteractable(player_character);
 	if (!interactable)
 	{
 		ARDebugDraw::Text(ARDebugCategories::INTERACTION, "No current focused interactable",

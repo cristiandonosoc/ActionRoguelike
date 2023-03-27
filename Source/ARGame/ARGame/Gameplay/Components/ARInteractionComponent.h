@@ -25,8 +25,9 @@ public:
 	static constexpr float kInteractionDistance = 1000.0f;
 	static constexpr float kInteractionRadius = 30.0f;
 
-	static constexpr float kFocusCheckPeriod = 0.25f;
+	static constexpr float kFocusCheckPeriod = 0.5f;
 
+public:
 	// Sets default values for this component's properties
 	UARInteractionComponent();
 
@@ -43,6 +44,10 @@ protected:
 	UFUNCTION()
 	void FindBestInteractable();
 
+	UFUNCTION(Server, Reliable)
+	void Server_Interact();
+	void Server_Interact_Implementation();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UARActorAttachedWidget> DefaultWidgetClass;
@@ -52,5 +57,5 @@ protected:
 
 private:
 	FTimerHandle FindFocusTimerHandle;
-	TWeakObjectPtr<AActor> FocusedInteractable;
 };
+
