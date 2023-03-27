@@ -57,6 +57,10 @@ public:
 	static void Text(int32 category, const FString& msg, const FColor& color,
 					 float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
 
+	static void Box(int32 category, NotNullPtr<UWorld> world, const FVector& center,
+					const FVector& extents, const FColor& color, float thickness,
+					float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;
+
 	static void Cylinder(int32 category, NotNullPtr<UWorld> world, const FVector& start,
 						 const FVector& end, float radius, float segments, const FColor& color,
 						 float thickness, float lifetime = 0) AR_DEBUG_DRAW_IMPLEMENTATION;

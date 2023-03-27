@@ -132,7 +132,32 @@ void ARDebugDraw::Text(int32 category, const FString& msg, const FColor& color, 
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color, msg);
+#if AR_BUILD_SERVER
+	{
+		static const TCHAR* kLocation = TEXT("Server");
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
+										 FString::Printf(TEXT("%s - %s"), kLocation, *msg));
+	}
+#endif // AR_BUILD_SERVER
+
+#if AR_BUILD_CLIENT
+	{
+		static const TCHAR* kLocation = TEXT("Client");
+		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
+										 FString::Printf(TEXT("%s - %s"), kLocation, *msg));
+	}
+#endif // AR_BUILD_CLIENT
+}
+
+void ARDebugDraw::Box(int32 category, NotNullPtr<UWorld> world, const FVector& center,
+					  const FVector& extents, const FColor& color, float thickness, float lifetime)
+{
+	if (!IsCategoryEnabled(category))
+	{
+		return;
+	}
+
+	DrawDebugBox(world, center, extents, color, false, lifetime, 0, thickness);
 }
 
 void ARDebugDraw::Cylinder(int32 category, NotNullPtr<UWorld> world, const FVector& start,
@@ -169,5 +194,6 @@ void ARDebugDraw::Sphere(int32 category, NotNullPtr<UWorld> world, const FVector
 
 	DrawDebugSphere(world, center, radius, segments, color, false, lifetime, 0, thickness);
 }
+
 
 #endif // HVN_BUILD_DEBUG
