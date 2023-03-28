@@ -17,6 +17,7 @@ class UARAttributeComponent;
 class UARInteractionComponent;
 
 class UAnimMontage;
+class UBoxComponent;
 class UCameraComponent;
 class UParticleSystem;
 class USpringArmComponent;
@@ -56,6 +57,7 @@ public:
 	// INTERFACE_END(IARCreditHolder)
 
 	NotNullPtr<UARActionComponent> GetActions() { return Actions.Get(); }
+	NotNullPtr<UBoxComponent> GetInteractionBox() { return InteractionBox.Get(); }
 	const FVector& GetCameraTarget() const { return CameraTarget; }
 
 protected:
@@ -78,6 +80,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Interaction")
 	TObjectPtr<UARInteractionComponent> InteractionComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Interaction")
+	TObjectPtr<UBoxComponent> InteractionBox;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TObjectPtr<UARAttributeComponent> Attributes;
 
@@ -92,7 +97,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	TSubclassOf<AARBaseProjectile> UltimateAttackProjectile;
-
 
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	TSubclassOf<UCameraShakeBase> CameraShake;

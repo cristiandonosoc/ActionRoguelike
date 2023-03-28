@@ -4,8 +4,9 @@
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>
 #include <ARGame/UI/ARActorAttachedWidget.h>
-#include <Blueprint/UserWidget.h>
 
+#include <Blueprint/UserWidget.h>
+#include <Components/BoxComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Templates/NonNullPointer.h>
 
@@ -38,9 +39,7 @@ void UARInteractionComponent::BeginPlay()
 
 void UARInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-
 	GetWorld()->GetTimerManager().ClearTimer(FindFocusTimerHandle);
-
 	Super::EndPlay(EndPlayReason);
 }
 
@@ -53,6 +52,7 @@ void UARInteractionComponent::TickComponent(float delta, ELevelTick tick_type,
 namespace
 {
 
+#if THIS_IS_DEPRECATED
 AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
 {
 	NotNullPtr<UWorld> world = owner->GetWorld();
@@ -110,6 +110,49 @@ AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
 	FColor color = interactable ? FColor::Green : FColor::Red;
 	ARDebugDraw::Cylinder(ARDebugCategories::ALWAYS, world, start, end,
 						  UARInteractionComponent::kInteractionRadius, 16, color, 2, 1);
+
+	return interactable;
+}
+#endif // THIS_IS_DEPRECATED
+
+AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
+{
+	TArray<AActor*> actors;
+	owner->GetInteractionBox()->GetOverlappingActors(actors);
+
+	if (actors.IsEmpty())
+	{
+		return nullptr;
+	}
+
+	// Get the closest interactable.
+	// We could collect them all if we want a more clever criteria to select the best interactable.
+	FVector owner_location = owner->GetActorLocation();
+	double min_dist_squared = std::numeric_limits<double>::max();
+	AActor* interactable = nullptr;
+
+	for (AActor* actor : actors)
+	{
+		if (!actor->Implements<UARInteractable>())
+		{
+			continue;
+		}
+
+		// Now we see the distance and see if it's the closest.
+		double dist = FVector::DistSquared(owner_location, actor->GetActorLocation());
+		if (dist > min_dist_squared)
+		{
+			continue;
+		}
+
+		min_dist_squared = dist;
+		interactable = actor;
+	}
+
+	if (!interactable)
+	{
+		return nullptr;
+	}
 
 	return interactable;
 }

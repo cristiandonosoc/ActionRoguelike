@@ -10,6 +10,7 @@
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
 #include <Camera/CameraComponent.h>
+#include <Components/BoxComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
 #include <Kismet/GameplayStatics.h>
@@ -37,6 +38,8 @@ AARCharacter::AARCharacter()
 	bUseControllerRotationYaw = false;
 
 	InteractionComponent = CreateDefaultSubobject<UARInteractionComponent>("InteractionComponent");
+	InteractionBox = CreateDefaultSubobject<UBoxComponent>("InteractionBox");
+	InteractionBox->SetupAttachment(RootComponent);
 
 	Attributes = CreateDefaultSubobject<UARAttributeComponent>("Attributes");
 

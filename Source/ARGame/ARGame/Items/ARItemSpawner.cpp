@@ -22,6 +22,7 @@ AARItemSpawner::AARItemSpawner()
 void AARItemSpawner::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
 	CollisionCapsule->OnComponentBeginOverlap.AddDynamic(this, &AARItemSpawner::OnBeginOverlap);
 	CollisionCapsule->OnComponentEndOverlap.AddDynamic(this, &AARItemSpawner::OnBeginEnd);
 }
@@ -44,7 +45,6 @@ void AARItemSpawner::Tick(float delta)
 {
 	Super::Tick(delta);
 }
-
 
 void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 									UPrimitiveComponent* other_comp, int32 other_body_index,
@@ -72,7 +72,6 @@ void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, A
 void AARItemSpawner::OnBeginEnd(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 								UPrimitiveComponent* other_comp, int32 other_body_index)
 {
-
 	// See if the player is leaving, so that we can stop tracking this.
 	NotNullPtr<APlayerController> pc = GetWorld()->GetFirstPlayerController();
 	APawn* pawn = pc->GetPawn();
@@ -106,7 +105,7 @@ void AARItemSpawner::SpawnItem()
 	// interaction.
 	if (APawn* player_pawn = CurrentlyOverlappingPlayerPawn.Get())
 	{
-		Interact(player_pawn);
+		IARInteractable::Execute_Interact(this, player_pawn);
 	}
 }
 

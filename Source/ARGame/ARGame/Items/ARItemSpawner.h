@@ -66,6 +66,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UCapsuleComponent> CollisionCapsule;
 
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UShapeComponent> InteractionCollisionVolume;
+
 private:
 	UPROPERTY()
 	TObjectPtr<AARBaseItem> SpawnedItem;
