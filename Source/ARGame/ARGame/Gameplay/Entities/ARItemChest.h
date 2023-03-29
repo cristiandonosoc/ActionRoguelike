@@ -20,8 +20,7 @@ public:
 	// Sets default values for this actor's properties
 	AARItemChest();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
 
 	// INTERFACE_BEGIN(IARGameplayInterface)
 	virtual bool CanInteract_Implementation(APawn* interactor) override;
@@ -29,14 +28,20 @@ public:
 	// INTERFACE_END(IARGameplayInterface)
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	UFUNCTION()
+	void OnRep_IsOpenedChanged();
+
+private:
+	void ToggleChestAnimation();
 
 public:
 	UPROPERTY(EditAnywhere)
 	float TargetPitch = 110.0f;
 
 protected:
+	UPROPERTY(ReplicatedUsing = "OnRep_IsOpenedChanged")
+	bool IsOpened = false;
+
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* BaseMesh;
 

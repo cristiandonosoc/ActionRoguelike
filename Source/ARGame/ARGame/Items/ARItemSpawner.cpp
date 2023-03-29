@@ -40,12 +40,6 @@ void AARItemSpawner::BeginPlay()
 	ScheduleItemSpawning(InitialDelay);
 }
 
-// Called every frame
-void AARItemSpawner::Tick(float delta)
-{
-	Super::Tick(delta);
-}
-
 void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 									UPrimitiveComponent* other_comp, int32 other_body_index,
 									bool from_sweep, const FHitResult& sweep_result)

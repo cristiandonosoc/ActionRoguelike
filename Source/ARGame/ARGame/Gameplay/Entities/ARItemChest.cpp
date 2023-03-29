@@ -1,6 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include <ARGame/Gameplay/Entities/ARItemChest.h>
+#include <Net/UnrealNetwork.h>
 
 // Sets default values
 AARItemChest::AARItemChest()
@@ -14,18 +15,17 @@ AARItemChest::AARItemChest()
 
 	LidMesh = CreateDefaultSubobject<UStaticMeshComponent>("LidMesh");
 	LidMesh->SetupAttachment(BaseMesh);
+
+	SetReplicates(true);
 }
 
-// Called when the game starts or when spawned
-void AARItemChest::BeginPlay()
+void AARItemChest::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const
 {
-	Super::BeginPlay();
-}
+	Super::GetLifetimeReplicatedProps(props);
 
-// Called every frame
-void AARItemChest::Tick(float delta)
-{
-	Super::Tick(delta);
+	// Unreal expects this stupid ass name.
+	auto& OutLifetimeProps = props;
+	DOREPLIFETIME(AARItemChest, IsOpened);
 }
 
 bool AARItemChest::CanInteract_Implementation(APawn* interactor)
@@ -35,6 +35,18 @@ bool AARItemChest::CanInteract_Implementation(APawn* interactor)
 
 bool AARItemChest::Interact_Implementation(APawn* interactor)
 {
-	LidMesh->SetRelativeRotation(FRotator(TargetPitch, 0.0f, 0.0f));
+	IsOpened = !IsOpened;
+	ToggleChestAnimation();
 	return true;
+}
+
+void AARItemChest::OnRep_IsOpenedChanged()
+{
+	ToggleChestAnimation();
+}
+
+void AARItemChest::ToggleChestAnimation()
+{
+	float target_pitch = IsOpened ? TargetPitch : 0.0f;
+	LidMesh->SetRelativeRotation(FRotator(target_pitch, 0.0f, 0.0f));
 }
