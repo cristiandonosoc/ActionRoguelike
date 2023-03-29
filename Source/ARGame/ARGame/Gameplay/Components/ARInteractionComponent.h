@@ -1,8 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
-#include <ARBase/NotNullPtr.h>
+#include <ARBase/BuildDefines.h>
 #include <Components/ActorComponent.h>
 #include <CoreMinimal.h>
 
@@ -32,13 +30,14 @@ public:
 	UARInteractionComponent();
 
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void TickComponent(float delta, ELevelTick tick_type,
-							   FActorComponentTickFunction* tick_function) override;
-
+	virtual void EndPlay(const EEndPlayReason::Type reason) override;
 
 	// Interact against the current best interactable.
 	void PrimaryInteract();
+
+#if AR_BUILD_CLIENT
+	void NotifyIsLocalControlled();
+#endif // AR_BUILD_CLIENT
 
 protected:
 	UFUNCTION()
@@ -47,7 +46,7 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void Server_Interact();
 	void Server_Interact_Implementation();
-	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UARActorAttachedWidget> DefaultWidgetClass;
@@ -56,6 +55,7 @@ protected:
 	TObjectPtr<UARActorAttachedWidget> Widget;
 
 private:
+#if AR_BUILD_CLIENT
 	FTimerHandle FindFocusTimerHandle;
+#endif // AR_BUILD_CLIENT
 };
-

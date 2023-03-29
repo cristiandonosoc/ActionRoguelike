@@ -50,6 +50,10 @@ public:
 
 	void PrimaryInteract();
 
+	// INTERFACE_BEGIN(APawn)
+	virtual void NotifyControllerChanged() override;
+	// INTERFACE_END(APawn)
+
 	// INTERFACE_BEGIN(IARCreditHolder)
 	int32 GetCurrentCredits_Implementation() override;
 	virtual int32 AddCredits_Implementation(int32 credits) override;

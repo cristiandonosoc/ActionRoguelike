@@ -23,10 +23,6 @@ void UARInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FTimerDelegate delegate;
-	delegate.BindUFunction(this, "FindBestInteractable");
-	GetWorld()->GetTimerManager().SetTimer(FindFocusTimerHandle, std::move(delegate),
-										   kFocusCheckPeriod, true);
 
 	// Create the widget.
 	if (DefaultWidgetClass)
@@ -37,22 +33,18 @@ void UARInteractionComponent::BeginPlay()
 	}
 }
 
-void UARInteractionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UARInteractionComponent::EndPlay(const EEndPlayReason::Type reason)
 {
+#if AR_BUILD_CLIENT
 	GetWorld()->GetTimerManager().ClearTimer(FindFocusTimerHandle);
-	Super::EndPlay(EndPlayReason);
-}
-
-void UARInteractionComponent::TickComponent(float delta, ELevelTick tick_type,
-											FActorComponentTickFunction* tick_function)
-{
-	Super::TickComponent(delta, tick_type, tick_function);
+#endif // AR_BUILD_CLIENT
+	Super::EndPlay(reason);
 }
 
 namespace
 {
 
-#if THIS_IS_DEPRECATED
+#ifdef THIS_IS_DEPRECATED
 AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner)
 {
 	NotNullPtr<UWorld> world = owner->GetWorld();
@@ -184,6 +176,18 @@ void ManageInteractableWidget(UARActorAttachedWidget* widget, AActor* interactab
 }
 
 } // namespace
+
+#if AR_BUILD_CLIENT
+
+void UARInteractionComponent::NotifyIsLocalControlled()
+{
+	FTimerDelegate delegate;
+	delegate.BindUFunction(this, "FindBestInteractable");
+	GetWorld()->GetTimerManager().SetTimer(FindFocusTimerHandle, std::move(delegate),
+										   kFocusCheckPeriod, true);
+}
+
+#endif // AR_BUILD_CLIENT
 
 void UARInteractionComponent::PrimaryInteract()
 {

@@ -252,6 +252,18 @@ void AARCharacter::PrimaryInteract()
 	}
 }
 
+void AARCharacter::NotifyControllerChanged()
+{
+	Super::NotifyControllerChanged();
+
+#if AR_BUILD_CLIENT
+	if (IsLocallyControlled())
+	{
+		InteractionComponent->NotifyIsLocalControlled();
+	}
+#endif
+}
+
 int32 AARCharacter::GetCurrentCredits_Implementation()
 {
 	NotNullPtr game_state = GetPlayerStateChecked<AARPlayerState>();
