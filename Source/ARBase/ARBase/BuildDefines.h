@@ -1,5 +1,7 @@
-﻿#pragma once
+﻿pragma once
 
+// Build Defines.
+// -------------------------------------------------------------------------------------------------
 // We define our set of defines in which we control where the code is build.
 // This is to avoid using the improper build define.
 
@@ -20,23 +22,19 @@
 
 // #define AR_HAS_CLIENT_CODE (UE_CLIENT || UE_EDITOR || UE_GAME || IS_PROGRAM)
 // #define AR_HAS_SERVER_CODE (UE_SERVER || UE_EDITOR || (UE_GAME && !UE_CLIENT) || IS_PROGRAM)
+// clang-format off
 
-// Cross-platform optimization pragmas.
+// Cross-platform macros/pragmas.
+// -------------------------------------------------------------------------------------------------
 
+// clang-format off
 #if PLATFORM_WINDOWS
-
 #define AR_OPTIMIZATION_ON  __pragma(optimize("", on))
 #define AR_OPTIMIZATION_OFF __pragma(optimize("", off))
-
 #elif PLATFORM_LINUX
-
 #define AR_OPTIMIZATION_ON  _Pragma("clang optimize on")
 #define AR_OPTIMIZATION_OFF _Pragma("clang optimize off")
-
 #else
-
 #error "Unsupported platform"
-
 #endif
-
 // clang-format on

@@ -20,6 +20,16 @@
 			"AdditionalDependencies": [
 				"Engine"
 			]
+		},
+		{
+			"Name": "ARGameClient",
+			"Type": "ClientOnly",
+			"LoadingPhase": "Default"
+		},
+		{
+			"Name": "ARGameServer",
+			"Type": "ServerOnly",
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [

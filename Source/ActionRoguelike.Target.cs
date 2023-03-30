@@ -16,6 +16,6 @@ public class ActionRoguelikeTarget : TargetRules
 
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] { "ARBase" });
+		ExtraModuleNames.AddRange(new string[] { "ARBase", "ARGameClient", "ARGameServer" });
 	}
 }
