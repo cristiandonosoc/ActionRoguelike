@@ -16,7 +16,7 @@ public class ARGame : ModuleRules
 		// ARGame deps.
 		PublicDependencyModuleNames.AddRange(new string[]{"ARBase"});
 
-		PublicIncludePaths.AddRange(new string[] { "ARGame" });
+		PublicIncludePaths.AddRange(new string[] { "Game/ARGame" });
 
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
