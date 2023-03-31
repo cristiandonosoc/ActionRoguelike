@@ -1,11 +1,22 @@
 #pragma once
 
 #include <ARBase/BuildDefines.h>
+#include <ARBase/ClientServerSplit.h>
+
+#ifdef AR_BUILD_CLIENT
+#include <ARGame/Client/ARInteractionComponentClient.h>
+#endif // AR_BUILD_CLIENT
+
+#ifdef AR_BUILD_SERVER
+#include <ARGame/Server/ARInteractionComponentServer.h>
+#endif // AR_BUILD_SERVER
+
 #include <Components/ActorComponent.h>
 #include <CoreMinimal.h>
 
 #include "ARInteractionComponent.generated.h"
 
+class AARCharacter;
 class IARInteractable;
 class UARActorAttachedWidget;
 
@@ -18,12 +29,12 @@ UCLASS()
 class ARGAME_API UARInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARInteractionComponent, ARInteractionComponentClient,
+									   ARInteractionComponentServer);
 
 public:
 	static constexpr float kInteractionDistance = 1000.0f;
 	static constexpr float kInteractionRadius = 30.0f;
-
-	static constexpr float kFocusCheckPeriod = 0.5f;
 
 public:
 	// Sets default values for this component's properties
@@ -35,17 +46,13 @@ public:
 	// Interact against the current best interactable.
 	void PrimaryInteract();
 
-#if AR_BUILD_CLIENT
-	void NotifyIsLocalControlled();
-#endif // AR_BUILD_CLIENT
-
 protected:
-	UFUNCTION()
-	void FindBestInteractable();
-
 	UFUNCTION(Server, Reliable)
 	void Server_Interact();
 	void Server_Interact_Implementation();
+
+private:
+	static AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -53,9 +60,4 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UARActorAttachedWidget> Widget;
-
-private:
-#if AR_BUILD_CLIENT
-	FTimerHandle FindFocusTimerHandle;
-#endif // AR_BUILD_CLIENT
 };

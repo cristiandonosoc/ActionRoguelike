@@ -281,7 +281,7 @@ void AARCharacter::NotifyControllerChanged()
 #if AR_BUILD_CLIENT
 	if (IsLocallyControlled())
 	{
-		InteractionComponent->NotifyIsLocalControlled();
+		InteractionComponent->GetClientSplit().NotifyIsLocalControlled();
 	}
 #endif
 }

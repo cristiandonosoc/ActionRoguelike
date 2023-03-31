@@ -1,4 +1,4 @@
-﻿pragma once
+﻿#pragma once
 
 // Build Defines.
 // -------------------------------------------------------------------------------------------------
@@ -22,7 +22,9 @@
 
 // #define AR_HAS_CLIENT_CODE (UE_CLIENT || UE_EDITOR || UE_GAME || IS_PROGRAM)
 // #define AR_HAS_SERVER_CODE (UE_SERVER || UE_EDITOR || (UE_GAME && !UE_CLIENT) || IS_PROGRAM)
-// clang-format off
+// clang-format on
+
+
 
 // Cross-platform macros/pragmas.
 // -------------------------------------------------------------------------------------------------
