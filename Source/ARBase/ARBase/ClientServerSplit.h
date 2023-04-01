@@ -69,13 +69,13 @@ private:                                                                        
 	client_class _ClientSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
-	client_class& GetClientSplit()                                                                 \
+	client_class* GetClientSplit()                                                                 \
 	{                                                                                              \
-		return _ClientSplit;                                                                       \
+		return &_ClientSplit;                                                                      \
 	}                                                                                              \
-	const client_class& GetClientSplit() const                                                     \
+	const client_class* GetClientSplit() const                                                     \
 	{                                                                                              \
-		return _ClientSplit;                                                                       \
+		return &_ClientSplit;                                                                      \
 	}
 
 
@@ -132,13 +132,13 @@ private:                                                                        
 	server_class _ServerSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
-	server_class& GetServerSplit()                                                                 \
+	server_class* GetServerSplit()                                                                 \
 	{                                                                                              \
-		return _ServerSplit;                                                                       \
+		return &_ServerSplit;                                                                      \
 	}                                                                                              \
-	const server_class& GetServerSplit() const                                                     \
+	const server_class* GetServerSplit() const                                                     \
 	{                                                                                              \
-		return _ServerSplit;                                                                       \
+		return &_ServerSplit;                                                                      \
 	}
 
 #define GENERATED_SERVER_SPLIT(base_class, server_class)                                           \

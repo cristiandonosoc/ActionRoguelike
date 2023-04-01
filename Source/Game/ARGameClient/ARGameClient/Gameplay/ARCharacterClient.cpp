@@ -26,7 +26,7 @@ void BindAxis(NotNullPtr<UInputComponent> input, const FName& axis_name,
 			if (AARCharacter* base = weakBase.Get())
 			{
 				// Call the callback member function.
-				(base->GetClientSplit().*callback)(dt);
+				(base->GetClientSplit()->*callback)(dt);
 			}
 		});
 
@@ -53,7 +53,7 @@ void BindAction(NotNullPtr<UInputComponent> input, const FName& action_name,
 			if (AARCharacter* base = weakBase.Get())
 			{
 				// Call the callback member function.
-				(base->GetClientSplit().*callback)();
+				(base->GetClientSplit()->*callback)();
 			}
 		});
 
@@ -87,7 +87,7 @@ void ARCharacterClient::NotifyControllerChanged()
 	// start tracking interactables (for player feedback).
 	if (GetBase()->IsLocallyControlled())
 	{
-		GetBase()->GetInteractionComponent()->GetClientSplit().NotifyIsLocalControlled();
+		GetBase()->GetInteractionComponent()->GetClientSplit()->NotifyIsLocalControlled();
 	}
 }
 
