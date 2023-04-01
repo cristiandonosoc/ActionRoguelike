@@ -3,10 +3,10 @@
 #include <ARGame/Gameplay/ARGameplayInterface.h>
 #include <ARBase/ClientServerSplit.h>
 
-#ifdef AR_BUILD_CLIENT
+#if AR_BUILD_CLIENT
 #include <ARGameClient/Items/ARItemSpawnerClient.h>
 #endif // AR_BUILD_CLIENT
-#ifdef AR_BUILD_SERVER
+#if AR_BUILD_SERVER
 #include <ARGameServer/Items/ARItemSpawnerServer.h>
 #endif // AR_BUILD_SERVER
 

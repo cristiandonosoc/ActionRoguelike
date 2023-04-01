@@ -2,9 +2,16 @@
 
 #pragma once
 
+#include <ARBase/ClientServerSplit.h>
+#include <ARBase/NotNullPtr.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>
 
-#include <ARBase/NotNullPtr.h>
+#if AR_BUILD_CLIENT
+#include <ARGameClient/Gameplay/ARCharacterClient.h>
+#endif // AR_BUILD_CLIENT
+#if AR_BUILD_SERVER
+#include <ARGameServer/Gameplay/ARCharacterServer.h>
+#endif // AR_BUILD_SERVER
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
 
@@ -26,33 +33,36 @@ UCLASS()
 class ARGAME_API AARCharacter : public ACharacter, public IARCreditHolder
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARCharacter, ARCharacterClient, ARCharacterServer);
 
 public:
 	// Sets default values for this character's properties
 	AARCharacter();
 
 public:
-	// Called every frame
+	NotNullPtr<UARActionComponent> GetActions() const { return Actions.Get(); }
+	NotNullPtr<UBoxComponent> GetInteractionBox() const { return InteractionBox.Get(); }
+	const FVector& GetCameraTarget() const { return CameraTarget; }
+	NotNullPtr<UARInteractionComponent> GetInteractionComponent() const
+	{
+		return InteractionComponent.Get();
+	}
+
+public:
+	// INTERFACE_BEGIN(AActor)
 	virtual void Tick(float delta) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* player_input) override;
-
-	void MoveForward(float val);
-	void MoveRight(float val);
-
-	void PrimaryAttack();
-	void DashAttack();
-	void UltimateAttack();
-
-	void SprintStart();
-	void SprintEnd();
-
-	void PrimaryInteract();
+	// INTERFACE_END(AActor)
 
 	// INTERFACE_BEGIN(APawn)
+	virtual FVector GetPawnViewLocation() const override;
 	virtual void NotifyControllerChanged() override;
 	// INTERFACE_END(APawn)
+
+	// INTERFACE_BEGIN(ACharacter)
+	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* player_input) override;
+	// INTERFACE_END(ACharacter)
 
 	// INTERFACE_BEGIN(IARCreditHolder)
 	int32 GetCurrentCredits_Implementation() override;
@@ -60,17 +70,7 @@ public:
 	virtual bool PayCredits_Implementation(int32 price) override;
 	// INTERFACE_END(IARCreditHolder)
 
-	NotNullPtr<UARActionComponent> GetActions() { return Actions.Get(); }
-	NotNullPtr<UBoxComponent> GetInteractionBox() { return InteractionBox.Get(); }
-	const FVector& GetCameraTarget() const { return CameraTarget; }
-
 protected:
-	virtual void PostInitializeComponents() override;
-
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual FVector GetPawnViewLocation() const override;
-
 	UFUNCTION()
 	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 

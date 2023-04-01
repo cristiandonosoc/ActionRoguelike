@@ -6,17 +6,6 @@
 // *************************************************************************************************
 // CLIENT SERVER SPLIT
 // *************************************************************************************************
-// Client server split are a set of macros that are meant to generate code for client and server
-// depending on where (and how) the code is being compiled.
-//
-// In the Client/Server split, there are 3 objects:
-//
-// - Base: The Base is the UObject that is meant to be the "common" part, which runs on both client
-//         and server, as well as the common interface both objects that are meant to replicate.
-// - ClientSplit: Part that will only be available in modules that have client code.
-//                Can be obtained via |GetClientSplit|.
-// - ServerSplit: Similar counterpart but for the server.
-//                Can be obtained via |GetServerSplit|.
 
 // ARClientServerGlobals provides useful functions to query on what configuration the game is
 // running. The main use is to know if a particular actor is running as part of the server or
@@ -39,6 +28,17 @@ struct ARBASE_API ARClientServerGlobals
 // Base Macros
 // -------------------------------------------------------------------------------------------------
 
+// GENERATED_BASE_CLIENT_SERVER_SPLIT generates code for client and server split of a AActor.
+// This split depends on where (and how) the code is being compiled.
+//
+// In the Client/Server split, there are 3 objects:
+//
+// - Base: The Base is the UObject that is meant to be the "common" part, which runs on both client
+//         and server, as well as the common interface both objects that are meant to replicate.
+// - ClientSplit: Part that will only be available in modules that have client code.
+//                Can be obtained via |GetClientSplit|.
+// - ServerSplit: Similar counterpart but for the server.
+//                Can be obtained via |GetServerSplit|.
 #define GENERATED_BASE_CLIENT_SERVER_SPLIT(base_class, client_class, server_class)                 \
 	GENERATED_BASE_CLIENT_SPLIT(base_class, client_class);                                         \
 	GENERATED_BASE_SERVER_SPLIT(base_class, server_class);
@@ -62,7 +62,7 @@ struct ARBASE_API ARClientServerGlobals
 // Client Macros
 // -------------------------------------------------------------------------------------------------
 
-#ifdef AR_BUILD_CLIENT
+#if AR_BUILD_CLIENT
 
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
 private:                                                                                           \
@@ -125,7 +125,7 @@ public:                                                                         
 // Server Macros
 // -------------------------------------------------------------------------------------------------
 
-#ifdef AR_BUILD_SERVER
+#if AR_BUILD_SERVER
 
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
 private:                                                                                           \

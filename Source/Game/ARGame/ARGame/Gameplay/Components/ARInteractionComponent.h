@@ -1,13 +1,12 @@
 #pragma once
 
-#include <ARBase/BuildDefines.h>
 #include <ARBase/ClientServerSplit.h>
 
-#ifdef AR_BUILD_CLIENT
+#if AR_BUILD_CLIENT
 #include <ARGameClient/Gameplay/Components/ARInteractionComponentClient.h>
 #endif // AR_BUILD_CLIENT
 
-#ifdef AR_BUILD_SERVER
+#if AR_BUILD_SERVER
 #include <ARGameServer/Gameplay/Components/ARInteractionComponentServer.h>
 #endif // AR_BUILD_SERVER
 

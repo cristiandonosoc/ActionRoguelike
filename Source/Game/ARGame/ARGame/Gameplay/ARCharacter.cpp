@@ -31,6 +31,8 @@ AR_DECLARE_DEBUG_CATEGORY(PLAYER_CHARACTER, ARDebugCategories::PLAYER_CHARACTER,
 // Sets default values
 AARCharacter::AARCharacter()
 {
+	INIT_BASE_CLIENT_SERVER_SPLIT();
+	
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance
 	// if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -81,21 +83,7 @@ void AARCharacter::SetupPlayerInputComponent(UInputComponent* player_input)
 {
 	Super::SetupPlayerInputComponent(player_input);
 
-	player_input->BindAxis("MoveForward", this, &AARCharacter::MoveForward);
-	player_input->BindAxis("MoveRight", this, &AARCharacter::MoveRight);
-
-	player_input->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	player_input->BindAxis("Lookup", this, &APawn::AddControllerPitchInput);
-
-	player_input->BindAction("PrimaryAttack", IE_Pressed, this, &AARCharacter::PrimaryAttack);
-	player_input->BindAction("DashAttack", IE_Pressed, this, &AARCharacter::DashAttack);
-	player_input->BindAction("UltimateAttack", IE_Pressed, this, &AARCharacter::UltimateAttack);
-
-	player_input->BindAction("Sprint", IE_Pressed, this, &AARCharacter::SprintStart);
-	player_input->BindAction("Sprint", IE_Released, this, &AARCharacter::SprintEnd);
-
-	player_input->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	player_input->BindAction("Interact", IE_Pressed, this, &AARCharacter::PrimaryInteract);
+	CLIENT_ONLY_CALL(SetupPlayerInput, player_input);
 }
 
 namespace
@@ -208,86 +196,11 @@ void AARCharacter::Tick(float delta)
 #endif
 }
 
-void AARCharacter::MoveForward(float val)
-{
-	// We remove the pitch and roll so that we don't mess the movement of the camera.
-	FRotator rotator = GetControlRotation();
-	rotator.Pitch = 0.0f;
-	rotator.Roll = 0.0f;
-
-	AddMovementInput(rotator.Vector(), val);
-}
-
-void AARCharacter::MoveRight(float val)
-{
-	// We remove the pitch and roll so that we don't mess the movement of the camera.
-	FRotator rotator = GetControlRotation();
-	rotator.Pitch = 0.0f;
-	rotator.Roll = 0.0f;
-
-	// X - Forward.
-	// Y - Right.
-	// Z - Up.
-	FVector Right = FRotationMatrix(rotator).GetScaledAxis(EAxis::Y);
-	AddMovementInput(Right, val);
-}
-
-namespace
-{
-
-void TryRunProjectile(NotNullPtr<AARCharacter> character, const FName& action_name)
-{
-	if (!character->GetActions()->StartAction(action_name, character, false))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s not set"), *action_name.ToString());
-	}
-}
-
-} // namespace
-
-void AARCharacter::PrimaryAttack()
-{
-	TryRunProjectile(this, "PrimaryAttack");
-}
-
-void AARCharacter::DashAttack()
-{
-	TryRunProjectile(this, "DashAttack");
-}
-
-void AARCharacter::UltimateAttack()
-{
-	TryRunProjectile(this, "UltimateAttack");
-}
-
-void AARCharacter::SprintStart()
-{
-	Actions->StartAction("sprint", this);
-}
-
-void AARCharacter::SprintEnd()
-{
-	Actions->StopAction("sprint", this);
-}
-
-void AARCharacter::PrimaryInteract()
-{
-	if (ensureAlways(InteractionComponent))
-	{
-		InteractionComponent->PrimaryInteract();
-	}
-}
-
 void AARCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
 
-#if AR_BUILD_CLIENT
-	if (IsLocallyControlled())
-	{
-		InteractionComponent->GetClientSplit().NotifyIsLocalControlled();
-	}
-#endif
+	CLIENT_ONLY_CALL(NotifyControllerChanged);
 }
 
 int32 AARCharacter::GetCurrentCredits_Implementation()
