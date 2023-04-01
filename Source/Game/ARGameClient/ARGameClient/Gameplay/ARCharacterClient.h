@@ -1,49 +1,19 @@
 ﻿#pragma once
 
 #include <ARBase/ClientServerSplit.h>
+#include <ARGameClient/Gameplay/MovementManager.h>
 
 class AARCharacter;
 
 class UInputComponent;
 class ARCharacterClient;
 
-namespace ARCharacterClient_Private
+namespace ar_client
 {
 
-// MovementHelperManager is helper class to take care of movement logic in order to de-clutter
-// ARCharacterClient.
-class MovementHelperManager
+class ARGAMECLIENT_API CharacterClient
 {
-public:
-	AARCharacter* GetBase();
-	
-public:
-	void SetupPlayerInput(NotNullPtr<ARCharacterClient> char_client,
-						  NotNullPtr<UInputComponent> input);
-
-private:
-	void MoveForward(float val);
-	void MoveRight(float val);
-	void AddControllerYawInput(float dt);
-	void AddControllerPitchInput(float dt);
-	void PrimaryAttack();
-	void DashAttack();
-	void UltimateAttack();
-	void SprintStart();
-	void SprintEnd();
-	void Jump();
-	void PrimaryInteract();
-
-private:
-	ARCharacterClient* ClientSplit = nullptr;
-};
-
-} // namespace ARCharacterClient_Private
-
-
-class ARGAMECLIENT_API ARCharacterClient
-{
-	GENERATED_CLIENT_SPLIT(AARCharacter, ARCharacterClient);
+	GENERATED_CLIENT_SPLIT(AARCharacter, CharacterClient);
 
 public:
 	void SetupPlayerInput(NotNullPtr<UInputComponent> input);
@@ -52,5 +22,7 @@ public:
 
 
 private:
-	ARCharacterClient_Private::MovementHelperManager MovementHelper;
+	MovementManager Movement;
 };
+
+} // namespace ar_client

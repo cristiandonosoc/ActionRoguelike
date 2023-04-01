@@ -33,7 +33,7 @@ UCLASS()
 class ARGAME_API AARCharacter : public ACharacter, public IARCreditHolder
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARCharacter, ARCharacterClient, ARCharacterServer);
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARCharacter, ar_client::CharacterClient, ARCharacterServer);
 
 public:
 	// Sets default values for this character's properties
