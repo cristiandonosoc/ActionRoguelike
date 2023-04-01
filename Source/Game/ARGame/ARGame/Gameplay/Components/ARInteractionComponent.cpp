@@ -7,9 +7,6 @@
 #include <Blueprint/UserWidget.h>
 #include <Components/BoxComponent.h>
 
-
-#include <ARGame/UI/ARActorAttachedWidget.h>
-
 AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, true,
 						  "All the displays for player interactions");
 
@@ -24,12 +21,12 @@ void UARInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CLIENT_CALL(BeginPlay);
+	CLIENT_ONLY_CALL(BeginPlay);
 }
 
 void UARInteractionComponent::EndPlay(const EEndPlayReason::Type reason)
 {
-	CLIENT_CALL(EndPlay);
+	CLIENT_ONLY_CALL(EndPlay);
 	Super::EndPlay(reason);
 }
 
@@ -82,5 +79,5 @@ void UARInteractionComponent::PrimaryInteract()
 
 void UARInteractionComponent::Server_Interact_Implementation()
 {
-	SERVER_CALL(Interact);
+	SERVER_ONLY_CALL(Interact);
 }

@@ -1,6 +1,14 @@
 ﻿#pragma once
 
 #include <ARGame/Gameplay/ARGameplayInterface.h>
+#include <ARBase/ClientServerSplit.h>
+
+#ifdef AR_BUILD_CLIENT
+#include <ARGameClient/Items/ARItemSpawnerClient.h>
+#endif // AR_BUILD_CLIENT
+#ifdef AR_BUILD_SERVER
+#include <ARGameServer/Items/ARItemSpawnerServer.h>
+#endif // AR_BUILD_SERVER
 
 #include <CoreMinimal.h>
 #include <GameFramework/Actor.h>
@@ -17,10 +25,23 @@ UCLASS()
 class ARGAME_API AARItemSpawner : public AActor, public IARInteractable
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARItemSpawner, ARItemSpawnerClient, ARItemSpawnerServer);
 
 public:
 	// Sets default values for this actor's properties
 	AARItemSpawner();
+
+public:
+	float GetInitialDelay() const { return InitialDelay; }
+	float GetRespawnDelay() const { return RespawnDelay; }
+	const TSoftClassPtr<AARBaseItem>& GetItemClass() const { return ItemClass; }
+	const TObjectPtr<AARBaseItem>& GetSpawnedItem() const { return SpawnedItem; }
+
+	void SetSpawnedItem(const TObjectPtr<AARBaseItem>& item) { SpawnedItem = item; }
+
+public:
+	virtual void EndPlay(const EEndPlayReason::Type reason) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
 
 	// INTERFACE_BEGIN(IARInteractable)
 	virtual bool CanInteract_Implementation(APawn* interactor) override;
@@ -41,11 +62,6 @@ protected:
 	UFUNCTION()
 	void OnBeginEnd(UPrimitiveComponent* overlapped_component, AActor* other_actor,
 					UPrimitiveComponent* other_comp, int32 other_body_index);
-
-private:
-	UFUNCTION()
-	void SpawnItem();
-	void ScheduleItemSpawning(float delay);
 
 protected:
 	// Item tracks the object to spawn in this spawner.
@@ -68,11 +84,8 @@ protected:
 	TObjectPtr<UShapeComponent> InteractionCollisionVolume;
 
 private:
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	TObjectPtr<AARBaseItem> SpawnedItem;
-
-	FTimerHandle SpawnTimerHandle;
-
 	// Cache of the overlapping player pawn with this spawner.
 	// We need to do this because if the player never leaves the collision, it will not be detected
 	// as "entering" and therefore will not automatically interact with the object.

@@ -1,16 +1,16 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#include <ARGame/Items/ARItemSpawner.h>
+﻿#include <ARGame/Items/ARItemSpawner.h>
 
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/Items/ARBaseItem.h>
 
 #include <Components/CapsuleComponent.h>
+#include <Net/UnrealNetwork.h>
 
 // Sets default values
 AARItemSpawner::AARItemSpawner()
 {
+	INIT_BASE_CLIENT_SERVER_SPLIT();
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if
 	// you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -37,7 +37,7 @@ void AARItemSpawner::BeginPlay()
 	streamer->RequestSyncLoad(ItemClass);
 
 	// We schedule the item to be spawned.
-	ScheduleItemSpawning(InitialDelay);
+	SERVER_ONLY_CALL(ScheduleItemSpawning, InitialDelay);
 }
 
 void AARItemSpawner::OnBeginOverlap(UPrimitiveComponent* overlapped_component, AActor* other_actor,
@@ -78,44 +78,20 @@ void AARItemSpawner::OnBeginEnd(UPrimitiveComponent* overlapped_component, AActo
 	CurrentlyOverlappingPlayerPawn = nullptr;
 }
 
-void AARItemSpawner::SpawnItem()
+void AARItemSpawner::EndPlay(const EEndPlayReason::Type reason)
 {
-	bool is_set = !ItemClass.IsNull();
-	if (!ensure(is_set))
-	{
-		return;
-	}
-
-	check(!SpawnedItem); // There should not be an item present.
-
-	FActorSpawnParameters params = {};
-	params.SpawnCollisionHandlingOverride =
-		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	NotNullPtr<AARBaseItem> item =
-		GetWorld()->SpawnActor<AARBaseItem>(ItemClass.Get(), GetActorTransform(), params);
-	SpawnedItem = item.Get();
-
-	// We check if the player is currently overlapping, so that we trigger immediately the
-	// interaction.
-	if (APawn* player_pawn = CurrentlyOverlappingPlayerPawn.Get())
-	{
-		IARInteractable::Execute_Interact(this, player_pawn);
-	}
+	SERVER_ONLY_CALL(EndPlay);
+	
+	Super::EndPlay(reason);
 }
 
-void AARItemSpawner::ScheduleItemSpawning(float delay)
+void AARItemSpawner::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const
 {
-	check(!SpawnedItem);
+	Super::GetLifetimeReplicatedProps(props);
 
-	// We check if we need to spawn the object immediately.
-	if (delay == 0.0f)
-	{
-		SpawnItem();
-	}
-
-	// Otherwise, we schedule it for spawning.
-	GetWorldTimerManager().SetTimer(SpawnTimerHandle, this, &AARItemSpawner::SpawnItem, delay,
-									false);
+	// Unreal expects this stupid ass name.
+	auto& OutLifetimeProps = props;
+	DOREPLIFETIME(AARItemSpawner, SpawnedItem);
 }
 
 bool AARItemSpawner::CanInteract_Implementation(APawn* interactor)
@@ -137,20 +113,15 @@ bool AARItemSpawner::CanInteract_Implementation(APawn* interactor)
 	return true;
 }
 
-
 bool AARItemSpawner::Interact_Implementation(APawn* interactor)
 {
+	// We verify that we can interact.
 	if (!IARInteractable::Execute_CanInteract(this, interactor))
 	{
 		return false;
 	}
 
-	// We use the object and we destroy it.
-	SpawnedItem->Use(interactor);
-	SpawnedItem->Destroy();
-	SpawnedItem = nullptr;
-
-	ScheduleItemSpawning(RespawnDelay);
-
+	// The item via replication will
+	CLIENT_SERVER_CALL(Interact, SpawnedItem.Get(), interactor);
 	return true;
 }

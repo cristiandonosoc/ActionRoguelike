@@ -2,7 +2,6 @@
 
 #include <ARBase/ClientServerSplit.h>
 
-
 class UARActorAttachedWidget;
 class UARInteractionComponent;
 
