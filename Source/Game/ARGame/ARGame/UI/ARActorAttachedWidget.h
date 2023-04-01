@@ -12,7 +12,7 @@ class USizeBox;
 // "near" it.
 // It handles the world to screen projection. It is meant to be sub-classed.
 UCLASS()
-class UARActorAttachedWidget : public UUserWidget
+class ARGAME_API UARActorAttachedWidget : public UUserWidget
 {
 	GENERATED_BODY()
 

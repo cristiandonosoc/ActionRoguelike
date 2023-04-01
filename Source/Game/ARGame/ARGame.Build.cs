@@ -21,12 +21,14 @@ public class ARGame : ModuleRules
 
 		PublicIncludePaths.AddRange(new string[] { "Game/ARGame" });
 
-		if (HasClientDependency(Target))
+		PrivateDefinitions.AddRange(ARBuildRules.GetModuleDefines(Target.Type));
+
+		if (ARBuildRules.HasClientCode(Target.Type))
 		{
 			PublicDependencyModuleNames.AddRange(new string[] { "ARGameClient" });
 		}
 
-		if (HasServerDependency(Target))
+		if (ARBuildRules.HasServerCode(Target.Type))
 		{
 			PublicDependencyModuleNames.AddRange(new string[] { "ARGameServer" });
 		}
@@ -38,31 +40,5 @@ public class ARGame : ModuleRules
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-	}
-
-	private static bool HasServerDependency(ReadOnlyTargetRules Target)
-	{
-		switch (Target.Type)
-		{
-			case TargetType.Editor:
-			case TargetType.Game:
-			case TargetType.Server:
-				return true;
-			default:
-				return false;
-		}
-	}
-
-	private static bool HasClientDependency(ReadOnlyTargetRules Target)
-	{
-		switch (Target.Type)
-		{
-			case TargetType.Editor:
-			case TargetType.Game:
-			case TargetType.Client:
-				return true;
-			default:
-				return false;
-		}
 	}
 }

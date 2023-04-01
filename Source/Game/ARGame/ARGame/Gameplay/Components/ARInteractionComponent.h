@@ -4,11 +4,11 @@
 #include <ARBase/ClientServerSplit.h>
 
 #ifdef AR_BUILD_CLIENT
-#include <ARGame/Client/ARInteractionComponentClient.h>
+#include <ARGameClient/Gameplay/Components/ARInteractionComponentClient.h>
 #endif // AR_BUILD_CLIENT
 
 #ifdef AR_BUILD_SERVER
-#include <ARGame/Server/ARInteractionComponentServer.h>
+#include <ARGameServer/Gameplay/Components/ARInteractionComponentServer.h>
 #endif // AR_BUILD_SERVER
 
 #include <Components/ActorComponent.h>
@@ -46,13 +46,16 @@ public:
 	// Interact against the current best interactable.
 	void PrimaryInteract();
 
+	static AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner);
+
+	const auto& GetDefaultWidgetClass() const { return DefaultWidgetClass; }
+	const TObjectPtr<UARActorAttachedWidget>& GetWidget() const { return Widget; }
+	void SetWidget(NotNullPtr<UARActorAttachedWidget> widget) { Widget = widget; }
+
 protected:
 	UFUNCTION(Server, Reliable)
 	void Server_Interact();
 	void Server_Interact_Implementation();
-
-private:
-	static AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")

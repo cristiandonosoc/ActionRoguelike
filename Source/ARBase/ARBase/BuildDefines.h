@@ -11,9 +11,9 @@
 // Dedicated server (NOT listen server).
 #define AR_BUILD_DEDICATED_SERVER UE_SERVER
 // This is if there is server code to be compiled.
-#define AR_BUILD_SERVER WITH_SERVER_CODE
+// #define AR_BUILD_SERVER WITH_SERVER_CODE
 // Parts that are client only (including editor).
-#define AR_BUILD_CLIENT ((!UE_SERVER && !WITH_SERVER_CODE) || UE_EDITOR)	
+// #define AR_BUILD_CLIENT ((!UE_SERVER && !WITH_SERVER_CODE) || UE_EDITOR)	
 
 #define AR_BUILD_GAME_ONLY UE_GAME 
 #define AR_BUILD_FINAL (UE_BUILD_SHIPPING || UE_BUILD_TEST)		// Shipping & test builds.

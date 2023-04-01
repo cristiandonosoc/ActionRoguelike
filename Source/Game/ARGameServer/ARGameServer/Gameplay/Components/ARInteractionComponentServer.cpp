@@ -1,5 +1,4 @@
-﻿#include <ARGame/Server/ARInteractionComponentServer.h>
-#ifdef AR_BUILD_SERVER
+﻿#include <ARGameServer/Gameplay/Components/ARInteractionComponentServer.h>
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
@@ -7,8 +6,8 @@
 
 void ARInteractionComponentServer::Interact()
 {
-	NotNullPtr player_character = Cast<AARCharacter>(Base->GetOwner());
-	AActor* interactable = Base->QueryBestInteractable(player_character);
+	NotNullPtr player_character = Cast<AARCharacter>(GetBase()->GetOwner());
+	AActor* interactable = GetBase()->QueryBestInteractable(player_character);
 	if (!interactable)
 	{
 		ARDebugDraw::Text(ARDebugCategories::INTERACTION, "No current focused interactable",
@@ -26,5 +25,3 @@ void ARInteractionComponentServer::Interact()
 
 	IARInteractable::Execute_Interact(interactable, pawn);
 }
-
-#endif // AR_BUILD_SERVER

@@ -3,12 +3,12 @@
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>
-#include <ARGame/UI/ARActorAttachedWidget.h>
 
 #include <Blueprint/UserWidget.h>
 #include <Components/BoxComponent.h>
-#include <Kismet/KismetMathLibrary.h>
-#include <Templates/NonNullPointer.h>
+
+
+#include <ARGame/UI/ARActorAttachedWidget.h>
 
 AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, true,
 						  "All the displays for player interactions");
@@ -24,13 +24,7 @@ void UARInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Create the widget.
-	if (DefaultWidgetClass)
-	{
-		check(!Widget);
-		Widget = Cast<UARActorAttachedWidget>(CreateWidget(GetWorld(), DefaultWidgetClass.Get()));
-		check(Widget);
-	}
+	CLIENT_CALL(BeginPlay);
 }
 
 void UARInteractionComponent::EndPlay(const EEndPlayReason::Type reason)
@@ -85,7 +79,6 @@ void UARInteractionComponent::PrimaryInteract()
 {
 	Server_Interact();
 }
-
 
 void UARInteractionComponent::Server_Interact_Implementation()
 {

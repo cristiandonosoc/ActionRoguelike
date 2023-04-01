@@ -18,7 +18,6 @@
 
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
 private:                                                                                           \
-	friend class client_class;                                                                     \
 	client_class _ClientSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
@@ -35,11 +34,24 @@ public:                                                                         
 #define GENERATED_CLIENT_SPLIT(base_class, client_class)                                           \
 private:                                                                                           \
 	friend class base_class;                                                                       \
-	base_class* Base;                                                                              \
+	base_class* _Base;                                                                             \
 	void InitFromBase(NotNullPtr<base_class> base)                                                 \
 	{                                                                                              \
-		Base = base.Get();                                                                         \
+		_Base = base.Get();                                                                        \
+	}                                                                                              \
+                                                                                                   \
+public:                                                                                            \
+	base_class* GetBase()                                                                          \
+	{                                                                                              \
+		check(_Base);                                                                              \
+		return _Base;                                                                              \
+	}                                                                                              \
+	const base_class* GetBase() const                                                              \
+	{                                                                                              \
+		check(_Base);                                                                              \
+		return _Base;                                                                              \
 	}
+
 
 #define INIT_BASE_CLIENT_SPLIT() _ClientSplit.InitFromBase(this);
 
@@ -47,7 +59,7 @@ private:                                                                        
 
 #else
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
-#define GENERATED_CLIENT_SPLIT(base_class, client_class) #define INIT_BASE_CLIENT_SPLIT()
+#define GENERATED_CLIENT_SPLIT(base_class, client_class)
 #define INIT_BASE_CLIENT_SPLIT()
 #define CLIENT_CALL(...)
 #endif // AR_BUILD_CLIENT
@@ -57,7 +69,6 @@ private:                                                                        
 
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
 private:                                                                                           \
-	friend class server_class;                                                                     \
 	server_class _ServerSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
@@ -73,10 +84,22 @@ public:                                                                         
 #define GENERATED_SERVER_SPLIT(base_class, server_class)                                           \
 private:                                                                                           \
 	friend class base_class;                                                                       \
-	base_class* Base;                                                                              \
+	base_class* _Base;                                                                             \
 	void InitFromBase(NotNullPtr<base_class> base)                                                 \
 	{                                                                                              \
-		Base = base.Get();                                                                         \
+		_Base = base.Get();                                                                        \
+	}                                                                                              \
+                                                                                                   \
+public:                                                                                            \
+	base_class* GetBase()                                                                          \
+	{                                                                                              \
+		check(_Base);                                                                              \
+		return _Base;                                                                              \
+	}                                                                                              \
+	const base_class* GetBase() const                                                              \
+	{                                                                                              \
+		check(_Base);                                                                              \
+		return _Base;                                                                              \
 	}
 
 #define INIT_BASE_SERVER_SPLIT() _ServerSplit.InitFromBase(this);

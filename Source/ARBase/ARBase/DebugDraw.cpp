@@ -132,7 +132,7 @@ void ARDebugDraw::Text(int32 category, const FString& msg, const FColor& color, 
 		return;
 	}
 
-#if AR_BUILD_SERVER
+#ifdef AR_BUILD_SERVER
 	{
 		static const TCHAR* kLocation = TEXT("Server");
 		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
@@ -140,7 +140,7 @@ void ARDebugDraw::Text(int32 category, const FString& msg, const FColor& color, 
 	}
 #endif // AR_BUILD_SERVER
 
-#if AR_BUILD_CLIENT
+#ifdef AR_BUILD_CLIENT
 	{
 		static const TCHAR* kLocation = TEXT("Client");
 		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,

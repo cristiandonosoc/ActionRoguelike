@@ -10,6 +10,7 @@ public class ARGameClient : ModuleRules
 			new string[]
 			{
 				"Core",
+				"UMG"
 			}
 		);
 
@@ -23,7 +24,15 @@ public class ARGameClient : ModuleRules
 			}
 		);
 
+		PrivateDefinitions.AddRange(ARBuildRules.GetClientDefines());
+		
+
 		PublicDependencyModuleNames.AddRange(new string[] { "ARBase" });
 		PublicIncludePaths.AddRange(new string[] { "Game/ARGameClient" });
+
+		// Only for Client/Server split, we create a circularly dependency.
+		// We also tell UBT that we're OK with it.
+		PublicDependencyModuleNames.Add("ARGame");
+		CircularlyReferencedDependentModules.Add("ARGame");
 	}
 }
