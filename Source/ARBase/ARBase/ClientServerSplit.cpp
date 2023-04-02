@@ -33,12 +33,12 @@ bool ARClientServerGlobals::RunningAsServer(NotNullPtr<AActor>)
 // For now we assume that if we don't have authority, we are running as client.
 // TODO(cdc): When we begin with client side things, this will not be true. For now, this is true.
 
-bool ARClientServerGlobals::RunningInClient(NotNullPtr<AActor> actor)
+bool ARClientServerGlobals::RunningInClient(NotNullPtr<const AActor> actor)
 {
 	return !actor->HasAuthority();
 }
 
-bool ARClientServerGlobals::RunningInServer(NotNullPtr<AActor> actor)
+bool ARClientServerGlobals::RunningInServer(NotNullPtr<const AActor> actor)
 {
 	return actor->HasAuthority();
 }

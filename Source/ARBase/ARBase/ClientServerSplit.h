@@ -12,14 +12,14 @@
 // client, even when running on the editor under RUOP (Run Under One Process).
 struct ARBASE_API ARClientServerGlobals
 {
-	static bool RunningInClient(NotNullPtr<AActor> actor);
-	static bool RunningInClient(NotNullPtr<UActorComponent> actor_component)
+	static bool RunningInClient(NotNullPtr<const AActor> actor);
+	static bool RunningInClient(NotNullPtr<const UActorComponent> actor_component)
 	{
 		return RunningInClient(actor_component->GetOwner());
 	}
 
-	static bool RunningInServer(NotNullPtr<AActor> actor);
-	static bool RunningInServer(NotNullPtr<UActorComponent> actor_component)
+	static bool RunningInServer(NotNullPtr<const AActor> actor);
+	static bool RunningInServer(NotNullPtr<const UActorComponent> actor_component)
 	{
 		return RunningInServer(actor_component->GetOwner());
 	}

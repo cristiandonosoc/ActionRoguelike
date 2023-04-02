@@ -18,4 +18,16 @@ public:
 	// https://forums.unrealengine.com/t/the-time-material-node-returns-editor-up-time-instead-of-game-time-if-the-material-is-set-to-the-material-domain-user-interface/398968/11
 	UFUNCTION(BlueprintPure, Category = "Time")
 	static float GetAccurateTime();
+
+	UFUNCTION(BlueprintPure, Category = "ClientServer")
+	static bool ActorRunningInClient(const AActor* actor);
+
+	UFUNCTION(BlueprintPure, Category = "ClientServer")
+	static bool ActorComponentRunningInClient(const UActorComponent* actor_component);
+
+	UFUNCTION(BlueprintPure, Category = "ClientServer")
+	static bool ActorRunningInServer(const AActor* actor);
+
+	UFUNCTION(BlueprintPure, Category = "ClientServer")
+	static bool ActorComponentRunningInServer(const UActorComponent* actor_component);
 };
