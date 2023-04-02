@@ -13,11 +13,13 @@ namespace client
 namespace
 {
 
-void ManageInteractableWidget(UARActorAttachedWidget* widget, AActor* interactable)
+void ManageInteractableWidget(NotNullPtr<UWorld> world, UARActorAttachedWidget* widget,
+							  AActor* interactable)
 {
 	if (!widget)
 	{
-		ARDebugDraw::Text(ARDebugCategories::INTERACTION, "No default widget set!", FColor::Red, 1);
+		ARDebugDraw::Text(ARDebugCategories::INTERACTION, world, "No default widget set!",
+						  FColor::Red, 1);
 		return;
 	}
 
@@ -69,9 +71,9 @@ void InteractionComponentClient::NotifyIsLocalControlled()
 
 void InteractionComponentClient::FindBestInteractable()
 {
-	NotNullPtr player_character = Cast<AARCharacter>(GetBase()->GetOwner());
+	NotNullPtr player_character = Cast<AARCharacter>(GetOwner());
 	auto* interactable = GetBase()->QueryBestInteractable(player_character);
-	ManageInteractableWidget(GetBase()->GetWidget(), interactable);
+	ManageInteractableWidget(GetWorld(), GetBase()->GetWidget(), interactable);
 }
 
 } // namespace client

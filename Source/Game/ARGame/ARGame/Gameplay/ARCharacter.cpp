@@ -24,7 +24,7 @@ AR_DECLARE_DEBUG_CATEGORY(PLAYER_CHARACTER, ARDebugCategories::PLAYER_CHARACTER,
 AARCharacter::AARCharacter()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
-	
+
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance
 	// if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -60,9 +60,33 @@ void AARCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Log, TEXT("IsServer: %d, IsClient: %d"),
-		   ARClientServerGlobals::RunningInServer(this),
-		   ARClientServerGlobals::RunningInClient(this));
+	FString prefix;
+	switch (GetWorld()->GetNetMode())
+	{
+	case NM_Client:
+		// GPlayInEditorID 0 is always the server, so 1 will be first client.
+		// You want to keep this logic in sync with GeneratePIEViewportWindowTitle and
+		// UpdatePlayInEditorWorldDebugString
+		prefix = FString::Printf(TEXT("Client %d"), GPlayInEditorID);
+		break;
+	case NM_DedicatedServer:
+	case NM_ListenServer:
+		prefix = FString::Printf(TEXT("Server"));
+		break;
+	case NM_Standalone:
+		break;
+	default:
+		break;
+	}
+
+
+	FString line("*******************************************************************************\n"
+				 "*******************************************************************************\n"
+				 "*******************************************************************************");
+
+	UE_LOG(LogTemp, Log, TEXT("%s\n%s (%s) -> IsServer: %d, IsClient: %d\n%s"), *line, *prefix,
+		   *GetNameSafe(this), ARClientServerGlobals::RunningInServer(this),
+		   ARClientServerGlobals::RunningInClient(this), *line);
 }
 
 FVector AARCharacter::GetPawnViewLocation() const
@@ -158,7 +182,7 @@ void AARCharacter::Tick(float delta)
 	CameraTarget = ObtainCameraTarget(*this);
 	if (HasAuthority())
 	{
-		ARDebugDraw::Text(ARDebugCategories::ALWAYS,
+		ARDebugDraw::Text(ARDebugCategories::ALWAYS, GetWorld(),
 						  FString::Printf(TEXT("%s LOCATION: %s"), *GetNameSafe(this),
 										  *GetActorLocation().ToString()),
 						  FColor::Purple);

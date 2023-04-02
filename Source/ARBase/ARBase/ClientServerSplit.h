@@ -62,28 +62,8 @@ struct ARBASE_API ARClientServerGlobals
 	CLIENT_ONLY_CALL(function, __VA_ARGS__);                                                       \
 	SERVER_ONLY_CALL(function, __VA_ARGS__);
 
-// Client Macros
-// -------------------------------------------------------------------------------------------------
 
-
-#if AR_BUILD_CLIENT
-
-#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
-private:                                                                                           \
-	client_class _ClientSplit;                                                                     \
-                                                                                                   \
-public:                                                                                            \
-	client_class* GetClientSplit()                                                                 \
-	{                                                                                              \
-		return &_ClientSplit;                                                                      \
-	}                                                                                              \
-	const client_class* GetClientSplit() const                                                     \
-	{                                                                                              \
-		return &_ClientSplit;                                                                      \
-	}
-
-
-#define GENERATED_CLIENT_SPLIT(base_class)                                                         \
+#define GENERATED_LEAF_COMMON_SPLIT(base_class)                                                    \
 private:                                                                                           \
 	friend class base_class;                                                                       \
 	base_class* _Base = nullptr;                                                                   \
@@ -102,10 +82,41 @@ public:                                                                         
 	{                                                                                              \
 		check(_Base);                                                                              \
 		return _Base;                                                                              \
+	}                                                                                              \
+	template <typename THackToOnlyUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>        \
+	UWorld* GetWorld() const                                                                       \
+	{                                                                                              \
+		return GetBase()->GetWorld();                                                              \
+	}                                                                                              \
+	template <typename THackToOnlyUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>        \
+	AActor* GetOwner() const                                                                       \
+	{                                                                                              \
+		return GetBase()->GetOwner();                                                              \
 	}
 
 
+// Client Macros
+// -------------------------------------------------------------------------------------------------
+
+#if AR_BUILD_CLIENT
+
+#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
+private:                                                                                           \
+	client_class _ClientSplit;                                                                     \
+                                                                                                   \
+public:                                                                                            \
+	client_class* GetClientSplit()                                                                 \
+	{                                                                                              \
+		return &_ClientSplit;                                                                      \
+	}                                                                                              \
+	const client_class* GetClientSplit() const                                                     \
+	{                                                                                              \
+		return &_ClientSplit;                                                                      \
+	}
+
 #define INIT_BASE_CLIENT_SPLIT() _ClientSplit.InitFromBase(this);
+
+#define GENERATED_LEAF_CLIENT_SPLIT(base_class) GENERATED_LEAF_COMMON_SPLIT(base_class)
 
 // TODO(cdc): Figure out if we can use variadic template and auto to be able to return values from
 //            this forwarded calls.
@@ -121,8 +132,8 @@ public:                                                                         
 
 #else
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
-#define GENERATED_CLIENT_SPLIT(base_class)
 #define INIT_BASE_CLIENT_SPLIT()
+#define GENERATED_LEAF_CLIENT_SPLIT(base_class)
 #define CLIENT_ONLY_CALL(...)
 #endif // AR_BUILD_CLIENT
 
@@ -145,28 +156,9 @@ public:                                                                         
 		return &_ServerSplit;                                                                      \
 	}
 
-#define GENERATED_SERVER_SPLIT(base_class)                                                         \
-private:                                                                                           \
-	friend class base_class;                                                                       \
-	base_class* _Base = nullptr;                                                                   \
-	void InitFromBase(NotNullPtr<base_class> base)                                                 \
-	{                                                                                              \
-		_Base = base.Get();                                                                        \
-	}                                                                                              \
-                                                                                                   \
-public:                                                                                            \
-	base_class* GetBase()                                                                          \
-	{                                                                                              \
-		check(_Base);                                                                              \
-		return _Base;                                                                              \
-	}                                                                                              \
-	const base_class* GetBase() const                                                              \
-	{                                                                                              \
-		check(_Base);                                                                              \
-		return _Base;                                                                              \
-	}
-
 #define INIT_BASE_SERVER_SPLIT() _ServerSplit.InitFromBase(this);
+
+#define GENERATED_LEAF_SERVER_SPLIT(base_class) GENERATED_LEAF_COMMON_SPLIT(base_class)
 
 // TODO(cdc): Figure out if we can use variadic template and auto to be able to return values from
 //            this forwarded calls.
@@ -183,7 +175,7 @@ public:                                                                         
 
 #else
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)
-#define GENERATED_SERVER_SPLIT(base_class)
 #define INIT_BASE_SERVER_SPLIT()
+#define GENERATED_LEAF_SERVER_SPLIT(base_class)
 #define SERVER_ONLY_CALL(...)
 #endif // AR_BUILD_SERVER

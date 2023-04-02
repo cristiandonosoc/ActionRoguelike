@@ -73,10 +73,6 @@ public:
 	static UARAttributeComponent& GetAttributes(NotNullPtr<AActor> actor);
 
 public:
-	// Sets default values for this component's properties
-	UARAttributeComponent();
-
-public:
 	float GetHealth() const { return Health; }
 	float GetMaxHealth() const { return MaxHealth; }
 	float GetKilledCredits() const { return KilledCredits; }
@@ -87,12 +83,16 @@ public:
 	void SetHealth(float health) { Health = health; }
 
 public:
+	// INTERFACE_BEGIN(AActor)
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
+	// INTERFACE_END(AActor)
+
+	
 	// Checks whether the health change attempt would apply.
 	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to
 	// query this to see if they need to perform the action (eg. Health pack).
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool WouldHealthChangeApply(float delta) const;
-
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const { return Health > 0.0f; }
@@ -110,10 +110,10 @@ public:
 	FOnHealthChanged OnHealthChanged;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float Health = 200;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
 	float MaxHealth = 200;
 
 	// How many credits the owner gives when killed.

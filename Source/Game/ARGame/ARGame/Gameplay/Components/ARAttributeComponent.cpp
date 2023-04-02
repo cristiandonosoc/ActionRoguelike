@@ -1,9 +1,8 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
-#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/Gameplay/Base/ARGameModeBase.h>
+#include <Net/UnrealNetwork.h>
 #include <Particles/Collision/ParticleModuleCollisionGPU.h>
-
 
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
 {
@@ -18,8 +17,15 @@ UARAttributeComponent& UARAttributeComponent::GetAttributes(NotNullPtr<AActor> a
 	return *comp;
 }
 
-// Sets default values for this component's properties
-UARAttributeComponent::UARAttributeComponent() {}
+void UARAttributeComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const
+{
+	Super::GetLifetimeReplicatedProps(props);
+
+	// Unreal expects this stupid ass name.
+	auto& OutLifetimeProps = props;
+	DOREPLIFETIME(UARAttributeComponent, Health);
+	DOREPLIFETIME(UARAttributeComponent, MaxHealth);
+}
 
 bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 {

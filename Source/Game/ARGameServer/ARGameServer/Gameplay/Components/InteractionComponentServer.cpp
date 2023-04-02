@@ -15,7 +15,7 @@ void InteractionComponentServer::Interact()
 	AActor* interactable = GetBase()->QueryBestInteractable(player_character);
 	if (!interactable)
 	{
-		ARDebugDraw::Text(ARDebugCategories::INTERACTION, "No current focused interactable",
+		ARDebugDraw::Text(ARDebugCategories::INTERACTION, GetBase()->GetWorld(), "No current focused interactable",
 						  FColor::Orange, 3);
 		return;
 	}

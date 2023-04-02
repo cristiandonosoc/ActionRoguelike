@@ -125,28 +125,33 @@ void ARDebugDraw::ToggleCategory(int32 category)
 	auto& data = FindCategoryData(category);
 	data.Enabled = !data.Enabled;
 }
-void ARDebugDraw::Text(int32 category, const FString& msg, const FColor& color, float lifetime)
+void ARDebugDraw::Text(int32 category, NotNullPtr<UWorld> world, const FString& msg,
+					   const FColor& color, float lifetime)
 {
 	if (!IsCategoryEnabled(category))
 	{
 		return;
 	}
 
-#if AR_BUILD_SERVER
+	FString prefix;
+	switch (world->GetNetMode())
 	{
-		static const TCHAR* kLocation = TEXT("Server");
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
-										 FString::Printf(TEXT("%s - %s"), kLocation, *msg));
+	case NM_Client:
+		// GPlayInEditorID 0 is always the server, so 1 will be first client.
+		// You want to keep this logic in sync with GeneratePIEViewportWindowTitle and
+		// UpdatePlayInEditorWorldDebugString
+		prefix = FString::Printf(TEXT("Client %d"), GPlayInEditorID);
+		break;
+	case NM_DedicatedServer:
+	case NM_ListenServer:
+		prefix = FString::Printf(TEXT("Server"));
+		break;
+	default:
+		break;
 	}
-#endif // AR_BUILD_SERVER
 
-#if AR_BUILD_CLIENT
-	{
-		static const TCHAR* kLocation = TEXT("Client");
-		GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
-										 FString::Printf(TEXT("%s - %s"), kLocation, *msg));
-	}
-#endif // AR_BUILD_CLIENT
+	GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
+									 FString::Printf(TEXT("%s: %s"), *prefix, *msg));
 }
 
 void ARDebugDraw::Box(int32 category, NotNullPtr<UWorld> world, const FVector& center,

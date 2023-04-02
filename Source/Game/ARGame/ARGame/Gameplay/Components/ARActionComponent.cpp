@@ -42,7 +42,7 @@ void UARActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	{
 		FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
 									  *ActiveGameplayTags.ToStringSimple());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, std::move(msg), FColor::Blue);
+		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
 	}
 }
 
@@ -98,7 +98,7 @@ bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* i
 		if (!action->CanStart(instigator))
 		{
 			FString msg = FString::Printf(TEXT("Action %s cannot start"), *name.ToString());
-			ARDebugDraw::Text(ARDebugCategories::ACTIONS, msg, FColor::Red, 2);
+			ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), msg, FColor::Red, 2);
 			continue;
 		}
 
@@ -112,7 +112,7 @@ bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* i
 	if (!found)
 	{
 		FString msg = FString::Printf(TEXT("No action for name %s found"), *name.ToString());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, msg, FColor::Red, 2);
+		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), msg, FColor::Red, 2);
 	}
 
 	return found;

@@ -12,7 +12,7 @@ namespace client
 
 class ARGAMECLIENT_API InteractionComponentClient
 {
-	GENERATED_CLIENT_SPLIT(UARInteractionComponent);
+	GENERATED_LEAF_CLIENT_SPLIT(UARInteractionComponent);
 
 public:
 	static constexpr float kFocusCheckPeriod = 0.5f;

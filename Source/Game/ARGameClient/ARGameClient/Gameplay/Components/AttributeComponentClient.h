@@ -11,7 +11,7 @@ namespace client
 
 class ARGAMECLIENT_API AttributeComponentClient
 {
-	GENERATED_CLIENT_SPLIT(UARAttributeComponent);
+	GENERATED_LEAF_CLIENT_SPLIT(UARAttributeComponent);
 };
 
 } // namespace client
