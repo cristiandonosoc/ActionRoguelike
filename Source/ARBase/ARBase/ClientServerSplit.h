@@ -28,6 +28,9 @@ struct ARBASE_API ARClientServerGlobals
 // Base Macros
 // -------------------------------------------------------------------------------------------------
 
+#define CHECK_RUNNING_ON_CLIENT() check(ARClientServerGlobals::RunningInClient(this));
+#define CHECK_RUNNING_ON_SERVER() check(ARClientServerGlobals::RunningInServer(this));
+
 // GENERATED_BASE_CLIENT_SERVER_SPLIT generates code for client and server split of a AActor.
 // This split depends on where (and how) the code is being compiled.
 //
@@ -61,6 +64,7 @@ struct ARBASE_API ARClientServerGlobals
 
 // Client Macros
 // -------------------------------------------------------------------------------------------------
+
 
 #if AR_BUILD_CLIENT
 

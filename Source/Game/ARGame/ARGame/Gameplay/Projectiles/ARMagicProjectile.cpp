@@ -3,6 +3,7 @@
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
 
 #include <ARBase/BuildDefines.h>
+#include <ARBase/ClientServerSplit.h>
 #include <ARBase/DebugDraw.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
@@ -82,8 +83,12 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 			}
 		}
 
-		UARAttributeFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), other_actor, Damage,
-															hit);
+		// TODO(cdc): Do projectile client/server split.
+		if (ARClientServerGlobals::RunningInServer(this))
+		{
+			UARAttributeFunctionLibrary::Server_ApplyDirectionalDamage(GetInstigator(), other_actor,
+																	   Damage, hit);
+		}
 		if (ActionEffect && actions)
 		{
 			actions->AddAction(ActionEffect, GetInstigator());

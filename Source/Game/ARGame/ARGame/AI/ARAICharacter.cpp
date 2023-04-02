@@ -45,7 +45,7 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 	if (!HealthBarWidget)
 	{
 		HealthBarWidget = UARWidgetManager::CreateEnemyHealthBarWidget(
-			this, Attributes->GetCurrentHealth(), Attributes->GetMaxHealth());
+			this, Attributes->GetHealth(), Attributes->GetMaxHealth());
 		if (HealthBarWidget)
 		{
 			// TODO(cdc): Make this translation configurable.
@@ -55,7 +55,7 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 	}
 	else
 	{
-		HealthBarWidget->CurrentHealth = Attributes->GetCurrentHealth();
+		HealthBarWidget->CurrentHealth = Attributes->GetHealth();
 		HealthBarWidget->MaxHealth = Attributes->GetMaxHealth();
 	}
 

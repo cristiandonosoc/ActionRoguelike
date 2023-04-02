@@ -12,20 +12,22 @@ UARAttributeComponent* GetAttributes(NotNullPtr<AActor> target)
 
 } // namespace
 
-bool UARAttributeFunctionLibrary::ApplyDamage(AActor* instigator, AActor* target, float damage)
+bool UARAttributeFunctionLibrary::Server_ApplyDamage(AActor* instigator, AActor* target,
+													 float damage)
 {
 	if (auto* attributes = GetAttributes(target))
 	{
-		return attributes->ApplyHealthChange(instigator, -damage); // We apply a negative delta.
+		return attributes->Server_ApplyHealthChange(instigator,
+													-damage); // We apply a negative delta.
 	}
 
 	return false;
 }
 
-bool UARAttributeFunctionLibrary::ApplyDirectionalDamage(AActor* instigator, AActor* target,
-														 float damage, const FHitResult& hit)
+bool UARAttributeFunctionLibrary::Server_ApplyDirectionalDamage(AActor* instigator, AActor* target,
+																float damage, const FHitResult& hit)
 {
-	if (!ApplyDamage(instigator, target, damage))
+	if (!Server_ApplyDamage(instigator, target, damage))
 	{
 		return false;
 	}
@@ -44,11 +46,11 @@ bool UARAttributeFunctionLibrary::ApplyDirectionalDamage(AActor* instigator, AAc
 	return true;
 }
 
-bool UARAttributeFunctionLibrary::ApplyHeal(AActor* instigator, AActor* target, float heal)
+bool UARAttributeFunctionLibrary::Server_ApplyHeal(AActor* instigator, AActor* target, float heal)
 {
 	if (auto* attributes = GetAttributes(target))
 	{
-		return attributes->ApplyHealthChange(instigator, heal);
+		return attributes->Server_ApplyHealthChange(instigator, heal);
 	}
 
 	return false;

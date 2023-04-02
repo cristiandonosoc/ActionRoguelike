@@ -2,9 +2,9 @@
 
 #include <ARGame/Items/ARHealthPack.h>
 
-#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 #include <ARGame/Gameplay/ARCharacter.h>
+#include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 // Sets default values
 AARHealthPack::AARHealthPack()
@@ -51,9 +51,13 @@ void AARHealthPack::Use_Implementation(APawn* interactor)
 {
 	Super::Use_Implementation(interactor);
 
-	bool affected = UARAttributeFunctionLibrary::ApplyHeal(this, interactor, HealAmount);
+	// TODO(cdc): Do HealthPack client/server split.
+	if (ARClientServerGlobals::RunningInServer(this))
+	{
+		bool affected = UARAttributeFunctionLibrary::Server_ApplyHeal(this, interactor, HealAmount);
 
-	// At this point, it should be validated by CanUse that this interactor can interact with
-	// this pawn.
-	check(affected);
+		// At this point, it should be validated by CanUse that this interactor can interact with
+		// this pawn.
+		check(affected);
+	}
 }

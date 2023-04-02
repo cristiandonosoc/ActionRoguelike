@@ -1,6 +1,14 @@
 ﻿#pragma once
 
+#include <ARBase/ClientServerSplit.h>
 #include <ARBase/NotNullPtr.h>
+
+#if AR_BUILD_CLIENT
+#include <ARGameClient/Gameplay/Components/AttributeComponentClient.h>
+#endif // AR_BUILD_CLIENT
+#if AR_BUILD_SERVER
+#include <ARGameServer/Gameplay/Components/AttributeComponentServer.h>
+#endif // AR_BUILD_SERVER
 
 #include <Components/ActorComponent.h>
 #include <CoreMinimal.h>
@@ -13,7 +21,7 @@ USTRUCT(BlueprintType)
 struct FOnHealthChangedPayload
 {
 	GENERATED_BODY();
-	
+
 	static constexpr uint8 FLAG_KILLED = 0b00000001;
 
 public:
@@ -55,6 +63,9 @@ UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent
 class ARGAME_API UARAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARAttributeComponent, ar::client::AttributeComponentClient,
+									   ar::server::AttributeComponentServer);
+
 public:
 	// Helper statics.
 	// NOTE: These assume that the actor will have the attribute component, so it will assert on it.
@@ -65,25 +76,34 @@ public:
 	// Sets default values for this component's properties
 	UARAttributeComponent();
 
-	float GetCurrentHealth() const { return Health; }
+public:
+	float GetHealth() const { return Health; }
 	float GetMaxHealth() const { return MaxHealth; }
+	float GetKilledCredits() const { return KilledCredits; }
 
+	const FOnHealthChanged& GetOnHealthChangedDeledate() const { return OnHealthChanged; }
+
+
+	void SetHealth(float health) { Health = health; }
+
+public:
 	// Checks whether the health change attempt would apply.
 	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to
 	// query this to see if they need to perform the action (eg. Health pack).
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool WouldHealthChangeApply(float delta) const;
 
-	// Returns whether the change was applied.
-	// |instigator| can be null.
-	UFUNCTION(BlueprintCallable, Category = "Attributes")
-	bool ApplyHealthChange(AActor* instigator, float delta);
 
 	UFUNCTION(BlueprintCallable)
 	bool IsAlive() const { return Health > 0.0f; }
 
 	UFUNCTION(BlueprintCallable)
 	float LifeRatio() const { return Health / MaxHealth; }
+
+	// Returns whether the change was applied.
+	// |instigator| can be null.
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	bool Server_ApplyHealthChange(AActor* instigator, float delta);
 
 public:
 	UPROPERTY(BlueprintAssignable)
