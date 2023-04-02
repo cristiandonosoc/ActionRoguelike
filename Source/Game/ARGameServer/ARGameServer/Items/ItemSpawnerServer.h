@@ -3,13 +3,18 @@
 #include <ARBase/ClientServerSplit.h>
 
 class AARBaseItem;
-class ARItemSpawner;
+class AARItemSpawner;
 
 class APawn;
 
-class ARGAMESERVER_API ARItemSpawnerServer
+namespace ar
 {
-	GENERATED_SERVER_SPLIT(AARItemSpawner, ARItemSpawnerServer);
+namespace server
+{
+
+class ARGAMESERVER_API ItemSpawnerServer
+{
+	GENERATED_SERVER_SPLIT(AARItemSpawner);
 
 public:
 	void EndPlay();
@@ -23,3 +28,6 @@ private:
 
 	FTimerHandle SpawnTimerHandle;
 };
+
+} // namespace server
+} // namespace ar

@@ -10,12 +10,14 @@ class AARCharacter;
 class UInputComponent;
 class ARCharacterClient;
 
-namespace ar_client
+namespace ar
+{
+namespace client
 {
 
 class ARGAMECLIENT_API CharacterClient
 {
-	GENERATED_CLIENT_SPLIT(AARCharacter, CharacterClient);
+	GENERATED_CLIENT_SPLIT(AARCharacter);
 
 public:
 	void SetupPlayerInput(NotNullPtr<UInputComponent> input);
@@ -28,4 +30,5 @@ private:
 	MovementManager Movement;
 };
 
-} // namespace ar_client
+} // namespace client
+} // namespace ar

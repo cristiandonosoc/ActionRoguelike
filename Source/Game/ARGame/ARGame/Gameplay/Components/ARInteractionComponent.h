@@ -3,11 +3,11 @@
 #include <ARBase/ClientServerSplit.h>
 
 #if AR_BUILD_CLIENT
-#include <ARGameClient/Gameplay/Components/ARInteractionComponentClient.h>
+#include <ARGameClient/Gameplay/Components/InteractionComponentClient.h>
 #endif // AR_BUILD_CLIENT
 
 #if AR_BUILD_SERVER
-#include <ARGameServer/Gameplay/Components/ARInteractionComponentServer.h>
+#include <ARGameServer/Gameplay/Components/InteractionComponentServer.h>
 #endif // AR_BUILD_SERVER
 
 #include <Components/ActorComponent.h>
@@ -28,8 +28,9 @@ UCLASS()
 class ARGAME_API UARInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARInteractionComponent, ARInteractionComponentClient,
-									   ARInteractionComponentServer);
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARInteractionComponent,
+									   ar::client::InteractionComponentClient,
+									   ar::server::InteractionComponentServer);
 
 public:
 	static constexpr float kInteractionDistance = 1000.0f;

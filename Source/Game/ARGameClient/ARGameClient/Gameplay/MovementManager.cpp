@@ -3,9 +3,11 @@
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
-#include <ARGameClient/Gameplay/ARCharacterClient.h>
+#include <ARGameClient/Gameplay/CharacterClient.h>
 
-namespace ar_client
+namespace ar
+{
+namespace client
 {
 
 namespace
@@ -177,4 +179,5 @@ void MovementManager::PrimaryInteract()
 	GetBase()->GetInteractionComponent()->PrimaryInteract();
 }
 
-} // namespace ar_client
+} // namespace client
+} // namespace ar

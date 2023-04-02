@@ -1,10 +1,15 @@
-﻿#include <ARGameServer/Gameplay/Components/ARInteractionComponentServer.h>
+﻿#include <ARGameServer/Gameplay/Components/InteractionComponentServer.h>
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 
-void ARInteractionComponentServer::Interact()
+namespace ar
+{
+namespace server
+{
+
+void InteractionComponentServer::Interact()
 {
 	NotNullPtr player_character = Cast<AARCharacter>(GetBase()->GetOwner());
 	AActor* interactable = GetBase()->QueryBestInteractable(player_character);
@@ -25,3 +30,6 @@ void ARInteractionComponentServer::Interact()
 
 	IARInteractable::Execute_Interact(interactable, pawn);
 }
+
+} // namespace server
+} // namespace ar

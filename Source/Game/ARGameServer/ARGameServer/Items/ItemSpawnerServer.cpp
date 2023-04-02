@@ -1,15 +1,20 @@
-﻿#include <ARGameServer/Items/ARItemSpawnerServer.h>
+﻿#include <ARGameServer/Items/ItemSpawnerServer.h>
 
 #include <ARGame/Items/ARBaseItem.h>
 #include <ARGame/Items/ARItemSpawner.h>
 
-void ARItemSpawnerServer::EndPlay()
+namespace ar
+{
+namespace server
+{
+
+void ItemSpawnerServer::EndPlay()
 {
 	// Clear any pending timer.
 	GetBase()->GetWorldTimerManager().ClearTimer(SpawnTimerHandle);
 }
 
-void ARItemSpawnerServer::ScheduleItemSpawning(float delay)
+void ItemSpawnerServer::ScheduleItemSpawning(float delay)
 {
 	check(!GetBase()->GetSpawnedItem());
 
@@ -21,11 +26,11 @@ void ARItemSpawnerServer::ScheduleItemSpawning(float delay)
 
 	// Otherwise, we schedule it for spawning.
 	FTimerDelegate delegate;
-	delegate.BindRaw(this, &ARItemSpawnerServer::SpawnItem);
+	delegate.BindRaw(this, &ItemSpawnerServer::SpawnItem);
 	GetBase()->GetWorldTimerManager().SetTimer(SpawnTimerHandle, std::move(delegate), delay, false);
 }
 
-void ARItemSpawnerServer::Interact(NotNullPtr<AARBaseItem> item, NotNullPtr<APawn> interactor)
+void ItemSpawnerServer::Interact(NotNullPtr<AARBaseItem> item, NotNullPtr<APawn> interactor)
 {
 	// We use the object and we destroy it.
 	item->Use(interactor);
@@ -36,7 +41,7 @@ void ARItemSpawnerServer::Interact(NotNullPtr<AARBaseItem> item, NotNullPtr<APaw
 	ScheduleItemSpawning(GetBase()->GetRespawnDelay());
 }
 
-void ARItemSpawnerServer::SpawnItem()
+void ItemSpawnerServer::SpawnItem()
 {
 	const auto& item_class = GetBase()->GetItemClass();
 	if (!ensure(item_class.IsValid()))
@@ -63,3 +68,6 @@ void ARItemSpawnerServer::SpawnItem()
 	// 	IARInteractable::Execute_Interact(this, player_pawn);
 	// }
 }
+
+} // namespace server
+} // namespace ar

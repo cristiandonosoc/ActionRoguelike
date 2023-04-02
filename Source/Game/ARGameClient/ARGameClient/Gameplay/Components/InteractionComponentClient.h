@@ -5,9 +5,14 @@
 class UARActorAttachedWidget;
 class UARInteractionComponent;
 
-class ARGAMECLIENT_API ARInteractionComponentClient
+namespace ar
 {
-	GENERATED_CLIENT_SPLIT(UARInteractionComponent, ARInteractionComponentClient);
+namespace client
+{
+
+class ARGAMECLIENT_API InteractionComponentClient
+{
+	GENERATED_CLIENT_SPLIT(UARInteractionComponent);
 
 public:
 	static constexpr float kFocusCheckPeriod = 0.5f;
@@ -23,3 +28,6 @@ public:
 private:
 	FTimerHandle FindFocusTimerHandle;
 };
+
+} // namespace client
+} // namespace ar

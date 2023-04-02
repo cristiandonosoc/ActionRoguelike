@@ -3,7 +3,9 @@
 
 class AARCharacter;
 
-namespace ar_client
+namespace ar
+{
+namespace client
 {
 
 class CharacterClient;
@@ -36,5 +38,6 @@ private:
 	CharacterClient* CharacterClientSplit = nullptr;
 };
 
-} // namespace ar_client
+} // namespace client
+} // namespace ar
 

@@ -1,9 +1,14 @@
-﻿#include <ARGameClient/Gameplay/Components/ARInteractionComponentClient.h>
+﻿#include <ARGameClient/Gameplay/Components/InteractionComponentClient.h>
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 #include <ARGame/UI/ARActorAttachedWidget.h>
+
+namespace ar
+{
+namespace client
+{
 
 namespace
 {
@@ -37,7 +42,7 @@ void ManageInteractableWidget(UARActorAttachedWidget* widget, AActor* interactab
 
 } // namespace
 
-void ARInteractionComponentClient::BeginPlay()
+void InteractionComponentClient::BeginPlay()
 {
 	// Create the widget.
 	if (GetBase()->GetDefaultWidgetClass())
@@ -49,22 +54,25 @@ void ARInteractionComponentClient::BeginPlay()
 	}
 }
 
-void ARInteractionComponentClient::EndPlay()
+void InteractionComponentClient::EndPlay()
 {
 	GetBase()->GetWorld()->GetTimerManager().ClearTimer(FindFocusTimerHandle);
 }
 
-void ARInteractionComponentClient::NotifyIsLocalControlled()
+void InteractionComponentClient::NotifyIsLocalControlled()
 {
 	FTimerDelegate delegate;
-	delegate.BindRaw(this, &ARInteractionComponentClient::FindBestInteractable);
+	delegate.BindRaw(this, &InteractionComponentClient::FindBestInteractable);
 	GetBase()->GetWorld()->GetTimerManager().SetTimer(FindFocusTimerHandle, std::move(delegate),
 													  kFocusCheckPeriod, true);
 }
 
-void ARInteractionComponentClient::FindBestInteractable()
+void InteractionComponentClient::FindBestInteractable()
 {
 	NotNullPtr player_character = Cast<AARCharacter>(GetBase()->GetOwner());
 	auto* interactable = GetBase()->QueryBestInteractable(player_character);
 	ManageInteractableWidget(GetBase()->GetWidget(), interactable);
 }
+
+} // namespace client
+} // namespace ar

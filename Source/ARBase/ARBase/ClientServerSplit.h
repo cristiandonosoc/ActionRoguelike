@@ -79,10 +79,10 @@ public:                                                                         
 	}
 
 
-#define GENERATED_CLIENT_SPLIT(base_class, client_class)                                           \
+#define GENERATED_CLIENT_SPLIT(base_class)                                                         \
 private:                                                                                           \
 	friend class base_class;                                                                       \
-	base_class* _Base;                                                                             \
+	base_class* _Base = nullptr;                                                                   \
 	void InitFromBase(NotNullPtr<base_class> base)                                                 \
 	{                                                                                              \
 		_Base = base.Get();                                                                        \
@@ -117,7 +117,7 @@ public:                                                                         
 
 #else
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
-#define GENERATED_CLIENT_SPLIT(base_class, client_class)
+#define GENERATED_CLIENT_SPLIT(base_class)
 #define INIT_BASE_CLIENT_SPLIT()
 #define CLIENT_ONLY_CALL(...)
 #endif // AR_BUILD_CLIENT
@@ -141,10 +141,10 @@ public:                                                                         
 		return &_ServerSplit;                                                                      \
 	}
 
-#define GENERATED_SERVER_SPLIT(base_class, server_class)                                           \
+#define GENERATED_SERVER_SPLIT(base_class)                                                         \
 private:                                                                                           \
 	friend class base_class;                                                                       \
-	base_class* _Base;                                                                             \
+	base_class* _Base = nullptr;                                                                   \
 	void InitFromBase(NotNullPtr<base_class> base)                                                 \
 	{                                                                                              \
 		_Base = base.Get();                                                                        \
@@ -179,7 +179,7 @@ public:                                                                         
 
 #else
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)
-#define GENERATED_SERVER_SPLIT(base_class, server_class)
+#define GENERATED_SERVER_SPLIT(base_class)
 #define INIT_BASE_SERVER_SPLIT()
 #define SERVER_ONLY_CALL(...)
 #endif // AR_BUILD_SERVER

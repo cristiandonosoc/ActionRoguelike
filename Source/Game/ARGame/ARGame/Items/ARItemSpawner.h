@@ -1,13 +1,13 @@
 ﻿#pragma once
 
-#include <ARGame/Gameplay/ARGameplayInterface.h>
 #include <ARBase/ClientServerSplit.h>
+#include <ARGame/Gameplay/ARGameplayInterface.h>
 
 #if AR_BUILD_CLIENT
-#include <ARGameClient/Items/ARItemSpawnerClient.h>
+#include <ARGameClient/Items/ItemSpawnerClient.h>
 #endif // AR_BUILD_CLIENT
 #if AR_BUILD_SERVER
-#include <ARGameServer/Items/ARItemSpawnerServer.h>
+#include <ARGameServer/Items/ItemSpawnerServer.h>
 #endif // AR_BUILD_SERVER
 
 #include <CoreMinimal.h>
@@ -25,7 +25,8 @@ UCLASS()
 class ARGAME_API AARItemSpawner : public AActor, public IARInteractable
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARItemSpawner, ARItemSpawnerClient, ARItemSpawnerServer);
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARItemSpawner, ar::client::ItemSpawnerClient,
+									   ar::server::ItemSpawnerServer);
 
 public:
 	// Sets default values for this actor's properties

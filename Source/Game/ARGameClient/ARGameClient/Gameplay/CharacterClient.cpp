@@ -1,10 +1,12 @@
-﻿#include <ARGameClient/Gameplay/ARCharacterClient.h>
+﻿#include <ARGameClient/Gameplay/CharacterClient.h>
 
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 
-namespace ar_client
+namespace ar
+{
+namespace client
 {
 
 void CharacterClient::SetupPlayerInput(NotNullPtr<UInputComponent> input)
@@ -56,4 +58,5 @@ void CharacterClient::OnHealthChanged(const FOnHealthChangedPayload& payload)
 	}
 }
 
-} // namespace ar_client
+} // namespace client
+} // namespace ar

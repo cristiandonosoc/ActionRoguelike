@@ -5,10 +5,10 @@
 #include <ARGame/Gameplay/ARGameplayInterface.h>
 
 #if AR_BUILD_CLIENT
-#include <ARGameClient/Gameplay/ARCharacterClient.h>
+#include <ARGameClient/Gameplay/CharacterClient.h>
 #endif // AR_BUILD_CLIENT
 #if AR_BUILD_SERVER
-#include <ARGameServer/Gameplay/ARCharacterServer.h>
+#include <ARGameServer/Gameplay/CharacterServer.h>
 #endif // AR_BUILD_SERVER
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
@@ -31,7 +31,8 @@ UCLASS()
 class ARGAME_API AARCharacter : public ACharacter, public IARCreditHolder
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARCharacter, ar_client::CharacterClient, ARCharacterServer);
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARCharacter, ar::client::CharacterClient,
+									   ar::server::CharacterServer);
 
 public:
 	// Sets default values for this character's properties

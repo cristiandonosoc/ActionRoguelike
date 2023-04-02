@@ -9,14 +9,6 @@
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
-#if AR_BUILD_CLIENT
-#include <ARGameClient/ClientTest.h>
-#endif // AR_BUILD_CLIENT
-
-#if AR_BUILD_SERVER
-#include <ARGameServer/ServerTest.h>
-#endif // AR_BUILD_SERVER
-
 #include <Camera/CameraComponent.h>
 #include <Components/BoxComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
@@ -179,21 +171,6 @@ void AARCharacter::Tick(float delta)
 	{
 		DisplayCharacterRotation(*this);
 	}
-
-	// TODO(cdc): Remove this test!
-#if AR_BUILD_CLIENT
-	if (!HasAuthority())
-	{
-		ClientTest::PrintFromClient();
-	}
-#endif // AR_BUILD_CLIENT
-
-#if AR_BUILD_SERVER
-	if (HasAuthority())
-	{
-		ServerTest::PrintFromServer();
-	}
-#endif
 }
 
 void AARCharacter::NotifyControllerChanged()
