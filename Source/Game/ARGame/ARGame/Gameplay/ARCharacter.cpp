@@ -230,24 +230,5 @@ bool AARCharacter::PayCredits_Implementation(int32 price)
 
 void AARCharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
-	if (payload.Killed())
-	{
-		DisableInput(Cast<APlayerController>(GetController()));
-	}
-
-
-	// Attempt to set the flash effect, camera shake, etc.
-	if (payload.ActualDelta < 0.0f)
-	{
-		if (USkeletalMeshComponent* mesh = GetMesh())
-		{
-			mesh->SetScalarParameterValueOnMaterials("TimeToHit", GetWorld()->TimeSeconds);
-		}
-
-		if (CameraShake)
-		{
-			GetLocalViewingPlayerController()->PlayerCameraManager->PlayWorldCameraShake(
-				GetWorld(), CameraShake.Get(), GetActorLocation(), 0.0f, 10000.0f, 0.1f);
-		}
-	}
+	CLIENT_ONLY_CALL(OnHealthChanged, payload);
 }

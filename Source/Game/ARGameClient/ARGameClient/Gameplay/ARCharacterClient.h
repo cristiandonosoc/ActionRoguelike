@@ -3,6 +3,8 @@
 #include <ARBase/ClientServerSplit.h>
 #include <ARGameClient/Gameplay/MovementManager.h>
 
+
+struct FOnHealthChangedPayload;
 class AARCharacter;
 
 class UInputComponent;
@@ -20,6 +22,7 @@ public:
 
 	void NotifyControllerChanged();
 
+	void OnHealthChanged(const FOnHealthChangedPayload& payload);
 
 private:
 	MovementManager Movement;

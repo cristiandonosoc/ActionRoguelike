@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include <ARBase/ClientServerSplit.h>
@@ -47,6 +45,7 @@ public:
 	{
 		return InteractionComponent.Get();
 	}
+	const TSubclassOf<UCameraShakeBase>& GetCameraShake() const { return CameraShake; }
 
 public:
 	// INTERFACE_BEGIN(AActor)
