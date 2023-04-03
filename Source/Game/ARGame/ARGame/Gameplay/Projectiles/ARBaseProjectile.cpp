@@ -15,6 +15,8 @@ AR_DECLARE_DEBUG_CATEGORY(PROJECTILES, ARDebugCategories::PROJECTILES, true,
 // Sets default values
 AARBaseProjectile::AARBaseProjectile()
 {
+	INIT_BASE_CLIENT_SPLIT();
+	
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if
 	// you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -36,6 +38,8 @@ AARBaseProjectile::AARBaseProjectile()
 
 	Audio = CreateDefaultSubobject<UAudioComponent>("Audio");
 	Audio->SetupAttachment(CollisionSphere);
+
+	SetReplicates(true);
 }
 
 void AARBaseProjectile::PostInitializeComponents()
@@ -53,13 +57,7 @@ void AARBaseProjectile::BeginPlay()
 	CollisionSphere->IgnoreActorWhenMoving(GetInstigator(), true);
 
 
-	// If there is a muzzle effect, we play it.
-	// TODO(cdc): This is really part of a weapon and probably should not be part of the projectile.
-	if (MuzzleEffect)
-	{
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleEffect, GetActorLocation(),
-												 GetActorRotation());
-	}
+	CLIENT_ONLY_CALL(BeginPlay);
 }
 
 void AARBaseProjectile::OnBeginHitInternal(UPrimitiveComponent* hit_component, AActor* other_actor,
@@ -82,10 +80,4 @@ void AARBaseProjectile::OnBeginHitInternal(UPrimitiveComponent* hit_component, A
 
 	// We simply forward the call over to the derived components, either via blueprints or via C++.
 	OnBeginHit(hit_component, other_actor, other_comp, normal_impulse, hit);
-}
-
-// Called every frame
-void AARBaseProjectile::Tick(float delta)
-{
-	Super::Tick(delta);
 }

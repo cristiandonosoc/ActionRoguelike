@@ -1,8 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
+#include <ARBase/ClientServerSplit.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
+
+#if AR_BUILD_CLIENT
+#include <ARGameClient/Gameplay/Projectiles/MagicProjectileClient.h>
+#endif // AR_BUILD_CLIENT
+#if AR_BUILD_SERVER
+#include <ARGameServer/Gameplay/Projectiles/MagicProjectileServer.h>
+#endif // AR_BUILD_SERVER
 
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
@@ -17,21 +23,30 @@ UCLASS()
 class ARGAME_API AARMagicProjectile : public AARBaseProjectile
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARMagicProjectile, ar::client::MagicProjectileClient,
+									   ar::server::MagicProjectileServer);
 
 public:
 	// Sets default values for this actor's properties
 	AARMagicProjectile();
 
-	// Called every frame
-	virtual void Tick(float delta) override;
+public:
+	float GetDamage() const { return Damage; }
+	const FGameplayTag& GetParryTag() const { return ParryTag; }
+
+	const TSubclassOf<UARActionEffect> GetActionEffect() const { return ActionEffect; }
+
+	const TObjectPtr<UParticleSystem>& GetExplosionParticle() const { return ExplosionParticle; }
+	const TObjectPtr<USoundCue>& GetExplosionSound() const { return ExplosionSound; }
+
+public:
+	// INTERFACE_BEGIN(AActor)
+	virtual void BeginPlay() override;
+	// INTERFACE_BEGIN(AActor)
 
 	virtual void OnBeginHit_Implementation(UPrimitiveComponent* hit_component, AActor* other_actor,
 										   UPrimitiveComponent* other_comp, FVector normal_impulse,
 										   const FHitResult& hit) override;
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Attacks")
