@@ -41,6 +41,10 @@ bool WasProjectileParried(NotNullPtr<AARMagicProjectile> base,
 
 void MagicProjectileServer::OnBeginHit(const FHitResult& hit, AActor* other_actor)
 {
+	// As soon we hit something, we mark this for destruction.
+	// We give it some time so that the client side has some time to do the shenanigans.
+	MarkForDestruction();
+
 	if (!other_actor)
 	{
 		return;
@@ -62,6 +66,22 @@ void MagicProjectileServer::OnBeginHit(const FHitResult& hit, AActor* other_acto
 	{
 		actions->AddAction(GetBase()->GetActionEffect(), GetBase()->GetInstigator());
 	}
+}
+
+void MagicProjectileServer::MarkForDestruction()
+{
+	FTimerDelegate delegate;
+	delegate.BindLambda(
+		[weakBase = TWeakObjectPtr<AARMagicProjectile>(GetBase())]()
+		{
+			if (auto* base = weakBase.Get())
+			{
+				base->Destroy();
+			}
+		});
+
+	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, std::move(delegate), kDestroyDelay,
+										   false);
 }
 
 

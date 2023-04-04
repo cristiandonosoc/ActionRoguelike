@@ -28,9 +28,8 @@ UCLASS()
 class ARGAME_API UARInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARInteractionComponent,
-									   ar::client::InteractionComponentClient,
-									   ar::server::InteractionComponentServer);
+	GENERATED_BASE_CLIENT_SPLIT(UARInteractionComponent, ar::client::InteractionComponentClient);
+	GENERATED_BASE_SERVER_SPLIT(UARInteractionComponent, ar::server::InteractionComponentServer);
 
 public:
 	static constexpr float kInteractionDistance = 1000.0f;

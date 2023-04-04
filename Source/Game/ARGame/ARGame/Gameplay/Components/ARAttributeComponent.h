@@ -63,14 +63,17 @@ UCLASS(Blueprintable, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent
 class ARGAME_API UARAttributeComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(UARAttributeComponent, ar::client::AttributeComponentClient,
-									   ar::server::AttributeComponentServer);
+	GENERATED_BASE_CLIENT_SPLIT(UARAttributeComponent, ar::client::AttributeComponentClient);
+	GENERATED_BASE_SERVER_SPLIT(UARAttributeComponent, ar::server::AttributeComponentServer);
 
 public:
 	// Helper statics.
 	// NOTE: These assume that the actor will have the attribute component, so it will assert on it.
 	static bool IsActorAlive(NotNullPtr<AActor> actor);
 	static UARAttributeComponent& GetAttributes(NotNullPtr<AActor> actor);
+
+public:
+	UARAttributeComponent();
 
 public:
 	float GetHealth() const { return Health; }

@@ -42,9 +42,6 @@ struct ARBASE_API ARClientServerGlobals
 //                Can be obtained via |GetClientSplit|.
 // - ServerSplit: Similar counterpart but for the server.
 //                Can be obtained via |GetServerSplit|.
-#define GENERATED_BASE_CLIENT_SERVER_SPLIT(base_class, client_class, server_class)                 \
-	GENERATED_BASE_CLIENT_ONLY_SPLIT(base_class, client_class);                                    \
-	GENERATED_BASE_SERVER_ONLY_SPLIT(base_class, server_class);
 
 #define INIT_BASE_CLIENT_SERVER_SPLIT()                                                            \
 	INIT_BASE_CLIENT_SPLIT();                                                                      \
@@ -107,7 +104,7 @@ private:                                                                        
 
 #if AR_BUILD_CLIENT
 
-#define GENERATED_BASE_CLIENT_ONLY_SPLIT(base_class, client_class)                                 \
+#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
 private:                                                                                           \
 	client_class _ClientSplit;                                                                     \
                                                                                                    \
@@ -138,7 +135,7 @@ public:                                                                         
 	while (false)
 
 #else
-#define GENERATED_BASE_CLIENT_ONLY_SPLIT(base_class, client_class)
+#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
 #define INIT_BASE_CLIENT_SPLIT()
 #define GENERATED_LEAF_CLIENT_SPLIT(base_class)
 #endif // AR_BUILD_CLIENT
@@ -148,7 +145,7 @@ public:                                                                         
 
 #if AR_BUILD_SERVER
 
-#define GENERATED_BASE_SERVER_ONLY_SPLIT(base_class, server_class)                                 \
+#define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
 private:                                                                                           \
 	server_class _ServerSplit;                                                                     \
                                                                                                    \
@@ -180,7 +177,7 @@ public:                                                                         
 
 
 #else
-#define GENERATED_BASE_SERVER_ONLY_SPLIT(base_class, server_class)
+#define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)
 #define INIT_BASE_SERVER_SPLIT()
 #define GENERATED_LEAF_SERVER_SPLIT(base_class)
 #endif // AR_BUILD_SERVER

@@ -39,7 +39,4 @@ void AARMagicProjectile::OnBeginHit_Implementation(UPrimitiveComponent* hit_comp
 	Super::OnBeginHit_Implementation(hit_component, other_actor, other_comp, normal_impulse, hit);
 
 	CLIENT_SERVER_CALL(OnBeginHit, hit, other_actor);
-
-	// We destroy this object as it is not needed anymore.
-	Destroy();
 }

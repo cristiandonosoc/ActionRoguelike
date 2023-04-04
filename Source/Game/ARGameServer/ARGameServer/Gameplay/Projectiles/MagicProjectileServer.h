@@ -14,7 +14,16 @@ class ARGAMESERVER_API MagicProjectileServer
 	GENERATED_LEAF_SERVER_SPLIT(AARMagicProjectile);
 
 public:
+	static constexpr float kDestroyDelay = 0.25f;
+
+public:
 	void OnBeginHit(const FHitResult& hit, AActor* hit_actor);
+
+private:
+	void MarkForDestruction();
+
+private:
+	FTimerHandle DestroyTimerHandle;
 };
 
 } // namespace server

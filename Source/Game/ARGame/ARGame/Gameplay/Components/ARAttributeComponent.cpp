@@ -4,6 +4,11 @@
 #include <Net/UnrealNetwork.h>
 #include <Particles/Collision/ParticleModuleCollisionGPU.h>
 
+UARAttributeComponent::UARAttributeComponent()
+{
+	INIT_BASE_CLIENT_SERVER_SPLIT();
+}
+
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
 {
 	auto& attributes = GetAttributes(actor);

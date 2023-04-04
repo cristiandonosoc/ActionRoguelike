@@ -25,8 +25,8 @@ UCLASS()
 class ARGAME_API AARItemSpawner : public AActor, public IARInteractable
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARItemSpawner, ar::client::ItemSpawnerClient,
-									   ar::server::ItemSpawnerServer);
+	GENERATED_BASE_CLIENT_SPLIT(AARItemSpawner, ar::client::ItemSpawnerClient);
+	GENERATED_BASE_SERVER_SPLIT(AARItemSpawner, ar::server::ItemSpawnerServer);
 
 public:
 	// Sets default values for this actor's properties

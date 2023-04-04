@@ -21,7 +21,7 @@ UCLASS()
 class ARGAME_API AARBaseProjectile : public AActor
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_ONLY_SPLIT(AARBaseProjectile, ar::client::BaseProjectileClient);
+	GENERATED_BASE_CLIENT_SPLIT(AARBaseProjectile, ar::client::BaseProjectileClient);
 
 public:
 	// Sets default values for this actor's properties

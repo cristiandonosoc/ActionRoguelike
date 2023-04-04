@@ -23,8 +23,8 @@ UCLASS()
 class ARGAME_API AARMagicProjectile : public AARBaseProjectile
 {
 	GENERATED_BODY()
-	GENERATED_BASE_CLIENT_SERVER_SPLIT(AARMagicProjectile, ar::client::MagicProjectileClient,
-									   ar::server::MagicProjectileServer);
+	GENERATED_BASE_CLIENT_SPLIT(AARMagicProjectile, ar::client::MagicProjectileClient);
+	GENERATED_BASE_SERVER_SPLIT(AARMagicProjectile, ar::server::MagicProjectileServer);
 
 public:
 	// Sets default values for this actor's properties
