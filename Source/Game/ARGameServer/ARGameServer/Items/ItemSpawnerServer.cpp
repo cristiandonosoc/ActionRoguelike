@@ -43,8 +43,8 @@ void ItemSpawnerServer::Interact(NotNullPtr<AARBaseItem> item, NotNullPtr<APawn>
 
 void ItemSpawnerServer::SpawnItem()
 {
-	const auto& item_class = GetBase()->GetItemClass();
-	if (!ensure(item_class.IsValid()))
+	UClass* item_class = GetBase()->GetItemClass().Get();
+	if (!ensure(item_class))
 	{
 		return;
 	}
@@ -58,7 +58,7 @@ void ItemSpawnerServer::SpawnItem()
 	params.SpawnCollisionHandlingOverride =
 		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	NotNullPtr<AARBaseItem> item = GetBase()->GetWorld()->SpawnActor<AARBaseItem>(
-		item_class.Get(), GetBase()->GetActorTransform(), params);
+		item_class, GetBase()->GetActorTransform(), params);
 	GetBase()->SetSpawnedItem(item);
 
 	// // We check if the player is currently overlapping, so that we trigger immediately the

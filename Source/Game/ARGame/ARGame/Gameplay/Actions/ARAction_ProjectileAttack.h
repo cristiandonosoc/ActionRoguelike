@@ -1,7 +1,14 @@
 ﻿#pragma once
 
-#include <ARBase/NotNullPtr.h>
+#include <ARBase/ClientServerSplit.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
+#if AR_BUILD_CLIENT
+#include <ARGameClient/Gameplay/Actions/Action_ProjectileAttackClient.h>
+#endif // AR_BUILD_CLIENT
+#if AR_BUILD_SERVER
+#include <ARGameServer/Gameplay/Actions/Action_ProjectileAttackServer.h>
+#endif // AR_BUILD_SERVER
+
 #include <CoreMinimal.h>
 
 #include "ARAction_ProjectileAttack.generated.h"
@@ -15,13 +22,32 @@ UCLASS()
 class ARGAME_API UARAction_ProjectileAttack : public UARAction
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SPLIT(UARAction_ProjectileAttack,
+								ar::client::Action_ProjectileAttackClient);
+	GENERATED_BASE_SERVER_SPLIT(UARAction_ProjectileAttack,
+								ar::server::Action_ProjectileAttackServer);
+
 public:
 	UARAction_ProjectileAttack();
 
+public:
+	const TSubclassOf<AARBaseProjectile>& GetProjectileClass() const { return ProjectileClass; }
+	const TObjectPtr<UAnimMontage>& GetAttackAnimation() const { return AttackAnimation; }
+	const FName& GetHandSocketName() const { return HandSocketName; }
+
+	float GetAttackAnimDelay() const { return AttackAnimDelay; }
+
+public:
+	// INTERFACE_BEGIN(UARAction)
 	virtual void Start_Implementation(AActor* instigator) override;
+	// INTERFACE_END(UARAction)
+
+	UFUNCTION(Server, Reliable)
+	void Server_Start(AARCharacter* instigator, const FVector& location, const FRotator& rotation);
 
 protected:
-	void AttackTimerEnd(NotNullPtr<AARCharacter> instigator);
+	void Server_Start_Implementation(AARCharacter* instigator, const FVector& location,
+									 const FRotator& rotation);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")
@@ -30,14 +56,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	FName HandSocketName = "Muzzle_01";
 
+	// TODO(cdc): This *FOR SURE* doesn't have to be here.
 	UPROPERTY(EditAnywhere, Category = "Attacks")
 	float AttackAnimDelay = 0.4f;
 
+	// TODO(cdc): This *FOR SURE* doesn't have to be here.
 	UPROPERTY(EditAnywhere, Category = "Animations")
 	TObjectPtr<UAnimMontage> AttackAnimation;
-
-private:
-	// This is the timer associated with the wait needed to spawn the projectile.
-	// TODO(cdc): Use animation notifications.
-	FTimerHandle TimerHandle;
 };

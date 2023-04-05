@@ -80,6 +80,11 @@ public:                                                                         
 		return _Base;                                                                              \
 	}                                                                                              \
 	template <typename THackUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>              \
+	TWeakObjectPtr<base_class> GetWeakBase()                                                       \
+	{                                                                                              \
+		return TWeakObjectPtr<base_class>(GetBase());                                              \
+	}                                                                                              \
+	template <typename THackUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>              \
 	UWorld* GetWorld() const                                                                       \
 	{                                                                                              \
 		return GetBase()->GetWorld();                                                              \
@@ -93,10 +98,7 @@ public:                                                                         
 
 #define __GENERATED_LEAF_DEFAULT_INIT(base_class)                                                  \
 private:                                                                                           \
-	void InitFromBase(NotNullPtr<base_class> base)                                                 \
-	{                                                                                              \
-		_Base = base.Get();                                                                        \
-	}
+	void InitFromBase(NotNullPtr<base_class> base) { _Base = base.Get(); }
 
 
 // Client Macros
@@ -109,14 +111,8 @@ private:                                                                        
 	client_class _ClientSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
-	client_class* GetClientSplit()                                                                 \
-	{                                                                                              \
-		return &_ClientSplit;                                                                      \
-	}                                                                                              \
-	const client_class* GetClientSplit() const                                                     \
-	{                                                                                              \
-		return &_ClientSplit;                                                                      \
-	}
+	client_class* GetClientSplit() { return &_ClientSplit; }                                       \
+	const client_class* GetClientSplit() const { return &_ClientSplit; }
 
 #define INIT_BASE_CLIENT_SPLIT() _ClientSplit.InitFromBase(this);
 
@@ -150,14 +146,8 @@ private:                                                                        
 	server_class _ServerSplit;                                                                     \
                                                                                                    \
 public:                                                                                            \
-	server_class* GetServerSplit()                                                                 \
-	{                                                                                              \
-		return &_ServerSplit;                                                                      \
-	}                                                                                              \
-	const server_class* GetServerSplit() const                                                     \
-	{                                                                                              \
-		return &_ServerSplit;                                                                      \
-	}
+	server_class* GetServerSplit() { return &_ServerSplit; }                                       \
+	const server_class* GetServerSplit() const { return &_ServerSplit; }
 
 #define INIT_BASE_SERVER_SPLIT() _ServerSplit.InitFromBase(this);
 
