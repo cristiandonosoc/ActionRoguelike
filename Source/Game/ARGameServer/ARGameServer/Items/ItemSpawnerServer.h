@@ -14,7 +14,7 @@ namespace server
 
 class ARGAMESERVER_API ItemSpawnerServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(AARItemSpawner);
+	GENERATED_LEAF_SERVER_SPLIT(AARItemSpawner, ItemSpawnerServer);
 
 public:
 	void EndPlay();
@@ -25,7 +25,6 @@ private:
 	void SpawnItem();
 
 private:
-
 	FTimerHandle SpawnTimerHandle;
 };
 

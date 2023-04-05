@@ -11,7 +11,7 @@ namespace server
 
 class ARGAMESERVER_API MagicProjectileServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(AARMagicProjectile);
+	GENERATED_LEAF_SERVER_SPLIT(AARMagicProjectile, MagicProjectileServer);
 
 public:
 	static constexpr float kDestroyDelay = 0.25f;

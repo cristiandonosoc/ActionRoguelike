@@ -12,7 +12,7 @@ namespace client
 
 class ARGAMECLIENT_API InteractionComponentClient
 {
-	GENERATED_LEAF_CLIENT_SPLIT(UARInteractionComponent);
+	GENERATED_LEAF_CLIENT_SPLIT(UARInteractionComponent, InteractionComponentClient);
 
 public:
 	static constexpr float kFocusCheckPeriod = 0.5f;
@@ -20,10 +20,9 @@ public:
 public:
 	void BeginPlay();
 	void EndPlay();
-	
+
 	void NotifyIsLocalControlled();
 	void FindBestInteractable();
-
 
 private:
 	FTimerHandle FindFocusTimerHandle;

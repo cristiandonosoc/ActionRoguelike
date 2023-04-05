@@ -11,7 +11,7 @@ namespace server
 
 class ARGAMESERVER_API InteractionComponentServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(UARInteractionComponent);
+	GENERATED_LEAF_SERVER_SPLIT(UARInteractionComponent, InteractionComponentServer);
 
 public:
 	void Interact();

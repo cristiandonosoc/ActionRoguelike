@@ -11,7 +11,7 @@ namespace server
 
 class ARGAMESERVER_API CharacterServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(AARCharacter);
+	GENERATED_LEAF_SERVER_SPLIT(AARCharacter, CharacterServer);
 };
 
 } // namespace server

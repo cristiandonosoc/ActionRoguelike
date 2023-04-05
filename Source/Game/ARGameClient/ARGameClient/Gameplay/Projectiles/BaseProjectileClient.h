@@ -11,7 +11,7 @@ namespace client
 
 class ARGAMECLIENT_API BaseProjectileClient
 {
-	GENERATED_LEAF_CLIENT_SPLIT(AARBaseProjectile);
+	GENERATED_LEAF_CLIENT_SPLIT(AARBaseProjectile, BaseProjectileClient);
 
 public:
 	void BeginPlay();

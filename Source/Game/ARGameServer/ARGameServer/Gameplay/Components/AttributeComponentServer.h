@@ -11,7 +11,7 @@ namespace server
 
 class ARGAMESERVER_API AttributeComponentServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(UARAttributeComponent);
+	GENERATED_LEAF_SERVER_SPLIT(UARAttributeComponent, AttributeComponentServer);
 
 public:
 	bool ApplyHealthChange(NotNullPtr<AActor> instigator, float delta);

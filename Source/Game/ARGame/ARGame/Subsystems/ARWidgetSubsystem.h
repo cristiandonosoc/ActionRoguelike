@@ -29,7 +29,7 @@ struct FWidgetSubsystemConfig : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EARWidgetType Type;
+	EARWidgetType Type = EARWidgetType::NONE;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftClassPtr<UARActorAttachedWidget> ActorAttachedWidgetClass;

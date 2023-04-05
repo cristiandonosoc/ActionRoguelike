@@ -11,7 +11,7 @@ namespace client
 
 class ARGAMECLIENT_API MagicProjectileClient
 {
-	GENERATED_LEAF_CLIENT_SPLIT(AARMagicProjectile);
+	GENERATED_LEAF_CLIENT_SPLIT(AARMagicProjectile, MagicProjectileClient);
 
 	void OnBeginHit(const FHitResult& hit, AActor* other_actor);
 };

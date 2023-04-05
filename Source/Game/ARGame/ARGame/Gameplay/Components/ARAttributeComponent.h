@@ -37,23 +37,23 @@ public:
 	TWeakObjectPtr<UARAttributeComponent> Target;
 
 	UPROPERTY(BlueprintReadOnly)
-	float MaxHealth;
+	float MaxHealth = 0;
 
 	UPROPERTY(BlueprintReadOnly)
-	float NewHealth;
+	float NewHealth = 0;
 
 	// OriginalDelta is the original change requested.
 	// Depending on the current value, it could be different.
 	// See |ActualDelta| for the real change made by the event.
 	UPROPERTY(BlueprintReadOnly)
-	float OriginalDelta;
+	float OriginalDelta = 0;
 
 	// ActualDelta is the real change to the value performed by the event.
 	UPROPERTY(BlueprintReadOnly)
-	float ActualDelta;
+	float ActualDelta = 0;
 
 	UPROPERTY(BlueprintReadOnly)
-	uint8 Flags;
+	uint8 Flags = 0;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, const FOnHealthChangedPayload&,
@@ -90,7 +90,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
 	// INTERFACE_END(AActor)
 
-	
+
 	// Checks whether the health change attempt would apply.
 	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to
 	// query this to see if they need to perform the action (eg. Health pack).

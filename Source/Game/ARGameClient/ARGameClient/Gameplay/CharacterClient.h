@@ -17,7 +17,7 @@ namespace client
 
 class ARGAMECLIENT_API CharacterClient
 {
-	GENERATED_LEAF_CLIENT_SPLIT(AARCharacter);
+	GENERATED_LEAF_CLIENT_SPLIT(AARCharacter, CharacterClient);
 
 public:
 	void SetupPlayerInput(NotNullPtr<UInputComponent> input);

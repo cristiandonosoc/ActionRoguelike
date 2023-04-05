@@ -11,6 +11,7 @@
 AARItemSpawner::AARItemSpawner()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
+
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if
 	// you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -81,7 +82,7 @@ void AARItemSpawner::OnBeginEnd(UPrimitiveComponent* overlapped_component, AActo
 void AARItemSpawner::EndPlay(const EEndPlayReason::Type reason)
 {
 	SERVER_ONLY_CALL(EndPlay);
-	
+
 	Super::EndPlay(reason);
 }
 

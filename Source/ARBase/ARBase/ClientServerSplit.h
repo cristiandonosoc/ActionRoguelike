@@ -3,6 +3,9 @@
 #include <ARBase/BuildDefines.h>
 #include <ARBase/NotNullPtr.h>
 
+// ReSharper disable once CppUnusedIncludeDirective
+#include <memory>
+
 // *************************************************************************************************
 // CLIENT SERVER SPLIT
 // *************************************************************************************************
@@ -59,14 +62,15 @@ struct ARBASE_API ARClientServerGlobals
 	CLIENT_ONLY_CALL(function, __VA_ARGS__);                                                       \
 	SERVER_ONLY_CALL(function, __VA_ARGS__);
 
-#define __GENERATED_LEAF_COMMON_SPLIT(base_class)                                                  \
-	__GENERATED_LEAF_COMMON_SPLIT_NO_INIT(base_class);                                             \
-	__GENERATED_LEAF_DEFAULT_INIT(base_class);
-
-#define __GENERATED_LEAF_COMMON_SPLIT_NO_INIT(base_class)                                          \
+#define __GENERATED_LEAF_COMMON_SPLIT(base_class, leaf_class)                                      \
 private:                                                                                           \
 	friend class base_class;                                                                       \
-	base_class* _Base = nullptr;                                                                   \
+	base_class* _Base;                                                                             \
+                                                                                                   \
+public:                                                                                            \
+	leaf_class(base_class* base) : _Base(base)                                                     \
+	{                                                                                              \
+	}                                                                                              \
                                                                                                    \
 public:                                                                                            \
 	base_class* GetBase()                                                                          \
@@ -90,15 +94,6 @@ public:                                                                         
 		return GetBase()->GetOwner();                                                              \
 	}
 
-
-#define __GENERATED_LEAF_DEFAULT_INIT(base_class)                                                  \
-private:                                                                                           \
-	void InitFromBase(NotNullPtr<base_class> base)                                                 \
-	{                                                                                              \
-		_Base = base.Get();                                                                        \
-	}
-
-
 // Client Macros
 // -------------------------------------------------------------------------------------------------
 
@@ -106,21 +101,23 @@ private:                                                                        
 
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
 private:                                                                                           \
-	client_class _ClientSplit;                                                                     \
+	using ClientSplitClass = client_class;                                                         \
+	std::unique_ptr<client_class> _ClientSplit;                                                    \
                                                                                                    \
 public:                                                                                            \
-	client_class* GetClientSplit()                                                                 \
+	NotNullPtr<client_class> GetClientSplit()                                                      \
 	{                                                                                              \
-		return &_ClientSplit;                                                                      \
+		return _ClientSplit.get();                                                                 \
 	}                                                                                              \
-	const client_class* GetClientSplit() const                                                     \
+	NotNullPtr<const client_class> GetClientSplit() const                                          \
 	{                                                                                              \
-		return &_ClientSplit;                                                                      \
+		return _ClientSplit.get();                                                                 \
 	}
 
-#define INIT_BASE_CLIENT_SPLIT() _ClientSplit.InitFromBase(this);
+#define INIT_BASE_CLIENT_SPLIT() _ClientSplit = std::make_unique<ClientSplitClass>(this);
 
-#define GENERATED_LEAF_CLIENT_SPLIT(base_class) __GENERATED_LEAF_COMMON_SPLIT(base_class);
+#define GENERATED_LEAF_CLIENT_SPLIT(base_class, client_class)                                      \
+	__GENERATED_LEAF_COMMON_SPLIT(base_class, client_class);
 
 // TODO(cdc): Figure out if we can use variadic template and auto to be able to return values from
 //            this forwarded calls.
@@ -129,14 +126,15 @@ public:                                                                         
 	{                                                                                              \
 		if (ARClientServerGlobals::RunningInClient(this))                                          \
 		{                                                                                          \
-			_ClientSplit.function(__VA_ARGS__);                                                    \
+			check(_ClientSplit);                                                                   \
+			_ClientSplit->function(__VA_ARGS__);                                                   \
 		}                                                                                          \
 	}                                                                                              \
 	while (false)
 
 #else
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
-#define INIT_BASE_CLIENT_SPLIT()
+#define INIT_BASE_CLIENT_SPLIT() std::unique_ptr<void> _PaddingNoClientSplitAvailable;
 #define GENERATED_LEAF_CLIENT_SPLIT(base_class)
 #endif // AR_BUILD_CLIENT
 
@@ -147,21 +145,23 @@ public:                                                                         
 
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
 private:                                                                                           \
-	server_class _ServerSplit;                                                                     \
+	using ServerSplitClass = server_class;                                                         \
+	std::unique_ptr<server_class> _ServerSplit;                                                    \
                                                                                                    \
 public:                                                                                            \
-	server_class* GetServerSplit()                                                                 \
+	NotNullPtr<server_class> GetServerSplit()                                                      \
 	{                                                                                              \
-		return &_ServerSplit;                                                                      \
+		return _ServerSplit.get();                                                                 \
 	}                                                                                              \
-	const server_class* GetServerSplit() const                                                     \
+	NotNullPtr<const server_class> GetServerSplit() const                                          \
 	{                                                                                              \
-		return &_ServerSplit;                                                                      \
+		return _ServerSplit.get();                                                                 \
 	}
 
-#define INIT_BASE_SERVER_SPLIT() _ServerSplit.InitFromBase(this);
+#define INIT_BASE_SERVER_SPLIT() _ServerSplit = std::make_unique<ServerSplitClass>(this);
 
-#define GENERATED_LEAF_SERVER_SPLIT(base_class) __GENERATED_LEAF_COMMON_SPLIT(base_class)
+#define GENERATED_LEAF_SERVER_SPLIT(base_class, server_class)                                      \
+	__GENERATED_LEAF_COMMON_SPLIT(base_class, server_class);
 
 // TODO(cdc): Figure out if we can use variadic template and auto to be able to return values from
 //            this forwarded calls.
@@ -170,14 +170,14 @@ public:                                                                         
 	{                                                                                              \
 		if (ARClientServerGlobals::RunningInServer(this))                                          \
 		{                                                                                          \
-			_ServerSplit.function(__VA_ARGS__);                                                    \
+			check(_ServerSplit);                                                                   \
+			_ServerSplit->function(__VA_ARGS__);                                                   \
 		}                                                                                          \
 	}                                                                                              \
 	while (false)
 
-
 #else
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)
-#define INIT_BASE_SERVER_SPLIT()
+#define INIT_BASE_SERVER_SPLIT() std::unique_ptr<void> _PaddingNoServerSplitAvailable;
 #define GENERATED_LEAF_SERVER_SPLIT(base_class)
 #endif // AR_BUILD_SERVER
