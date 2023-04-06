@@ -14,6 +14,17 @@ class ARGAME_API UARAction : public UObject
 	GENERATED_BODY()
 
 public:
+	const FName& GetActionName() const { return ActionName; }
+	bool GetAutoStarts() const { return AutoStarts; }
+	bool GetIsRunning() const { return IsRunning; }
+
+public:
+	// INTERFACE_BEGIN(UObject)
+	virtual bool IsSupportedForNetworking() const override { return true; }
+	virtual UWorld* GetWorld() const override;
+	// INTERFACE_END(UObject)
+
+public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* instigator);
 
@@ -25,12 +36,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UARActionComponent* GetOwningComponent() const;
-
-	const FName& GetActionName() const { return ActionName; }
-	bool GetAutoStarts() const { return AutoStarts; }
-	bool GetIsRunning() const { return IsRunning; }
-
-	virtual UWorld* GetWorld() const override;
 
 protected:
 	// INTERFACE_BEGIN(UARAction)

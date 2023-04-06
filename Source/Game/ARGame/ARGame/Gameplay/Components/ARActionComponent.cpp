@@ -4,45 +4,64 @@
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
+#include <Net/UnrealNetwork.h>
 
 AR_DECLARE_DEBUG_CATEGORY(ACTIONS, ARDebugCategories::ACTIONS, true, "All about actions");
 
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
 {
+	INIT_BASE_CLIENT_SERVER_SPLIT();
 	PrimaryComponentTick.bCanEverTick = true;
+	SetIsReplicatedByDefault(true);
+}
+
+const TArray<TSoftClassPtr<UARAction>>& UARActionComponent::GetServer_DefaultActions() const
+{
+	CHECK_RUNNING_ON_SERVER();
+	return Server_DefaultActions;
 }
 
 void UARActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// TODO(cdc): Do async loading.
-	NotNullPtr streamer = GetWorld()->GetGameInstance()->GetSubsystem<UARStreamingSubsystem>();
-	auto paths = UARStreamingSubsystem::ExtractSoftObjectPaths(DefaultActions);
-	streamer->RequestSyncLoad(paths);
-
-	// Now that the classes are loaded, we can create the objects.
-	for (const TSoftClassPtr<UARAction> action_soft_class : DefaultActions)
-	{
-		UClass* uclass = action_soft_class.Get();
-		check(uclass);
-
-		// We assume the action component holder is the instigator for these actions.
-		AddAction(TSubclassOf<UARAction>(uclass), GetOwner());
-	}
+	SERVER_ONLY_CALL(BeginPlay);
 }
 
-void UARActionComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-									   FActorComponentTickFunction* ThisTickFunction)
+void UARActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::GetLifetimeReplicatedProps(props);
+
+	// Unreal expects this stupid ass name.
+	auto& OutLifetimeProps = props;
+	DOREPLIFETIME(UARActionComponent, Actions);
+}
+
+bool UARActionComponent::ReplicateSubobjects(UActorChannel* channel, FOutBunch* bunch,
+											 FReplicationFlags* rep_flags)
+{
+	CHECK_RUNNING_ON_SERVER();
+	return GetServerSplit()->ReplicateSubObjects(channel, bunch, rep_flags);
+}
+
+void UARActionComponent::TickComponent(float delta, ELevelTick tick_type,
+									   FActorComponentTickFunction* tick_function)
+{
+	Super::TickComponent(delta, tick_type, tick_function);
 
 	if (ARDebugDraw::IsCategoryEnabled(ARDebugCategories::ACTIONS))
 	{
-		FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
-									  *ActiveGameplayTags.ToStringSimple());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
+		// FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
+		// 							  *ActiveGameplayTags.ToStringSimple());
+		// ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
+
+		FString msg =
+			FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
+							*FString::JoinBy(Actions, TEXT(","),
+											 [](const auto& action) -> FString
+											 { return *action->GetActionName().ToString(); }));
+		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::White);
 	}
 }
 
@@ -50,8 +69,11 @@ void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* 
 {
 	check(action_class);
 
+
 	NotNullPtr action = NewObject<UARAction>(this, action_class.Get());
 	Actions.Add(action);
+
+	UE_LOG(LogTemp, Log, TEXT("Adding action %s"), *action->GetActionName().ToString());
 
 	if (action->GetAutoStarts())
 	{
@@ -144,4 +166,9 @@ bool UARActionComponent::StopAction_Implementation(const FName& name, AActor* in
 	}
 
 	return found;
+}
+
+void UARActionComponent::OnRep_Actions(TArray<UARAction*> old_actions)
+{
+	CHECK_RUNNING_ON_CLIENT();
 }
