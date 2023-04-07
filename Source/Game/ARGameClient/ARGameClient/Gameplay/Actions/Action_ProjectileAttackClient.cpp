@@ -53,8 +53,7 @@ void Action_ProjectileAttackClient::AttackTimerEnd(NotNullPtr<AARCharacter> inst
 	FRotator rotation =
 		UKismetMathLibrary::FindLookAtRotation(hand_location, instigator->GetCameraTarget());
 
-	GetBase()->Server_Start(instigator, hand_location, rotation);
-	GetBase()->Stop(instigator);
+	GetBase()->ClientStop(instigator);
 }
 
 } // namespace client

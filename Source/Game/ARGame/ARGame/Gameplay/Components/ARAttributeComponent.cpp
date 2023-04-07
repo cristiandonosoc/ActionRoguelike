@@ -60,6 +60,6 @@ bool UARAttributeComponent::WouldHealthChangeApply(float delta) const
 
 bool UARAttributeComponent::Server_ApplyHealthChange(AActor* instigator, float delta)
 {
-	CHECK_RUNNING_ON_SERVER();
+	CHECK_RUNNING_ON_SERVER(this);
 	return GetServerSplit()->ApplyHealthChange(instigator, delta);
 }

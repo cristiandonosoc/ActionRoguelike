@@ -25,7 +25,7 @@ void Action_ProjectileAttackServer::Start(NotNullPtr<AARCharacter> instigator,
 	GetWorld()->SpawnActor<AActor>(GetBase()->GetProjectileClass().Get(), spawn_transform, params);
 
 	// This is a one-off action, so we stop it.
-	GetBase()->Stop(instigator);
+	GetBase()->ServerStop(instigator);
 }
 
 } // namespace server

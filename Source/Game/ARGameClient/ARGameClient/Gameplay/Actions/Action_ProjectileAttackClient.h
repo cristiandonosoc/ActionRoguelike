@@ -12,7 +12,7 @@ namespace client
 
 class ARGAMECLIENT_API Action_ProjectileAttackClient
 {
-	GENERATED_LEAF_CLIENT_SPLIT(UARAction_ProjectileAttack);
+	GENERATED_LEAF_CLIENT_SPLIT(UARAction_ProjectileAttack, Action_ProjectileAttackClient);
 
 public:
 	void Start(NotNullPtr<AActor> instigator);

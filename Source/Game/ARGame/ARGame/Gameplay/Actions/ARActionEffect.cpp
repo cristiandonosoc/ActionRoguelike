@@ -7,9 +7,9 @@ UARActionEffect::UARActionEffect()
 	AutoStarts = true;
 }
 
-void UARActionEffect::Start_Implementation(AActor* instigator)
+void UARActionEffect::ServerStart_Implementation(AActor* instigator)
 {
-	Super::Start_Implementation(instigator);
+	Super::ServerStart_Implementation(instigator);
 
 	if (Duration > 0.0f)
 	{
@@ -26,7 +26,7 @@ void UARActionEffect::Start_Implementation(AActor* instigator)
 	}
 }
 
-void UARActionEffect::Stop_Implementation(AActor* instigator)
+void UARActionEffect::ServerStop_Implementation(AActor* instigator)
 {
 	auto& timer = GetWorld()->GetTimerManager();
 	
@@ -42,5 +42,5 @@ void UARActionEffect::Stop_Implementation(AActor* instigator)
 
 	GetOwningComponent()->RemoveAction(ActionName);
 	
-	Super::Stop_Implementation(instigator);
+	Super::ServerStop_Implementation(instigator);
 }

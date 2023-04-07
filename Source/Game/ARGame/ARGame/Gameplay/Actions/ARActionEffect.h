@@ -13,14 +13,15 @@ class ARGAME_API UARActionEffect : public UARAction
 public:
 	UARActionEffect();
 
-protected:
-	// INTERFACE_BEGIN(UARAction)
-	virtual void Start_Implementation(AActor* instigator) override;
-	virtual void Stop_Implementation(AActor* instigator) override;
-	// INTERFACE_END(UARAction)
-
+public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Effect")
 	void Execute(AActor* instigator);
+
+protected:
+	// INTERFACE_BEGIN(UARAction)
+	virtual void ServerStart_Implementation(AActor* instigator) override;
+	virtual void ServerStop_Implementation(AActor* instigator) override;
+	// INTERFACE_END(UARAction)
 
 	// INTERFACE_BEGIN(UARActionEffect)
 	void Execute_Implementation(AActor* instigator) {}

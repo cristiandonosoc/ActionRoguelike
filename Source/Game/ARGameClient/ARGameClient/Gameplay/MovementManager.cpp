@@ -136,10 +136,7 @@ namespace
 
 void TryRunProjectile(NotNullPtr<AARCharacter> character, const FName& action_name)
 {
-	if (!character->GetActions()->StartAction(action_name, character, false))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%s not set"), *action_name.ToString());
-	}
+	character->GetActions()->ClientPredictStartAction(action_name, character);
 }
 
 } // namespace
@@ -161,12 +158,12 @@ void MovementManager::UltimateAttack()
 
 void MovementManager::SprintStart()
 {
-	GetBase()->GetActions()->StartAction("sprint", GetBase());
+	// GetBase()->GetActions()->StartAction("sprint", GetBase());
 }
 
 void MovementManager::SprintEnd()
 {
-	GetBase()->GetActions()->StopAction("sprint", GetBase());
+	// GetBase()->GetActions()->StopAction("sprint", GetBase());
 }
 
 void MovementManager::Jump()

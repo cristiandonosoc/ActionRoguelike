@@ -15,15 +15,17 @@
 // client, even when running on the editor under RUOP (Run Under One Process).
 struct ARBASE_API ARClientServerGlobals
 {
-	static bool RunningInClient(NotNullPtr<const AActor> actor);
-	static bool RunningInClient(NotNullPtr<const UActorComponent> actor_component)
+	static bool RunningInClient(const AActor* actor);
+	static bool RunningInClient(const UActorComponent* actor_component)
 	{
+		check(actor_component);
 		return RunningInClient(actor_component->GetOwner());
 	}
 
-	static bool RunningInServer(NotNullPtr<const AActor> actor);
-	static bool RunningInServer(NotNullPtr<const UActorComponent> actor_component)
+	static bool RunningInServer(const AActor* actor);
+	static bool RunningInServer(const UActorComponent* actor_component)
 	{
+		check(actor_component);
 		return RunningInServer(actor_component->GetOwner());
 	}
 };
@@ -31,8 +33,15 @@ struct ARBASE_API ARClientServerGlobals
 // Base Macros
 // -------------------------------------------------------------------------------------------------
 
-#define CHECK_RUNNING_ON_CLIENT() check(ARClientServerGlobals::RunningInClient(this));
-#define CHECK_RUNNING_ON_SERVER() check(ARClientServerGlobals::RunningInServer(this));
+// CHECK_RUNNING_ON_CLIENT verifies that the AActor or UActorComponent is running on the client.
+// Normally called as CHECK_RUNNING_ON_CLIENT(this).
+#define CHECK_RUNNING_ON_CLIENT(actor_or_actor_component)                                          \
+	check(ARClientServerGlobals::RunningInClient(actor_or_actor_component));
+
+// CHECK_RUNNING_ON_SERVER verifies that the AActor or UActorComponent is running on the server
+// Normally called as CHECK_RUNNING_ON_SERVER(this).
+#define CHECK_RUNNING_ON_SERVER(actor_or_actor_component)                                          \
+	check(ARClientServerGlobals::RunningInServer(actor_or_actor_component));
 
 // GENERATED_BASE_CLIENT_SERVER_SPLIT generates code for client and server split of a AActor.
 // This split depends on where (and how) the code is being compiled.
@@ -102,7 +111,10 @@ public:                                                                         
 
 #define __GENERATED_LEAF_DEFAULT_INIT(base_class)                                                  \
 private:                                                                                           \
-	void InitFromBase(NotNullPtr<base_class> base) { _Base = base.Get(); }
+	void InitFromBase(NotNullPtr<base_class> base)                                                 \
+	{                                                                                              \
+		_Base = base.Get();                                                                        \
+	}
 
 // Client Macros
 // -------------------------------------------------------------------------------------------------

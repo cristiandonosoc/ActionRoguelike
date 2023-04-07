@@ -1,8 +1,10 @@
 ﻿#include <ARGameServer/Gameplay/Components/ActionComponentServer.h>
 
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
+
 #include <Engine/ActorChannel.h>
 
 namespace ar
@@ -44,6 +46,18 @@ bool ActionComponentServer::ReplicateSubObjects(NotNullPtr<UActorChannel> channe
 	}
 
 	return wrote_something;
+}
+
+void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(!action->GetIsRunning());
+	action->ServerStart(instigator);
+}
+
+void ActionComponentServer::StopAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(action->GetIsRunning());
+	action->ServerStop(instigator);
 }
 
 } // namespace server

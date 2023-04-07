@@ -39,15 +39,13 @@ public:
 
 public:
 	// INTERFACE_BEGIN(UARAction)
-	virtual void Start_Implementation(AActor* instigator) override;
+	//virtual void ClientPredictStart_Implementation(AActor* instigator);
+	//virtual void ClientPredictStop_Implementation(AActor* instigator);
+	virtual void ClientStart_Implementation(AActor* instigator);
+	//virtual void ClientStop_Implementation(AActor* instigator);
+	//virtual void ServerStart_Implementation(AActor* instigator);
+	//virtual void ServerStop_Implementation(AActor* instigator);
 	// INTERFACE_END(UARAction)
-
-	UFUNCTION(Server, Reliable)
-	void Server_Start(AARCharacter* instigator, const FVector& location, const FRotator& rotation);
-
-protected:
-	void Server_Start_Implementation(AARCharacter* instigator, const FVector& location,
-									 const FRotator& rotation);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Attack")

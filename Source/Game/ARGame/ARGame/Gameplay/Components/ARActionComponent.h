@@ -23,6 +23,11 @@ class ARGAME_API UARActionComponent : public UActorComponent
 	GENERATED_BASE_CLIENT_SPLIT(UARActionComponent, ar::client::ActionComponentClient);
 	GENERATED_BASE_SERVER_SPLIT(UARActionComponent, ar::server::ActionComponentServer);
 
+	// To keep the public API clean, we allow access to the client.
+#if AR_BUILD_CLIENT
+	friend class ar::client::ActionComponentClient;
+#endif // AR_BUILD_CLIENT
+
 public:
 	// Sets default values for this component's properties
 	UARActionComponent();
@@ -31,16 +36,17 @@ public:
 	FGameplayTagContainer& GetActiveGameplayTags() { return ActiveGameplayTags; }
 	const TArray<TObjectPtr<UARAction>>& GetActions() const { return Actions; }
 
-	const TArray<TSoftClassPtr<UARAction>>& GetServer_DefaultActions() const; 
+	const TArray<TSoftClassPtr<UARAction>>& GetServer_DefaultActions() const;
 
 public:
 	// INTERFACE_BEGIN(UActorComponent)
 	virtual void BeginPlay() override;
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const;
-	virtual bool ReplicateSubobjects(UActorChannel* channel, FOutBunch* bunch, FReplicationFlags* rep_flags) override;
+	virtual bool ReplicateSubobjects(UActorChannel* channel, FOutBunch* bunch,
+									 FReplicationFlags* rep_flags) override;
 	virtual void TickComponent(float delta, ELevelTick tick_type,
 							   FActorComponentTickFunction* tick_function) override;
-	// INTERFACE_END(UActorComponent) 
+	// INTERFACE_END(UActorComponent)
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
@@ -50,33 +56,33 @@ public:
 	void RemoveAction(const FName& name);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	bool HasAction(const FName& name) const;
+	UARAction* FindAction(const FName& name) const;
 
-	// |all_instances| determines whether we're starting all the instances of just the first one.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
-	bool StartAction(const FName& name, AActor* instigator, bool all_instances = false);
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void ClientPredictStartAction(const FName& name, AActor* instigator);
 
-	// |all_instances| determines whether we're starting all the instances of just the first one.
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Action")
-	bool StopAction(const FName& name, AActor* instigator, bool all_instances = false);
-
+	UFUNCTION(BlueprintCallable, Category = "Action")
+	void StopAction(const FName& name, AActor* instigator);
 
 protected:
-	// INTERFACE_BEGIN(UARActionComponent) 
-	virtual bool StartAction_Implementation(const FName& name, AActor* instigator,
-											bool all_instances);
-	virtual bool StopAction_Implementation(const FName& name, AActor* instigator,
-										   bool all_instances);
+	UFUNCTION(Server, Reliable)
+	void Server_StartAction(UARAction* action, AActor* instigator);
 
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_StartAction(UARAction* action, AActor* instigator);
+
+	// INTERFACE_BEGIN(UARActionComponent)
 	UFUNCTION()
 	void OnRep_Actions(TArray<UARAction*> old_actions);
+	void Multicast_StartAction_Implementation(UARAction* action, AActor* instigator);
+	void Server_StartAction_Implementation(UARAction* action, AActor* instigator);
 	// INTERFACE_END(UARActionComponent)
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer ActiveGameplayTags;
 
-	UPROPERTY(ReplicatedUsing="OnRep_Actions", EditAnywhere)
+	UPROPERTY(ReplicatedUsing = "OnRep_Actions", EditAnywhere)
 	TArray<TObjectPtr<UARAction>> Actions;
 
 	// SERVER_PROPERTIES_BEGIN ---------------------------------------------------------------------

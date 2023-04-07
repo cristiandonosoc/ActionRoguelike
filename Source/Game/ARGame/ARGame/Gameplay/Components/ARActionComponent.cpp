@@ -12,13 +12,14 @@ AR_DECLARE_DEBUG_CATEGORY(ACTIONS, ARDebugCategories::ACTIONS, true, "All about 
 UARActionComponent::UARActionComponent()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
+	
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicatedByDefault(true);
 }
 
 const TArray<TSoftClassPtr<UARAction>>& UARActionComponent::GetServer_DefaultActions() const
 {
-	CHECK_RUNNING_ON_SERVER();
+	CHECK_RUNNING_ON_SERVER(this);
 	return Server_DefaultActions;
 }
 
@@ -41,7 +42,7 @@ void UARActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& p
 bool UARActionComponent::ReplicateSubobjects(UActorChannel* channel, FOutBunch* bunch,
 											 FReplicationFlags* rep_flags)
 {
-	CHECK_RUNNING_ON_SERVER();
+	CHECK_RUNNING_ON_SERVER(this);
 	return GetServerSplit()->ReplicateSubObjects(channel, bunch, rep_flags);
 }
 
@@ -77,7 +78,7 @@ void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* 
 
 	if (action->GetAutoStarts())
 	{
-		StartAction(action->GetActionName(), instigator, false);
+		ClientPredictStartAction(action->GetActionName(), instigator);
 	}
 }
 
@@ -98,77 +99,46 @@ void UARActionComponent::RemoveAction(const FName& name)
 
 	Actions.RemoveAt(index);
 }
-bool UARActionComponent::HasAction(const FName& name) const
+UARAction* UARActionComponent::FindAction(const FName& name) const
 {
-	return Actions.ContainsByPredicate([&name](const TObjectPtr<UARAction>& action)
-									   { return action->GetActionName() == name; });
+	auto result = Actions.FindByPredicate([&name](const TObjectPtr<UARAction>& action)
+										  { return action->GetActionName() == name; });
+	return result ? result->Get() : nullptr;
 }
 
-bool UARActionComponent::StartAction_Implementation(const FName& name, AActor* instigator,
-													bool all_instances)
+void UARActionComponent::ClientPredictStartAction(const FName& name, AActor* instigator)
 {
-	// We search for one action that matches the parameters.
-	bool found = false;
-	for (const TObjectPtr<UARAction>& action : Actions)
-	{
-		if (action->GetActionName() != name)
-		{
-			continue;
-		}
-
-		found = true;
-		if (!action->CanStart(instigator))
-		{
-			FString msg = FString::Printf(TEXT("Action %s cannot start"), *name.ToString());
-			ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), msg, FColor::Red, 2);
-			continue;
-		}
-
-		action->Start(instigator);
-		if (!all_instances)
-		{
-			return true;
-		}
-	}
-
-	if (!found)
-	{
-		FString msg = FString::Printf(TEXT("No action for name %s found"), *name.ToString());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), msg, FColor::Red, 2);
-	}
-
-	return found;
+	CHECK_RUNNING_ON_CLIENT(this);
+	
+	CLIENT_ONLY_CALL(PredictStartAction, name, instigator);
 }
 
-bool UARActionComponent::StopAction_Implementation(const FName& name, AActor* instigator,
-												   bool all_instances)
+void UARActionComponent::StopAction(const FName& name, AActor* instigator)
 {
-	bool found = false;
-	for (const TObjectPtr<UARAction>& action : Actions)
-	{
-		if (action->GetActionName() != name)
-		{
-			continue;
-		}
 
-		// We only want to stop actions that are running.
-		if (!action->GetIsRunning())
-		{
-			continue;
-		}
+	NotNullPtr<UARAction> action = FindAction(name);
+	check(action->GetIsRunning());
 
-		found = true;
-		action->Stop(instigator);
-		if (!all_instances)
-		{
-			return true;
-		}
-	}
-
-	return found;
+	CLIENT_SERVER_CALL(StopAction, action, instigator);
 }
 
 void UARActionComponent::OnRep_Actions(TArray<UARAction*> old_actions)
 {
-	CHECK_RUNNING_ON_CLIENT();
+	CHECK_RUNNING_ON_CLIENT(this);
+}
+
+void UARActionComponent::Multicast_StartAction_Implementation(UARAction* action, AActor* instigator)
+{
+	CHECK_RUNNING_ON_CLIENT(this);
+	check(action);
+
+	CLIENT_ONLY_CALL(StartAction, action, instigator);
+}
+
+void UARActionComponent::Server_StartAction_Implementation(UARAction* action, AActor* instigator)
+{
+	CHECK_RUNNING_ON_SERVER(this);
+	check(action);
+
+	SERVER_ONLY_CALL(StartAction, action, instigator);
 }

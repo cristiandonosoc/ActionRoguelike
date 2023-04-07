@@ -1,9 +1,72 @@
 ﻿#include <ARGameClient/Gameplay/Components/ActionComponentClient.h>
 
+#include <ARGame/ARDebugCategories.h>
+#include <ARGame/Gameplay/Actions/ARAction.h>
+#include <ARGame/Gameplay/Components/ARActionComponent.h>
+
 namespace ar
 {
 namespace client
 {
+
+UARAction* FindStartableAction(NotNullPtr<UARActionComponent> action_component, const FName& name,
+							   AActor* instigator)
+{
+	UARAction* action = action_component->FindAction(name);
+	if (!action)
+	{
+		FString msg = FString::Printf(TEXT("No action for name %s found"), *name.ToString());
+		ARDebugDraw::Text(ARDebugCategories::ACTIONS, action_component->GetWorld(), msg,
+						  FColor::Red, 2);
+		return nullptr;
+	}
+
+	if (!action->CanStart(instigator))
+	{
+		FString msg = FString::Printf(TEXT("Action %s cannot start"), *name.ToString());
+		ARDebugDraw::Text(ARDebugCategories::ACTIONS, action_component->GetWorld(), msg,
+						  FColor::Red, 2);
+		return nullptr;
+	}
+
+	return action;
+}
+
+void ActionComponentClient::PredictStartAction(const FName& name, AActor* instigator)
+{
+	UARAction* action = FindStartableAction(GetBase(), name, instigator);
+	if (!action)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Action %s not found!"), *name.ToString());
+		return;
+	}
+
+	check(!action->GetIsClientPredicting());
+
+	// If it's a client only action, there is no prediction needed so we go direct to start.
+	if (action->GetIsClientOnly())
+	{
+		StartAction(action, instigator);
+		return;
+	}
+
+	// This is a networked ability, so we start the client prediction and then send a request for
+	// the server to start the ability on its end.
+	action->ClientPredictStart(instigator);
+	GetBase()->Server_StartAction(action, instigator);
+}
+
+void ActionComponentClient::StartAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(!action->GetIsRunning());
+	action->ClientStart(instigator);
+}
+
+void ActionComponentClient::StopAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(action->GetIsRunning());
+	action->ClientStop(instigator);
+}
+
 } // namespace client
 } // namespace ar
-

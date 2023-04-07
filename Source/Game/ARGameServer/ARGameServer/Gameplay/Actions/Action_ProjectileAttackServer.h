@@ -12,7 +12,7 @@ namespace server
 
 class ARGAMESERVER_API Action_ProjectileAttackServer
 {
-	GENERATED_LEAF_SERVER_SPLIT(UARAction_ProjectileAttack);
+	GENERATED_LEAF_SERVER_SPLIT(UARAction_ProjectileAttack, Action_ProjectileAttackServer);
 
 public:
 	void Start(NotNullPtr<AARCharacter> instigator, const FVector& location,
