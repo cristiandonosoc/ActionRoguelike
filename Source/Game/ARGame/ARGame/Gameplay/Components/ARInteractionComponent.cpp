@@ -3,6 +3,7 @@
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>
+#include <ARGame/UI/ARActorAttachedWidget.h>
 
 #include <Blueprint/UserWidget.h>
 #include <Components/BoxComponent.h>
@@ -70,6 +71,11 @@ AActor* UARInteractionComponent::QueryBestInteractable(NotNullPtr<AARCharacter> 
 	}
 
 	return interactable;
+}
+
+NotNullPtr<UClass> UARInteractionComponent::GetDefaultWidgetClass() const
+{
+	return DefaultWidgetClass.Get();
 }
 
 void UARInteractionComponent::PrimaryInteract()

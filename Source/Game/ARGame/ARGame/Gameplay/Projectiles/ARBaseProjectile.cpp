@@ -16,7 +16,7 @@ AR_DECLARE_DEBUG_CATEGORY(PROJECTILES, ARDebugCategories::PROJECTILES, true,
 AARBaseProjectile::AARBaseProjectile()
 {
 	INIT_BASE_CLIENT_SPLIT();
-	
+
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if
 	// you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,7 +39,7 @@ AARBaseProjectile::AARBaseProjectile()
 	Audio = CreateDefaultSubobject<UAudioComponent>("Audio");
 	Audio->SetupAttachment(CollisionSphere);
 
-	SetReplicates(true);
+	bReplicates = true;
 }
 
 void AARBaseProjectile::PostInitializeComponents()

@@ -47,8 +47,8 @@ public:
 
 	static AActor* QueryBestInteractable(NotNullPtr<AARCharacter> owner);
 
-	const auto& GetDefaultWidgetClass() const { return DefaultWidgetClass; }
-	const TObjectPtr<UARActorAttachedWidget>& GetWidget() const { return Widget; }
+	NotNullPtr<UClass> GetDefaultWidgetClass() const;
+	UARActorAttachedWidget* GetWidget() const { return Widget; }
 	void SetWidget(NotNullPtr<UARActorAttachedWidget> widget) { Widget = widget; }
 
 protected:

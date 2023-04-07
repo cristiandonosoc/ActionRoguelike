@@ -84,6 +84,11 @@ public:                                                                         
 		return _Base;                                                                              \
 	}                                                                                              \
 	template <typename THackUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>              \
+	TWeakObjectPtr<base_class> GetWeakBase()                                                       \
+	{                                                                                              \
+		return TWeakObjectPtr<base_class>(GetBase());                                              \
+	}                                                                                              \
+	template <typename THackUsedToNotRequireTheTypeOnHeadersAsItWillBeInlined = void>              \
 	UWorld* GetWorld() const                                                                       \
 	{                                                                                              \
 		return GetBase()->GetWorld();                                                              \
@@ -93,6 +98,11 @@ public:                                                                         
 	{                                                                                              \
 		return GetBase()->GetOwner();                                                              \
 	}
+
+
+#define __GENERATED_LEAF_DEFAULT_INIT(base_class)                                                  \
+private:                                                                                           \
+	void InitFromBase(NotNullPtr<base_class> base) { _Base = base.Get(); }
 
 // Client Macros
 // -------------------------------------------------------------------------------------------------
