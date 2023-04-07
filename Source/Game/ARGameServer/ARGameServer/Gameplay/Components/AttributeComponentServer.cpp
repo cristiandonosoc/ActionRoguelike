@@ -1,5 +1,6 @@
 ﻿#include <ARGameServer/Gameplay/Components/AttributeComponentServer.h>
 
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Base/ARGameModeBase.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
@@ -38,7 +39,7 @@ bool AttributeComponentServer::ApplyHealthChange(NotNullPtr<AActor> instigator, 
 	float new_health = FMath::Clamp(expectedResult, 0, GetBase()->GetMaxHealth());
 	GetBase()->SetHealth(new_health);
 
-	UE_LOG(LogTemp, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, new_health);
+	UE_LOG(LogAR_Attributes, Log, TEXT("Delta: %f, Change: %f -> %f"), delta, prev, new_health);
 
 	// Trigger the delegate.
 	FOnHealthChangedPayload payload = {};
@@ -59,7 +60,7 @@ bool AttributeComponentServer::ApplyHealthChange(NotNullPtr<AActor> instigator, 
 		NotNullPtr game_mode = GetBase()->GetWorld()->GetAuthGameMode<AARGameModeBase>();
 		game_mode->OnActorKilled(GetBase()->GetOwner(), instigator, GetBase()->GetKilledCredits());
 	}
-	
+
 	GetBase()->OnHealthChanged.Broadcast(payload);
 
 	return true;

@@ -16,16 +16,14 @@ UARAction* FindStartableAction(NotNullPtr<UARActionComponent> action_component, 
 	if (!action)
 	{
 		FString msg = FString::Printf(TEXT("No action for name %s found"), *name.ToString());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, action_component->GetWorld(), msg,
-						  FColor::Red, 2);
+		debug::DrawText(ar::ACTIONS, action_component->GetWorld(), msg, FColor::Red, 2);
 		return nullptr;
 	}
 
 	if (!action->CanStart(instigator))
 	{
 		FString msg = FString::Printf(TEXT("Action %s cannot start"), *name.ToString());
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, action_component->GetWorld(), msg,
-						  FColor::Red, 2);
+		debug::DrawText(ar::ACTIONS, action_component->GetWorld(), msg, FColor::Red, 2);
 		return nullptr;
 	}
 
@@ -37,7 +35,7 @@ void ActionComponentClient::PredictStartAction(const FName& name, AActor* instig
 	UARAction* action = FindStartableAction(GetBase(), name, instigator);
 	if (!action)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Action %s not found!"), *name.ToString());
+		UE_LOG(LogAR_Actions, Error, TEXT("Action %s not found!"), *name.ToString());
 		return;
 	}
 

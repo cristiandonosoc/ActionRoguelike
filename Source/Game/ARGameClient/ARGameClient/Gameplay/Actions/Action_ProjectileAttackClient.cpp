@@ -1,8 +1,10 @@
 ﻿#include <ARGameClient/Gameplay/Actions/Action_ProjectileAttackClient.h>
 
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Actions/ARAction_ProjectileAttack.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
+
 #include <Kismet/KismetMathLibrary.h>
 
 namespace ar
@@ -14,14 +16,14 @@ void Action_ProjectileAttackClient::Start(NotNullPtr<AActor> instigator)
 {
 	if (!ensure(GetBase()->GetProjectileClass()))
 	{
-		UE_LOG(LogTemp, Error, TEXT("Projectile class is not set"));
+		UE_LOG(LogAR_Projectiles, Error, TEXT("Projectile class is not set"));
 		return;
 	}
 
 	AARCharacter* character = Cast<AARCharacter>(instigator.Get());
 	if (!character)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Instigator is not an AARCharacter"));
+		UE_LOG(LogAR_Projectiles, Warning, TEXT("Instigator is not an AARCharacter"));
 		return;
 	}
 

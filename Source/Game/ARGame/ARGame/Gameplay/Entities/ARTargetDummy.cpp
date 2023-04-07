@@ -2,6 +2,7 @@
 
 #include <ARGame/Gameplay/Entities/ARTargetDummy.h>
 
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 // Sets default values
@@ -25,7 +26,7 @@ void AARTargetDummy::BeginPlay()
 }
 void AARTargetDummy::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
-	UE_LOG(LogTemp, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
+	UE_LOG(LogAR_Entities, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
 
 	// We only flash on negative hits.
 	if (payload.ActualDelta > 0)

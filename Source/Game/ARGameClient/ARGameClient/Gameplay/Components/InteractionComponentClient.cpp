@@ -18,8 +18,7 @@ void ManageInteractableWidget(NotNullPtr<UWorld> world, UARActorAttachedWidget* 
 {
 	if (!widget)
 	{
-		ARDebugDraw::Text(ARDebugCategories::INTERACTION, world, "No default widget set!",
-						  FColor::Red, 1);
+		debug::DrawText(ar::INTERACTION, world, "No default widget set!", FColor::Red, 1);
 		return;
 	}
 

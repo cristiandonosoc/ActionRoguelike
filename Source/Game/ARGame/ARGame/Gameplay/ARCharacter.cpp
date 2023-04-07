@@ -17,8 +17,6 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <Particles/ParticleSystem.h>
 
-AR_DECLARE_DEBUG_CATEGORY(PLAYER_CHARACTER, ARDebugCategories::PLAYER_CHARACTER, false,
-						  "All the display about the player character");
 
 // Sets default values
 AARCharacter::AARCharacter()
@@ -84,8 +82,8 @@ void AARCharacter::BeginPlay()
 				 "*******************************************************************************\n"
 				 "*******************************************************************************");
 
-	UE_LOG(LogTemp, Log, TEXT("%s\n%s (%s) -> IsServer: %d, IsClient: %d\n%s"), *line, *prefix,
-		   *GetNameSafe(this), ARClientServerGlobals::RunningInServer(this),
+	UE_LOG(LogAR_PlayerCharacter, Log, TEXT("%s\n%s (%s) -> IsServer: %d, IsClient: %d\n%s"), *line,
+		   *prefix, *GetNameSafe(this), ARClientServerGlobals::RunningInServer(this),
 		   ARClientServerGlobals::RunningInClient(this), *line);
 }
 
@@ -118,10 +116,10 @@ void DisplayCharacterRotation(const AARCharacter& character)
 	// Draw the lines.
 	NotNullPtr<UWorld> world = character.GetWorld();
 
-	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start, actor_forward,
-								  draw_scale, FColor::Yellow, thickness);
-	ARDebugDraw::DirectionalArrow(ARDebugCategories::PLAYER_CHARACTER, world, start,
-								  controller_forward, draw_scale, FColor::Green, thickness);
+	debug::DrawDirectionalArrow(ar::PLAYER_CHARACTER, world, start, actor_forward, draw_scale,
+								FColor::Yellow, thickness);
+	debug::DrawDirectionalArrow(ar::PLAYER_CHARACTER, world, start, controller_forward, draw_scale,
+								FColor::Green, thickness);
 }
 
 // ObtainCameraTarget obtains where the player is looking at. Useful for several calculations to
@@ -159,8 +157,8 @@ FVector ObtainCameraTarget(const AARCharacter& character)
 	{
 		if (AActor* hit_actor = out_hit.GetActor(); hit_actor)
 		{
-			ARDebugDraw::Sphere(ARDebugCategories::PLAYER_CHARACTER, character.GetWorld(),
-								out_hit.Location, 20.0f, 16, FColor::Orange, 2);
+			debug::DrawSphere(ar::PLAYER_CHARACTER, character.GetWorld(), out_hit.Location, 20.0f,
+							  16, FColor::Orange, 2);
 			return out_hit.Location;
 		}
 	}
@@ -182,16 +180,16 @@ void AARCharacter::Tick(float delta)
 	CameraTarget = ObtainCameraTarget(*this);
 	if (HasAuthority())
 	{
-		ARDebugDraw::Text(ARDebugCategories::ALWAYS, GetWorld(),
-						  FString::Printf(TEXT("%s LOCATION: %s"), *GetNameSafe(this),
-										  *GetActorLocation().ToString()),
-						  FColor::Purple);
+		debug::DrawText(ar::ALWAYS, GetWorld(),
+						FString::Printf(TEXT("%s LOCATION: %s"), *GetNameSafe(this),
+										*GetActorLocation().ToString()),
+						FColor::Purple);
 
-		ARDebugDraw::Box(ARDebugCategories::ALWAYS, GetWorld(), GetActorLocation(),
-						 FVector(50, 50, 75), FColor::Purple, 2);
+		debug::DrawBox(ar::ALWAYS, GetWorld(), GetActorLocation(), FVector(50, 50, 75),
+					   FColor::Purple, 2);
 	}
 
-	if (ARDebugDraw::IsCategoryEnabled(ARDebugCategories::PLAYER_CHARACTER))
+	if (debug::IsCategoryEnabled(ar::PLAYER_CHARACTER))
 	{
 		DisplayCharacterRotation(*this);
 	}

@@ -5,6 +5,7 @@
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/AI/ARAICharacter.h>
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
@@ -66,7 +67,7 @@ void PayCreditsToKiller(NotNullPtr<AActor> killer, uint32 credits)
 
 void AARGameModeBase::OnActorKilled(NotNullPtr<AActor> victim, AActor* killer, uint32 credits)
 {
-	UE_LOG(LogTemp, Log, TEXT("Actor %s died, killed by %s"), *GetNameSafe(victim),
+	UE_LOG(LogAR_GameMode, Log, TEXT("Actor %s died, killed by %s"), *GetNameSafe(victim),
 		   *GetNameSafe(killer));
 
 	// Check if it's a player.
@@ -115,19 +116,19 @@ void AARGameModeBase::OnSpawnBotTimerElapsed()
 {
 	if (!CVarSpawnBots.GetValueOnGameThread())
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: CVarSpawnBots not set"));
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: CVarSpawnBots not set"));
 		return;
 	}
 
 	if (!SpawnLocationEnvQuery)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: SpawnLocationEnvQuery not set"));
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: SpawnLocationEnvQuery not set"));
 		return;
 	}
 
 	if (!BotClassToSpawn)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: BotClassToSpawn not set"));
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: BotClassToSpawn not set"));
 		return;
 	}
 
@@ -143,15 +144,15 @@ void AARGameModeBase::OnSpawnBotTimerElapsed()
 
 	check(max_bots > 0);
 
-	UE_LOG(LogTemp, Log, TEXT("GameMode: Spawn timer elapsed! Current bots: %d/%d"), alive_bots,
-		   max_bots);
+	UE_LOG(LogAR_GameMode, Log, TEXT("GameMode: Spawn timer elapsed! Current bots: %d/%d"),
+		   alive_bots, max_bots);
 	if (alive_bots >= max_bots)
 	{
 		return;
 	}
 
 	// Perform an EQS request.
-	UE_LOG(LogTemp, Log, TEXT("GameMode: Attempting to spawn bot: Running EQS query"));
+	UE_LOG(LogAR_GameMode, Log, TEXT("GameMode: Attempting to spawn bot: Running EQS query"));
 
 	FEnvQueryRequest env_request(SpawnLocationEnvQuery, this);
 	int32 query_id = env_request.Execute(EEnvQueryRunMode::RandomBest25Pct, this,
@@ -163,17 +164,17 @@ void AARGameModeBase::OnSpawnLocationEnvQueryResult(TSharedPtr<FEnvQueryResult> 
 {
 	if (!result->IsFinished())
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: SpawnLocationEnvQuery not finished"));
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: SpawnLocationEnvQuery not finished"));
 		return;
 	}
 
 	if (!result->IsSuccessful())
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: SpawnLocationEnvQuery not successful"));
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: SpawnLocationEnvQuery not successful"));
 		return;
 	}
 
-	UE_LOG(LogTemp, Log, TEXT("GameMode: EQS query successful! Spawning bot"));
+	UE_LOG(LogAR_GameMode, Log, TEXT("GameMode: EQS query successful! Spawning bot"));
 
 	FVector target_location = result->GetItemAsLocation(0);
 	check(!target_location.IsNearlyZero());
@@ -187,7 +188,8 @@ void AARGameModeBase::OnSpawnLocationEnvQueryResult(TSharedPtr<FEnvQueryResult> 
 		BotClassToSpawn.Get(), std::move(spawn_transform), std::move(spawn_params));
 	if (!ai_character)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameMode: spawning class %s"), *BotClassToSpawn->GetName());
+		UE_LOG(LogAR_GameMode, Error, TEXT("GameMode: spawning class %s"),
+			   *BotClassToSpawn->GetName());
 		return;
 	}
 

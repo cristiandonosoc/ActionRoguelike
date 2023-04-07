@@ -1,8 +1,8 @@
 ﻿#include <ARGame/Gameplay/Actions/ARAction.h>
 
 #include <ARBase/NotNullPtr.h>
+#include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
-#include <Misc/MTAccessDetector.h>
 
 UARActionComponent* UARAction::GetOwningComponent() const
 {
@@ -42,7 +42,7 @@ void UARAction::ClientPredictStart_Implementation(AActor* instigator)
 	check(!IsClientPredicting);
 	check(!IsRunning);
 
-	UE_LOG(LogTemp, Log, TEXT("Client: Predicting Action Start: %s (Actor: %s)"),
+	UE_LOG(LogAR_Actions, Log, TEXT("Client: Predicting Action Start: %s (Actor: %s)"),
 		   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientPredicting = true;
@@ -54,7 +54,7 @@ void UARAction::ClientPredictStop_Implementation(AActor* instigator)
 	check(IsClientPredicting);
 	check(!IsRunning);
 
-	UE_LOG(LogTemp, Log, TEXT("Client: Predicting Action Stop: %s (Actor: %s)"),
+	UE_LOG(LogAR_Actions, Log, TEXT("Client: Predicting Action Stop: %s (Actor: %s)"),
 		   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientPredicting = false;
@@ -73,8 +73,8 @@ void UARAction::ClientStart_Implementation(AActor* instigator)
 	}
 
 	check(!IsClientPredicting);
-	
-	UE_LOG(LogTemp, Log, TEXT("Client: Action Start: %s (Actor: %s)"), *ActionName.ToString(),
+
+	UE_LOG(LogAR_Actions, Log, TEXT("Client: Action Start: %s (Actor: %s)"), *ActionName.ToString(),
 		   *GetNameSafe(this));
 
 	IsRunning = true;
@@ -87,10 +87,10 @@ void UARAction::ClientStop_Implementation(AActor* instigator)
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsClientPredicting);
 	check(IsRunning);
-	
-	UE_LOG(LogTemp, Log, TEXT("Client: Action Stop: %s (Actor: %s)"), *ActionName.ToString(),
+
+	UE_LOG(LogAR_Actions, Log, TEXT("Client: Action Stop: %s (Actor: %s)"), *ActionName.ToString(),
 		   *GetNameSafe(this));
-	
+
 	// TODO(cdc): Should this be done via replication?
 	GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
 	IsRunning = false;
@@ -101,8 +101,8 @@ void UARAction::ServerStart_Implementation(AActor* instigator)
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	check(!IsRunning);
 	check(!IsClientPredicting);
-	
-	UE_LOG(LogTemp, Log, TEXT("Server: Action Start: %s (Actor: %s)"), *ActionName.ToString(),
+
+	UE_LOG(LogAR_Actions, Log, TEXT("Server: Action Start: %s (Actor: %s)"), *ActionName.ToString(),
 		   *GetNameSafe(this));
 
 	IsRunning = true;
@@ -113,10 +113,10 @@ void UARAction::ServerStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	check(IsRunning);
-	
-	UE_LOG(LogTemp, Log, TEXT("Server: Action Stop: %s (Actor: %s)"), *ActionName.ToString(),
+
+	UE_LOG(LogAR_Actions, Log, TEXT("Server: Action Stop: %s (Actor: %s)"), *ActionName.ToString(),
 		   *GetNameSafe(this));
-	
+
 	GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
 	IsRunning = false;
 }

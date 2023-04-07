@@ -43,12 +43,9 @@ void MagicProjectileClient::OnBeginHit(const FHitResult& hit, AActor* hit_actor)
 	FRotator rotation = GetBase()->GetActorRotation();
 
 	// We draw the debug collision.
-	ARDebugDraw::Sphere(ARDebugCategories::PROJECTILES, GetWorld(), location, 20, 16,
-						FColor::Yellow, 1, 1);
+	debug::DrawSphere(ar::PROJECTILES, GetWorld(), location, 20, 16, FColor::Yellow, 1, 1);
 
 	PlayHitEffects(GetBase(), location, rotation);
-
-
 }
 
 } // namespace client

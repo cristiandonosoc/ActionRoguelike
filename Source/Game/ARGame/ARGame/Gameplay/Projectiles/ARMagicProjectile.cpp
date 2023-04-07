@@ -1,7 +1,7 @@
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
 
 #include <ARBase/ClientServerSplit.h>
-#include <ARBase/DebugDraw.h>
+#include <ARBase/DebugTools.h>
 
 #include <Components/AudioComponent.h>
 #include <Kismet/GameplayStatics.h>

@@ -6,13 +6,11 @@
 #include <ARGame/Gameplay/Actions/ARAction.h>
 #include <Net/UnrealNetwork.h>
 
-AR_DECLARE_DEBUG_CATEGORY(ACTIONS, ARDebugCategories::ACTIONS, true, "All about actions");
-
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
-	
+
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicatedByDefault(true);
 }
@@ -51,18 +49,18 @@ void UARActionComponent::TickComponent(float delta, ELevelTick tick_type,
 {
 	Super::TickComponent(delta, tick_type, tick_function);
 
-	if (ARDebugDraw::IsCategoryEnabled(ARDebugCategories::ACTIONS))
+	if (debug::IsCategoryEnabled(ar::ACTIONS))
 	{
 		// FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
 		// 							  *ActiveGameplayTags.ToStringSimple());
-		// ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
+		// debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
 
 		FString msg =
 			FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
 							*FString::JoinBy(Actions, TEXT(","),
 											 [](const auto& action) -> FString
 											 { return *action->GetActionName().ToString(); }));
-		ARDebugDraw::Text(ARDebugCategories::ACTIONS, GetWorld(), std::move(msg), FColor::White);
+		debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::White);
 	}
 }
 
@@ -74,7 +72,7 @@ void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* 
 	NotNullPtr action = NewObject<UARAction>(this, action_class.Get());
 	Actions.Add(action);
 
-	UE_LOG(LogTemp, Log, TEXT("Adding action %s"), *action->GetActionName().ToString());
+	UE_LOG(LogAR_Actions, Log, TEXT("Adding action %s"), *action->GetActionName().ToString());
 
 	if (action->GetAutoStarts())
 	{
@@ -109,7 +107,7 @@ UARAction* UARActionComponent::FindAction(const FName& name) const
 void UARActionComponent::ClientPredictStartAction(const FName& name, AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(this);
-	
+
 	CLIENT_ONLY_CALL(PredictStartAction, name, instigator);
 }
 

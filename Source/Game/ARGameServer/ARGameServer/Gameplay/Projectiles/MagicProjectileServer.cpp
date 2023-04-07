@@ -26,8 +26,8 @@ bool WasProjectileParried(NotNullPtr<AARMagicProjectile> base,
 
 	FRotator rotation = UKismetMathLibrary::FindLookAtRotation(hit.Location, hit.TraceStart);
 
-	ARDebugDraw::DirectionalArrow(ARDebugCategories::PROJECTILES, base->GetWorld(), hit.TraceEnd,
-								  hit.TraceStart, 10, FColor::Blue, 2);
+	debug::DrawDirectionalArrow(ar::PROJECTILES, base->GetWorld(), hit.TraceEnd, hit.TraceStart, 10,
+								FColor::Blue, 2);
 
 	FTransform spawn_transform = FTransform(rotation, hit.Location);
 

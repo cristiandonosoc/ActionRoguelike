@@ -8,8 +8,6 @@
 #include <Blueprint/UserWidget.h>
 #include <Components/BoxComponent.h>
 
-AR_DECLARE_DEBUG_CATEGORY(INTERACTION, ARDebugCategories::INTERACTION, true,
-						  "All the displays for player interactions");
 
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()

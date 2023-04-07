@@ -9,8 +9,6 @@
 #include <Kismet/GameplayStatics.h>
 #include <Particles/ParticleSystemComponent.h>
 
-AR_DECLARE_DEBUG_CATEGORY(PROJECTILES, ARDebugCategories::PROJECTILES, true,
-						  "All the display about projectiles");
 
 // Sets default values
 AARBaseProjectile::AARBaseProjectile()
