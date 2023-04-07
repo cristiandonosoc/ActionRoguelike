@@ -26,9 +26,12 @@ void AARGameModeBase::StartPlay()
 	streamer->RequestSyncLoad(BotClassToSpawn);
 
 	// On start, we start a timer to spawn a new bot.
-	GetWorldTimerManager().SetTimer(SpawnBotTimerHandle, this,
-									&AARGameModeBase::OnSpawnBotTimerElapsed, SpawnBotInterval,
-									true);
+	if (MaxConcurrentBots > 0)
+	{
+		GetWorldTimerManager().SetTimer(SpawnBotTimerHandle, this,
+										&AARGameModeBase::OnSpawnBotTimerElapsed, SpawnBotInterval,
+										true);
+	}
 }
 
 namespace
@@ -137,6 +140,8 @@ void AARGameModeBase::OnSpawnBotTimerElapsed()
 	{
 		max_bots = static_cast<int32>(SpawnCurve->GetFloatValue(GetWorld()->TimeSeconds));
 	}
+
+	check(max_bots > 0);
 
 	UE_LOG(LogTemp, Log, TEXT("GameMode: Spawn timer elapsed! Current bots: %d/%d"), alive_bots,
 		   max_bots);
