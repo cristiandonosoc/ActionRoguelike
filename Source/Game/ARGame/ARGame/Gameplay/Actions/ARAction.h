@@ -17,8 +17,14 @@ public:
 	const FName& GetActionName() const { return ActionName; }
 	bool GetIsClientOnly() const { return IsClientOnly; }
 	bool GetAutoStarts() const { return AutoStarts; }
+
+	bool GetIsClientStartPredicting() const { return IsClientStartPredicting; }
+	bool GetIsClientStopPredicting() const { return IsClientStopPredicting; }
+
 	bool GetIsRunning() const { return IsRunning; }
-	bool GetIsClientPredicting() const { return IsClientPredicting; }
+
+	const FGameplayTagContainer& GetGrantsTags() const { return GrantsTags; }
+	const FGameplayTagContainer& GetBlockedTags() const { return BlockedTags; }
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	UARActionComponent* GetOwningComponent() const;
@@ -30,11 +36,22 @@ public:
 	// INTERFACE_END(UObject)
 
 public:
+	// We generate all the possible action callbacks so that they can be implement in blueprints.
+	
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* instigator);
 
-	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client")
+	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
 	void ClientPredictStart(AActor* instigator);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
+	void FinalizeClientStartPrediction();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
+	void ClientPredictStop(AActor* instigator);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
+	void FinalizeClientStopPrediction();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client")
 	void ClientStart(AActor* instigator);
@@ -48,15 +65,21 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
 	void ServerStop(AActor* instigator);
 
-protected:
-	// ClientPredictStop is protected because it will be called directly from ClientStart.
-	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client")
-	void ClientPredictStop(AActor* instigator);
 
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Action|Client|Prediction")
+	void DispatchClientStopPrediction(AActor* instigator);
+
+	UFUNCTION(BlueprintCallable, Category = "Action|Server")
+	void DispatchServerStop(AActor* instigator);
+
+protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual bool CanStart_Implementation(AActor* instigator);
 	virtual void ClientPredictStart_Implementation(AActor* instigator);
+	virtual void FinalizeClientStartPrediction_Implementation();
 	virtual void ClientPredictStop_Implementation(AActor* instigator);
+	virtual void FinalizeClientStopPrediction_Implementation();
 	virtual void ClientStart_Implementation(AActor* instigator);
 	virtual void ClientStop_Implementation(AActor* instigator);
 	virtual void ServerStart_Implementation(AActor* instigator);
@@ -64,24 +87,15 @@ protected:
 	// INTERFACE_END(UARAction)
 
 protected:
-	UPROPERTY(BlueprintReadOnly, BlueprintReadOnly, Category = "Action|Runtime")
-	bool IsClientPredicting = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
+	FName ActionName;
 
 	UPROPERTY(BlueprintReadOnly, BlueprintReadOnly, Category = "Action|Runtime")
 	bool IsRunning = false;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
-	FName ActionName;
-
 	// Whether this gets started as soon as someone adds the ability to the action component.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
 	bool AutoStarts = false;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Action|Config")
-	bool CanBeStartedMultipleTimes = false;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
-	bool IsClientOnly = false;
 
 	// Tags added to the owning actor when |Start| is called. Removed on |Stop|.
 	UPROPERTY(EditDefaultsOnly, Category = "Action|Config")
@@ -92,4 +106,15 @@ protected:
 	//            action should decide.
 	UPROPERTY(EditDefaultsOnly, Category = "Action|Tags")
 	FGameplayTagContainer BlockedTags;
+
+	// CLIENT_PROPERTIES_BEGIN ---------------------------------------------------------------------
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
+	bool IsClientOnly = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Action|Runtime")
+	bool IsClientStartPredicting = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Action|Runtime")
+	bool IsClientStopPredicting = false;
+	// CLIENT_PROPERTIES_END -----------------------------------------------------------------------
 };

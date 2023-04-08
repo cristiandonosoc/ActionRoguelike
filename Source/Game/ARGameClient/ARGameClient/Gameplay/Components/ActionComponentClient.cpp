@@ -9,6 +9,9 @@ namespace ar
 namespace client
 {
 
+namespace
+{
+
 UARAction* FindStartableAction(NotNullPtr<UARActionComponent> action_component, const FName& name,
 							   AActor* instigator)
 {
@@ -30,7 +33,9 @@ UARAction* FindStartableAction(NotNullPtr<UARActionComponent> action_component, 
 	return action;
 }
 
-void ActionComponentClient::PredictStartAction(const FName& name, AActor* instigator)
+} // namespace
+
+void ActionComponentClient::PredictStartActionByName(const FName& name, AActor* instigator)
 {
 	UARAction* action = FindStartableAction(GetBase(), name, instigator);
 	if (!action)
@@ -38,8 +43,6 @@ void ActionComponentClient::PredictStartAction(const FName& name, AActor* instig
 		UE_LOG(LogAR_Actions, Error, TEXT("Action %s not found!"), *name.ToString());
 		return;
 	}
-
-	check(!action->GetIsClientPredicting());
 
 	// If it's a client only action, there is no prediction needed so we go direct to start.
 	if (action->GetIsClientOnly())
@@ -51,7 +54,19 @@ void ActionComponentClient::PredictStartAction(const FName& name, AActor* instig
 	// This is a networked ability, so we start the client prediction and then send a request for
 	// the server to start the ability on its end.
 	action->ClientPredictStart(instigator);
-	GetBase()->Server_StartAction(action, instigator);
+	GetBase()->RPC_Server_StartAction(action, instigator);
+}
+
+void ActionComponentClient::StartActionByName(const FName& name, AActor* instigator)
+{
+	UARAction* action = FindStartableAction(GetBase(), name, instigator);
+	if (!action)
+	{
+		UE_LOG(LogAR_Actions, Error, TEXT("Action %s not found!"), *name.ToString());
+		return;
+	}
+
+	StartAction(action, instigator);
 }
 
 void ActionComponentClient::StartAction(NotNullPtr<UARAction> action, AActor* instigator)

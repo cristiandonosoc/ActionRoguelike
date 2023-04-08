@@ -97,6 +97,7 @@ void UARActionComponent::RemoveAction(const FName& name)
 
 	Actions.RemoveAt(index);
 }
+
 UARAction* UARActionComponent::FindAction(const FName& name) const
 {
 	auto result = Actions.FindByPredicate([&name](const TObjectPtr<UARAction>& action)
@@ -107,16 +108,18 @@ UARAction* UARActionComponent::FindAction(const FName& name) const
 void UARActionComponent::ClientPredictStartAction(const FName& name, AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(this);
+	CLIENT_ONLY_CALL(PredictStartActionByName, name, instigator);
+}
 
-	CLIENT_ONLY_CALL(PredictStartAction, name, instigator);
+void UARActionComponent::ServerStartAction(const FName& name, AActor* instigator)
+{
+	CHECK_RUNNING_ON_SERVER(this);
+	SERVER_ONLY_CALL(StartActionByName, name, instigator);
 }
 
 void UARActionComponent::StopAction(const FName& name, AActor* instigator)
 {
-
 	NotNullPtr<UARAction> action = FindAction(name);
-	check(action->GetIsRunning());
-
 	CLIENT_SERVER_CALL(StopAction, action, instigator);
 }
 
@@ -125,18 +128,47 @@ void UARActionComponent::OnRep_Actions(TArray<UARAction*> old_actions)
 	CHECK_RUNNING_ON_CLIENT(this);
 }
 
-void UARActionComponent::Multicast_StartAction_Implementation(UARAction* action, AActor* instigator)
-{
-	CHECK_RUNNING_ON_CLIENT(this);
-	check(action);
-
-	CLIENT_ONLY_CALL(StartAction, action, instigator);
-}
-
-void UARActionComponent::Server_StartAction_Implementation(UARAction* action, AActor* instigator)
+void UARActionComponent::RPC_Server_StartAction_Implementation(UARAction* action,
+															   AActor* instigator)
 {
 	CHECK_RUNNING_ON_SERVER(this);
 	check(action);
 
 	SERVER_ONLY_CALL(StartAction, action, instigator);
+}
+
+void UARActionComponent::RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator)
+{
+	CHECK_RUNNING_ON_SERVER(this);
+	check(action);
+
+	SERVER_ONLY_CALL(StopAction, action, instigator);
+}
+
+void UARActionComponent::RPC_Multicast_StartAction_Implementation(UARAction* action,
+																  AActor* instigator)
+{
+	check(action);
+
+	// This is a client only RPC.
+	if (ARClientServerGlobals::RunningInServer(this))
+	{
+		return;
+	}
+
+	CLIENT_ONLY_CALL(StartAction, action, instigator);
+}
+
+void UARActionComponent::RPC_Multicast_StopAction_Implementation(UARAction* action,
+																 AActor* instigator)
+{
+	check(action);
+
+	// This is a client only RPC.
+	if (ARClientServerGlobals::RunningInServer(this))
+	{
+		return;
+	}
+
+	CLIENT_ONLY_CALL(StopAction, action, instigator);
 }

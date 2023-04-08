@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <ARBase/BuildDefines.h>
+// ReSharper disable once CppUnusedIncludeDirective
 #include <ARBase/NotNullPtr.h>
 
 // ReSharper disable once CppUnusedIncludeDirective
@@ -123,6 +124,7 @@ private:                                                                        
 
 #define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
 private:                                                                                           \
+	friend class client_class;                                                                     \
 	using ClientSplitClass = client_class;                                                         \
 	std::unique_ptr<client_class> _ClientSplit;                                                    \
                                                                                                    \
@@ -167,6 +169,7 @@ public:                                                                         
 
 #define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
 private:                                                                                           \
+	friend class server_class;                                                                     \
 	using ServerSplitClass = server_class;                                                         \
 	std::unique_ptr<server_class> _ServerSplit;                                                    \
                                                                                                    \

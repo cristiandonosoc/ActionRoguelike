@@ -61,21 +61,32 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void ClientPredictStartAction(const FName& name, AActor* instigator);
 
+	UFUNCTION(BlueprintCallable, Category = "Action|Server")
+	void ServerStartAction(const FName& name, AActor* instigator);
+
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void StopAction(const FName& name, AActor* instigator);
 
 protected:
 	UFUNCTION(Server, Reliable)
-	void Server_StartAction(UARAction* action, AActor* instigator);
+	void RPC_Server_StartAction(UARAction* action, AActor* instigator);
+
+	UFUNCTION(Server, Reliable)
+	void RPC_Server_StopAction(UARAction* action, AActor* instigator);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_StartAction(UARAction* action, AActor* instigator);
+	void RPC_Multicast_StartAction(UARAction* action, AActor* instigator);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void RPC_Multicast_StopAction(UARAction* action, AActor* instigator);
 
 	// INTERFACE_BEGIN(UARActionComponent)
 	UFUNCTION()
 	void OnRep_Actions(TArray<UARAction*> old_actions);
-	void Multicast_StartAction_Implementation(UARAction* action, AActor* instigator);
-	void Server_StartAction_Implementation(UARAction* action, AActor* instigator);
+	void RPC_Server_StartAction_Implementation(UARAction* action, AActor* instigator);
+	void RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator);
+	void RPC_Multicast_StartAction_Implementation(UARAction* action, AActor* instigator);
+	void RPC_Multicast_StopAction_Implementation(UARAction* action, AActor* instigator);
 	// INTERFACE_END(UARActionComponent)
 
 protected:

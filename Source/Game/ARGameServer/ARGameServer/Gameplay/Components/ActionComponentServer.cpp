@@ -12,6 +12,33 @@ namespace ar
 namespace server
 {
 
+void ActionComponentServer::StartActionByName(const FName& name, AActor* instigator)
+{
+	NotNullPtr<UARAction> action = GetBase()->FindAction(name);
+	StartAction(action, instigator);
+}
+
+void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(!action->GetIsRunning());
+
+	GetBase()->ActiveGameplayTags.AppendTags(action->GetGrantsTags());
+	action->ServerStart(instigator);
+
+	// We also let the clients know that this action has started.
+	GetBase()->RPC_Multicast_StartAction(action, instigator);
+}
+
+void ActionComponentServer::StopAction(NotNullPtr<UARAction> action, AActor* instigator)
+{
+	check(action->GetIsRunning());
+	action->ServerStop(instigator);
+	GetBase()->ActiveGameplayTags.RemoveTags(action->GetGrantsTags());
+
+	// We also let the clients know that this action has stopped.
+	GetBase()->RPC_Multicast_StopAction(action, instigator);
+}
+
 void ActionComponentServer::BeginPlay()
 {
 	// TODO(cdc): Do async loading.
@@ -48,17 +75,6 @@ bool ActionComponentServer::ReplicateSubObjects(NotNullPtr<UActorChannel> channe
 	return wrote_something;
 }
 
-void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* instigator)
-{
-	check(!action->GetIsRunning());
-	action->ServerStart(instigator);
-}
-
-void ActionComponentServer::StopAction(NotNullPtr<UARAction> action, AActor* instigator)
-{
-	check(action->GetIsRunning());
-	action->ServerStop(instigator);
-}
 
 } // namespace server
 } // namespace ar

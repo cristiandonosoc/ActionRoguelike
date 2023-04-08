@@ -10,6 +10,7 @@ public class ARGameServer : ModuleRules
 			new string[]
 			{
 				"Core",
+				"GameplayTags",
 			}
 		);
 
