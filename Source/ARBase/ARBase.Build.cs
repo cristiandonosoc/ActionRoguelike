@@ -16,6 +16,7 @@ public class ARBase : ModuleRules
         PrivateDependencyModuleNames.AddRange(
             new string[]
             {
+                "AutomationTest",
                 "CoreUObject",
                 "Engine",
                 "Slate",
