@@ -4,6 +4,7 @@
 
 class UARAction;
 class UARActionComponent;
+struct FPredictedStartActionContext;
 
 namespace ar
 {
@@ -15,8 +16,10 @@ class ARGAMESERVER_API ActionComponentServer
 	GENERATED_LEAF_SERVER_SPLIT(UARActionComponent, ActionComponentServer);
 
 public:
-	void StartActionByName(const FName& name, AActor* instigator);
-	void StartAction(NotNullPtr<UARAction> action, AActor* instigator);
+	void StartActionByName(const FName& name, AActor* instigator,
+						   FPredictedStartActionContext&& context);
+	void StartAction(NotNullPtr<UARAction> action, AActor* instigator,
+					 FPredictedStartActionContext&& context);
 	void StopAction(NotNullPtr<UARAction> action, AActor* instigator);
 
 private:

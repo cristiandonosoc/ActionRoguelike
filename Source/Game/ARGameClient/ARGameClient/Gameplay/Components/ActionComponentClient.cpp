@@ -53,8 +53,8 @@ void ActionComponentClient::PredictStartActionByName(const FName& name, AActor* 
 
 	// This is a networked ability, so we start the client prediction and then send a request for
 	// the server to start the ability on its end.
-	action->ClientPredictStart(instigator);
-	GetBase()->RPC_Server_StartAction(action, instigator);
+	FPredictedStartActionContext context = action->ClientPredictStart(instigator);
+	GetBase()->RPC_Server_StartAction(action, instigator, std::move(context));
 }
 
 void ActionComponentClient::StartActionByName(const FName& name, AActor* instigator)

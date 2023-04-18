@@ -9,7 +9,6 @@
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
 {
-	INIT_BASE_CLIENT_SERVER_SPLIT();
 
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicatedByDefault(true);
@@ -24,6 +23,7 @@ const TArray<TSoftClassPtr<UARAction>>& UARActionComponent::GetServer_DefaultAct
 void UARActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	INIT_BASE_CLIENT_SERVER_SPLIT();
 
 	SERVER_ONLY_CALL(BeginPlay);
 }
@@ -111,10 +111,11 @@ void UARActionComponent::ClientPredictStartAction(const FName& name, AActor* ins
 	CLIENT_ONLY_CALL(PredictStartActionByName, name, instigator);
 }
 
-void UARActionComponent::ServerStartAction(const FName& name, AActor* instigator)
+void UARActionComponent::ServerStartAction(const FName& name, AActor* instigator,
+										   FPredictedStartActionContext context)
 {
 	CHECK_RUNNING_ON_SERVER(this);
-	SERVER_ONLY_CALL(StartActionByName, name, instigator);
+	SERVER_ONLY_CALL(StartActionByName, name, instigator, std::move(context));
 }
 
 void UARActionComponent::StopAction(const FName& name, AActor* instigator)
@@ -129,12 +130,13 @@ void UARActionComponent::OnRep_Actions(TArray<UARAction*> old_actions)
 }
 
 void UARActionComponent::RPC_Server_StartAction_Implementation(UARAction* action,
-															   AActor* instigator)
+															   AActor* instigator,
+															   FPredictedStartActionContext context)
 {
 	CHECK_RUNNING_ON_SERVER(this);
 	check(action);
 
-	SERVER_ONLY_CALL(StartAction, action, instigator);
+	SERVER_ONLY_CALL(StartAction, action, instigator, std::move(context));
 }
 
 void UARActionComponent::RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator)

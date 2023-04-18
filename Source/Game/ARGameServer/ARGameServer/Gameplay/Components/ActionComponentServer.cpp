@@ -12,13 +12,15 @@ namespace ar
 namespace server
 {
 
-void ActionComponentServer::StartActionByName(const FName& name, AActor* instigator)
+void ActionComponentServer::StartActionByName(const FName& name, AActor* instigator,
+											  FPredictedStartActionContext&& context)
 {
 	NotNullPtr<UARAction> action = GetBase()->FindAction(name);
-	StartAction(action, instigator);
+	StartAction(action, instigator, std::move(context));
 }
 
-void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* instigator)
+void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* instigator,
+										FPredictedStartActionContext&& context)
 {
 	check(!action->GetIsRunning());
 

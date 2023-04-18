@@ -58,8 +58,7 @@ bool UARAction::CanStart_Implementation(AActor* instigator)
 
 	return true;
 }
-
-void UARAction::ClientPredictStart_Implementation(AActor* instigator)
+FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor* instigator) 
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsClientStartPredicting);
@@ -70,6 +69,8 @@ void UARAction::ClientPredictStart_Implementation(AActor* instigator)
 		   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientStartPredicting = true;
+
+	return {};
 }
 
 void UARAction::FinalizeClientStartPrediction_Implementation()

@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <ARBase/NotNullPtr.h>
+#include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
 #include <UObject/Object.h>
@@ -7,6 +9,7 @@
 #include "ARAction.generated.h"
 
 class UARActionComponent;
+struct FPredictedStartActionContext;
 
 UCLASS(Blueprintable, BlueprintType)
 class ARGAME_API UARAction : public UObject
@@ -37,12 +40,12 @@ public:
 
 public:
 	// We generate all the possible action callbacks so that they can be implement in blueprints.
-	
+
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
-	void ClientPredictStart(AActor* instigator);
+	FPredictedStartActionContext ClientPredictStart(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
 	void FinalizeClientStartPrediction();
@@ -76,7 +79,7 @@ protected:
 protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual bool CanStart_Implementation(AActor* instigator);
-	virtual void ClientPredictStart_Implementation(AActor* instigator);
+	virtual FPredictedStartActionContext ClientPredictStart_Implementation(AActor* instigator);
 	virtual void FinalizeClientStartPrediction_Implementation();
 	virtual void ClientPredictStop_Implementation(AActor* instigator);
 	virtual void FinalizeClientStopPrediction_Implementation();

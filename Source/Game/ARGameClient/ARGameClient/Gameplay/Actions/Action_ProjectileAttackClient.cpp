@@ -12,7 +12,8 @@ namespace ar
 namespace client
 {
 
-void Action_ProjectileAttackClient::Start(NotNullPtr<AActor> instigator)
+void Action_ProjectileAttackClient::PredictStart(
+	NotNullPtr<AActor> instigator, NotNullPtr<FPredictedStartActionContext> out_context)
 {
 	if (!ensure(GetBase()->GetProjectileClass()))
 	{
@@ -27,35 +28,22 @@ void Action_ProjectileAttackClient::Start(NotNullPtr<AActor> instigator)
 		return;
 	}
 
-	// We play the attack animation and then we setup a timer to spawn the projectile once we're
-	// done with that animation.
-	// TODO(cdc): Use anim notify.
-	character->PlayAnimMontage(GetBase()->GetAttackAnimation());
+	// We only play the animation if we're not local.
+	// If we're locally controlled, we play the animation as part of the prediction.
+	if (!character->IsLocallyControlled())
+	{
+		// We play the attack animation and then we setup a timer to spawn the projectile once we're
+		// done with that animation.
+		// TODO(cdc): Use anim notify.
+		character->PlayAnimMontage(GetBase()->GetAttackAnimation());
+	}
 
-	FTimerDelegate delegate;
-	delegate.BindLambda(
-		[this, character, weakBase = GetWeakBase()]()
-		{
-			if (weakBase.Get())
-			{
-				AttackTimerEnd(character);
-			}
-		});
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, std::move(delegate),
-										   GetBase()->GetAttackAnimDelay(), false);
-}
-
-void Action_ProjectileAttackClient::AttackTimerEnd(NotNullPtr<AARCharacter> instigator)
-{
 	// Obtain the place in the hand where we will spawn from.
-	FVector hand_location =
-		instigator->GetMesh()->GetSocketLocation(GetBase()->GetHandSocketName());
+	out_context->Location = character->GetMesh()->GetSocketLocation(GetBase()->GetHandSocketName());
 
 	// We make it spawn with the rotation of the camera target.
-	FRotator rotation =
-		UKismetMathLibrary::FindLookAtRotation(hand_location, instigator->GetCameraTarget());
-
-	GetBase()->ClientStop(instigator);
+	out_context->Rotation =
+		UKismetMathLibrary::FindLookAtRotation(out_context->Location, character->GetCameraTarget());
 }
 
 } // namespace client
