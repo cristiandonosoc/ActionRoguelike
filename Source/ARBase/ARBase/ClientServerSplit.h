@@ -157,8 +157,9 @@ public:                                                                         
 	while (false)
 
 #else
-#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)
-#define INIT_BASE_CLIENT_SPLIT() std::unique_ptr<void> _PaddingNoClientSplitAvailable;
+#define GENERATED_BASE_CLIENT_SPLIT(base_class, client_class)                                      \
+	std::unique_ptr<void> _PaddingNoClientSplitAvailable;
+#define INIT_BASE_CLIENT_SPLIT()
 #define GENERATED_LEAF_CLIENT_SPLIT(base_class)
 #endif // AR_BUILD_CLIENT
 
@@ -202,7 +203,8 @@ public:                                                                         
 	while (false)
 
 #else
-#define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)
-#define INIT_BASE_SERVER_SPLIT() std::unique_ptr<void> _PaddingNoServerSplitAvailable;
+#define GENERATED_BASE_SERVER_SPLIT(base_class, server_class)                                      \
+	std::unique_ptr<void> _PaddingNoServerSplitAvailable;
+#define INIT_BASE_SERVER_SPLIT()
 #define GENERATED_LEAF_SERVER_SPLIT(base_class)
 #endif // AR_BUILD_SERVER
