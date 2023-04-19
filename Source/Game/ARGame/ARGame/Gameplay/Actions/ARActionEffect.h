@@ -5,6 +5,8 @@
 
 #include "ARActionEffect.generated.h"
 
+struct FPredictedStartActionContext;
+
 UCLASS()
 class ARGAME_API UARActionEffect : public UARAction
 {
@@ -19,7 +21,8 @@ public:
 
 protected:
 	// INTERFACE_BEGIN(UARAction)
-	virtual void ServerStart_Implementation(AActor* instigator) override;
+	virtual void ServerStart_Implementation(AActor* instigator,
+											const FPredictedStartActionContext& context) override;
 	virtual void ServerStop_Implementation(AActor* instigator) override;
 	// INTERFACE_END(UARAction)
 

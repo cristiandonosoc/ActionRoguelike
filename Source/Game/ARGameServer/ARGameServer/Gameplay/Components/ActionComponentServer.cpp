@@ -25,7 +25,7 @@ void ActionComponentServer::StartAction(NotNullPtr<UARAction> action, AActor* in
 	check(!action->GetIsRunning());
 
 	GetBase()->ActiveGameplayTags.AppendTags(action->GetGrantsTags());
-	action->ServerStart(instigator);
+	action->ServerStart(instigator, std::move(context));
 
 	// We also let the clients know that this action has started.
 	GetBase()->RPC_Multicast_StartAction(action, instigator);

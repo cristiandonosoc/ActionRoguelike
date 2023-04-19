@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include <ARBase/NotNullPtr.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
@@ -63,7 +62,7 @@ public:
 	void ClientStop(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
-	void ServerStart(AActor* instigator);
+	void ServerStart(AActor* instigator, const FPredictedStartActionContext& context);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
 	void ServerStop(AActor* instigator);
@@ -85,7 +84,8 @@ protected:
 	virtual void FinalizeClientStopPrediction_Implementation();
 	virtual void ClientStart_Implementation(AActor* instigator);
 	virtual void ClientStop_Implementation(AActor* instigator);
-	virtual void ServerStart_Implementation(AActor* instigator);
+	virtual void ServerStart_Implementation(AActor* instigator,
+											const FPredictedStartActionContext& context);
 	virtual void ServerStop_Implementation(AActor* instigator);
 	// INTERFACE_END(UARAction)
 

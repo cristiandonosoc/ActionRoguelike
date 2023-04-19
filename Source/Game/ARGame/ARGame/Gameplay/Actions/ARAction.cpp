@@ -58,7 +58,7 @@ bool UARAction::CanStart_Implementation(AActor* instigator)
 
 	return true;
 }
-FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor* instigator) 
+FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsClientStartPredicting);
@@ -94,10 +94,9 @@ void UARAction::ClientPredictStop_Implementation(AActor* instigator)
 	// no need to run stop prediction stop again.
 	if (!IsRunning)
 	{
-		check(!IsClientStopPredicting)
-		return;
+		check(!IsClientStopPredicting) return;
 	}
-	
+
 	check(!IsClientStartPredicting);
 	check(!IsClientStopPredicting);
 
@@ -164,7 +163,8 @@ void UARAction::ClientStop_Implementation(AActor* instigator)
 	IsRunning = false;
 }
 
-void UARAction::ServerStart_Implementation(AActor* instigator)
+void UARAction::ServerStart_Implementation(AActor* instigator,
+										   const FPredictedStartActionContext& context)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	check(!IsClientStartPredicting);

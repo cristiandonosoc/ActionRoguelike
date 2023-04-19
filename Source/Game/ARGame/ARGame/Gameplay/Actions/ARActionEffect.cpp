@@ -7,9 +7,10 @@ UARActionEffect::UARActionEffect()
 	AutoStarts = true;
 }
 
-void UARActionEffect::ServerStart_Implementation(AActor* instigator)
+void UARActionEffect::ServerStart_Implementation(AActor* instigator,
+												 const FPredictedStartActionContext& context)
 {
-	Super::ServerStart_Implementation(instigator);
+	Super::ServerStart_Implementation(instigator, context);
 
 	if (Duration > 0.0f)
 	{
@@ -29,18 +30,18 @@ void UARActionEffect::ServerStart_Implementation(AActor* instigator)
 void UARActionEffect::ServerStop_Implementation(AActor* instigator)
 {
 	auto& timer = GetWorld()->GetTimerManager();
-	
+
 	// We check if we had a period pending (could happen if the period and the duration would end
 	// very close to each other. If it is, we execute it one last time.
 	if (timer.GetTimerRemaining(PeriodHandle) < KINDA_SMALL_NUMBER)
 	{
 		Execute(instigator);
 	}
-	
+
 	GetWorld()->GetTimerManager().ClearTimer(DurationHandle);
 	GetWorld()->GetTimerManager().ClearTimer(PeriodHandle);
 
 	GetOwningComponent()->RemoveAction(ActionName);
-	
+
 	Super::ServerStop_Implementation(instigator);
 }

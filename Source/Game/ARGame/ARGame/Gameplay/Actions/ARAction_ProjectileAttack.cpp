@@ -17,23 +17,11 @@ UARAction_ProjectileAttack::ClientPredictStart_Implementation(AActor* instigator
 	GetClientSplit()->PredictStart(instigator, &context);
 	return context;
 }
+void UARAction_ProjectileAttack::ServerStart_Implementation(
+	AActor* instigator, const FPredictedStartActionContext& context)
+{
+	Super::ServerStart_Implementation(instigator, context);
 
-// void UARAction_ProjectileAttack::ClientStart_Implementation(AActor* instigator)
-// {
-// 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
-// 	Super::ClientStart_Implementation(instigator);
-// 	GetClientSplit()->Start(instigator);
-// }
-
-// void UARAction_ProjectileAttack::ServerStart_Implementation(AARCharacter* instigator,
-//															 const FVector& location,
-//															 const FRotator& rotation)
-//{
-//	check(instigator);
-//
-//	if (ARClientServerGlobals::RunningInServer(instigator))
-//	{
-//		Super::Start_Implementation(instigator);
-//		GetServerSplit()->Start(instigator, location, rotation);
-//	}
-// }
+	NotNullPtr character = Cast<AARCharacter>(instigator);
+	GetServerSplit()->Start(character, context.Location, context.Rotation);
+}
