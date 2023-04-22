@@ -9,15 +9,8 @@
 // Sets default values for this component's properties
 UARActionComponent::UARActionComponent()
 {
-
 	PrimaryComponentTick.bCanEverTick = true;
 	SetIsReplicatedByDefault(true);
-}
-
-const TArray<TSoftClassPtr<UARAction>>& UARActionComponent::GetServer_DefaultActions() const
-{
-	CHECK_RUNNING_ON_SERVER(this);
-	return Server_DefaultActions;
 }
 
 void UARActionComponent::BeginPlay()
@@ -35,6 +28,7 @@ void UARActionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& p
 	// Unreal expects this stupid ass name.
 	auto& OutLifetimeProps = props;
 	DOREPLIFETIME(UARActionComponent, Actions);
+	DOREPLIFETIME(UARActionComponent, ActiveGameplayTags);
 }
 
 bool UARActionComponent::ReplicateSubobjects(UActorChannel* channel, FOutBunch* bunch,
@@ -51,16 +45,21 @@ void UARActionComponent::TickComponent(float delta, ELevelTick tick_type,
 
 	if (debug::IsCategoryEnabled(ar::ACTIONS))
 	{
-		// FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
-		// 							  *ActiveGameplayTags.ToStringSimple());
-		// debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
 
-		FString msg =
-			FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
-							*FString::JoinBy(Actions, TEXT(","),
-											 [](const auto& action) -> FString
-											 { return *action->GetActionName().ToString(); }));
-		debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::White);
+		{
+			FString msg =
+				FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
+								*FString::JoinBy(Actions, TEXT(","),
+												 [](const auto& action) -> FString
+												 { return *action->GetActionName().ToString(); }));
+			debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::White);
+		}
+
+		{
+			FString msg = FString::Printf(TEXT("%s: %s"), *GetNameSafe(GetOwner()),
+										  *ActiveGameplayTags.ToStringSimple());
+			debug::DrawText(ar::ACTIONS, GetWorld(), std::move(msg), FColor::Blue);
+		}
 	}
 }
 
@@ -151,13 +150,6 @@ void UARActionComponent::RPC_Multicast_StartAction_Implementation(UARAction* act
 																  AActor* instigator)
 {
 	check(action);
-
-	// This is a client only RPC.
-	if (ARClientServerGlobals::RunningInServer(this))
-	{
-		return;
-	}
-
 	CLIENT_ONLY_CALL(StartAction, action, instigator);
 }
 
@@ -165,12 +157,5 @@ void UARActionComponent::RPC_Multicast_StopAction_Implementation(UARAction* acti
 																 AActor* instigator)
 {
 	check(action);
-
-	// This is a client only RPC.
-	if (ARClientServerGlobals::RunningInServer(this))
-	{
-		return;
-	}
-
 	CLIENT_ONLY_CALL(StopAction, action, instigator);
 }

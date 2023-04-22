@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <ARBase/ClientServerSplit.h>
+#include <ARGame/Gameplay/Components/ARActionComponentData.h>
 #if AR_BUILD_CLIENT
 #include <ARGameClient/Gameplay/Components/ActionComponentClient.h>
 #endif // AR_BUILD_CLIENT
@@ -16,17 +17,6 @@
 
 class UARAction;
 
-USTRUCT(Blueprintable, BlueprintType)
-struct FPredictedStartActionContext
-{
-	GENERATED_BODY()
-
-	UPROPERTY()
-	FVector Location;
-
-	UPROPERTY()
-	FRotator Rotation;
-};
 
 UCLASS(Blueprintable, meta = (BlueprintSpawnableComponent))
 class ARGAME_API UARActionComponent : public UActorComponent
@@ -42,8 +32,6 @@ public:
 public:
 	FGameplayTagContainer& GetActiveGameplayTags() { return ActiveGameplayTags; }
 	const TArray<TObjectPtr<UARAction>>& GetActions() const { return Actions; }
-
-	const TArray<TSoftClassPtr<UARAction>>& GetServer_DefaultActions() const;
 
 public:
 	// INTERFACE_BEGIN(UActorComponent)
@@ -93,21 +81,15 @@ protected:
 	UFUNCTION()
 	void OnRep_Actions(TArray<UARAction*> old_actions);
 
-	UFUNCTION()
 	void RPC_Server_StartAction_Implementation(UARAction* action, AActor* instigator,
 											   FPredictedStartActionContext context);
-	UFUNCTION()
 	void RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator);
-	
-	UFUNCTION()
 	void RPC_Multicast_StartAction_Implementation(UARAction* action, AActor* instigator);
-	
-	UFUNCTION()
 	void RPC_Multicast_StopAction_Implementation(UARAction* action, AActor* instigator);
 	// INTERFACE_END(UARActionComponent)
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tags")
+	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer ActiveGameplayTags;
 
 	UPROPERTY(ReplicatedUsing = "OnRep_Actions", EditAnywhere)

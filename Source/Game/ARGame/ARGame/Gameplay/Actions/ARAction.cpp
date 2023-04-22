@@ -139,13 +139,12 @@ void UARAction::ClientStart_Implementation(AActor* instigator)
 
 	IsRunning = true;
 	// TODO(cdc): Should this be done via replication?
-	GetOwningComponent()->GetActiveGameplayTags().AppendTags(GrantsTags);
+	// GetOwningComponent()->GetActiveGameplayTags().AppendTags(GrantsTags);
 }
 
 void UARAction::ClientStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
-	check(!IsClientStartPredicting);
 	check(IsRunning);
 
 	// If we're predicting that the action stopped, we activate any cleanup that it might want to do
@@ -159,7 +158,7 @@ void UARAction::ClientStop_Implementation(AActor* instigator)
 		   *GetNameSafe(this));
 
 	// TODO(cdc): Should this be done via replication?
-	GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
+	// GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
 	IsRunning = false;
 }
 
