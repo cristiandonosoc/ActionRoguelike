@@ -39,7 +39,6 @@ public:
 
 public:
 	// We generate all the possible action callbacks so that they can be implement in blueprints.
-
 	UFUNCTION(BlueprintNativeEvent, Category = "Action")
 	bool CanStart(AActor* instigator);
 
@@ -66,7 +65,6 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
 	void ServerStop(AActor* instigator);
-
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Action|Client|Prediction")

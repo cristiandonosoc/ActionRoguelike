@@ -24,6 +24,14 @@ UARAction* FindStartableAction(NotNullPtr<UARActionComponent> action_component, 
 		return nullptr;
 	}
 
+	if (action->GetIsClientStartPredicting())
+	{
+		FString msg =
+			FString::Printf(TEXT("Action %s is client predicting already"), *name.ToString());
+		debug::DrawText(ar::ACTIONS, action_component->GetWorld(), msg, FColor::Red, 2);
+		return nullptr;
+	}
+
 	if (!action->CanStart(instigator))
 	{
 		FString msg = FString::Printf(TEXT("Action %s cannot start"), *name.ToString());
