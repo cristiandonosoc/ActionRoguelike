@@ -7,6 +7,7 @@
 UARAttributeComponent::UARAttributeComponent()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
+	SetIsReplicatedByDefault(true);
 }
 
 bool UARAttributeComponent::IsActorAlive(NotNullPtr<AActor> actor)
@@ -62,4 +63,15 @@ bool UARAttributeComponent::Server_ApplyHealthChange(AActor* instigator, float d
 {
 	CHECK_RUNNING_ON_SERVER(this);
 	return GetServerSplit()->ApplyHealthChange(instigator, delta);
+}
+
+void UARAttributeComponent::OnRep_Health(float old_health)
+{
+	// Trigger the delegate.
+	FOnHealthChangedPayload payload = {};
+	payload.Target = this;
+	payload.MaxHealth = MaxHealth;
+	payload.NewHealth = Health;
+	payload.ActualDelta = Health - old_health;
+	OnHealthChanged.Broadcast(payload);
 }

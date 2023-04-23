@@ -80,16 +80,15 @@ public:
 	float GetMaxHealth() const { return MaxHealth; }
 	float GetKilledCredits() const { return KilledCredits; }
 
-	const FOnHealthChanged& GetOnHealthChangedDeledate() const { return OnHealthChanged; }
+	const FOnHealthChanged& GetOnHealthChangedDelegate() const { return OnHealthChanged; }
 
 
 	void SetHealth(float health) { Health = health; }
 
 public:
-	// INTERFACE_BEGIN(AActor)
+	// INTERFACE_BEGIN(UActorComponent)
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
-	// INTERFACE_END(AActor)
-
+	// INTERFACE_END(UActorComponent)
 
 	// Checks whether the health change attempt would apply.
 	// This is validated by |ApplyHealthChanged| as well, but it can be useful for certain agents to
@@ -108,12 +107,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	bool Server_ApplyHealthChange(AActor* instigator, float delta);
 
+protected:
+	UFUNCTION()
+	void OnRep_Health(float old_health);
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
 
 protected:
-	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	UPROPERTY(ReplicatedUsing = "OnRep_Health", EditDefaultsOnly, BlueprintReadOnly,
+			  Category = "Attributes")
 	float Health = 200;
 
 	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
