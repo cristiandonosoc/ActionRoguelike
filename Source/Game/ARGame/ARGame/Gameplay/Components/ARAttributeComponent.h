@@ -77,13 +77,12 @@ public:
 
 public:
 	float GetHealth() const { return Health; }
+	void SetHealth(float health) { Health = health; }
+	
 	float GetMaxHealth() const { return MaxHealth; }
-	float GetKilledCredits() const { return KilledCredits; }
+	float GetCredits() const { return Credits; }
 
 	const FOnHealthChanged& GetOnHealthChangedDelegate() const { return OnHealthChanged; }
-
-
-	void SetHealth(float health) { Health = health; }
 
 public:
 	// INTERFACE_BEGIN(UActorComponent)
@@ -110,7 +109,7 @@ public:
 protected:
 	UFUNCTION()
 	void OnRep_Health(float old_health);
-
+	
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnHealthChanged OnHealthChanged;
@@ -124,8 +123,6 @@ protected:
 	float MaxHealth = 200;
 
 	// How many credits the owner gives when killed.
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
-	int32 KilledCredits = 0;
-
-	// HealthMax, Stamina, Strength
+	UPROPERTY(Replicated, EditDefaultsOnly, BlueprintReadOnly, Category = "Attributes")
+	int32 Credits = 0;
 };

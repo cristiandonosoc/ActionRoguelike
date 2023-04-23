@@ -67,6 +67,8 @@ bool UARAttributeComponent::Server_ApplyHealthChange(AActor* instigator, float d
 
 void UARAttributeComponent::OnRep_Health(float old_health)
 {
+	CHECK_RUNNING_ON_CLIENT(this);
+	
 	// Trigger the delegate.
 	FOnHealthChangedPayload payload = {};
 	payload.Target = this;

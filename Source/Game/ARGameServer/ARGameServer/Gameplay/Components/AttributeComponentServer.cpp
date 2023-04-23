@@ -60,7 +60,7 @@ bool AttributeComponentServer::ApplyHealthChange(NotNullPtr<AActor> instigator, 
 		// Let the game mode know this character was killed.
 		// TODO(cdc): This should be via an event.
 		NotNullPtr game_mode = GetBase()->GetWorld()->GetAuthGameMode<AARGameModeBase>();
-		game_mode->OnActorKilled(GetBase()->GetOwner(), instigator, GetBase()->GetKilledCredits());
+		game_mode->OnActorKilled(GetBase()->GetOwner(), instigator, GetBase()->GetCredits());
 	}
 
 	GetBase()->OnHealthChanged.Broadcast(payload);
