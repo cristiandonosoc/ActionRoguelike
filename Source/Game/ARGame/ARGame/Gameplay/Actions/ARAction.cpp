@@ -1,5 +1,6 @@
 ﻿#include <ARGame/Gameplay/Actions/ARAction.h>
 
+#include <ARBase/Logging.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
@@ -65,8 +66,8 @@ FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor
 	check(!IsRunning);
 	check(!IsClientStopPredicting);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Predicting Action Start: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Predicting Action Start: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientStartPredicting = true;
 
@@ -80,8 +81,8 @@ void UARAction::FinalizeClientStartPrediction_Implementation()
 	check(!IsRunning);
 	check(!IsClientStopPredicting);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Finalizing start prediction: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Finalizing start prediction: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientStartPredicting = false;
 }
@@ -100,8 +101,8 @@ void UARAction::ClientPredictStop_Implementation(AActor* instigator)
 	check(!IsClientStartPredicting);
 	check(!IsClientStopPredicting);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Predicting Action Stop: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Predicting Action Stop: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientStopPredicting = true;
 }
@@ -113,8 +114,8 @@ void UARAction::FinalizeClientStopPrediction_Implementation()
 	check(IsRunning);
 	check(IsClientStopPredicting);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Finalizing stop prediction: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Finalizing stop prediction: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsClientStopPredicting = false;
 }
@@ -134,8 +135,8 @@ void UARAction::ClientStart_Implementation(AActor* instigator)
 
 	check(!IsClientStartPredicting);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Action Start: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Action Start: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsRunning = true;
 	// TODO(cdc): Should this be done via replication?
@@ -154,8 +155,8 @@ void UARAction::ClientStop_Implementation(AActor* instigator)
 		FinalizeClientStopPrediction();
 	}
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Client: Action Stop: %s (Action: %s)"), *ActionName.ToString(),
-		   *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Action Stop: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	// TODO(cdc): Should this be done via replication?
 	// GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
@@ -171,8 +172,8 @@ void UARAction::ServerStart_Implementation(AActor* instigator,
 
 	check(!IsRunning);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Server: Action Start: %s (Action: %s)"),
-		   *ActionName.ToString(), *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Action Start: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsRunning = true;
 }
@@ -185,8 +186,8 @@ void UARAction::ServerStop_Implementation(AActor* instigator)
 
 	check(IsRunning);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Server: Action Stop: %s (Action: %s)"), *ActionName.ToString(),
-		   *GetNameSafe(this));
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Action Stop: %s (Action: %s)"),
+			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsRunning = false;
 }

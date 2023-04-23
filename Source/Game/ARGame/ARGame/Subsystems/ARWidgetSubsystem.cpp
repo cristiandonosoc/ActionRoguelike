@@ -2,6 +2,7 @@
 
 #include <ARGame/Subsystems/ARWidgetSubsystem.h>
 
+#include <ARBase/Logging.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/ARDebugCategories.h>
@@ -18,8 +19,8 @@ void UARWidgetSubsystem::LoadWidgetClasses(const TArray<FWidgetSubsystemConfig*>
 	{
 		if (row->ActorAttachedWidgetClass.IsNull())
 		{
-			UE_LOG(LogAR_UI, Warning, TEXT("Class ptr for widget \"%s\" is null"),
-				   *UEnum::GetValueAsString(row->Type));
+			AR_LOG_CSS(GetWorld(), LogAR_UI, Warning, TEXT("Class ptr for widget \"%s\" is null"),
+					   *UEnum::GetValueAsString(row->Type));
 			continue;
 		}
 
@@ -29,16 +30,16 @@ void UARWidgetSubsystem::LoadWidgetClasses(const TArray<FWidgetSubsystemConfig*>
 		auto subclass_ptr = streamer->RequestSyncLoad(soft_class_ptr);
 		if (!subclass_ptr)
 		{
-			UE_LOG(LogAR_UI, Warning, TEXT("Could not stream class %s (key: %s)"),
-				   *soft_class_ptr.ToString(), *UEnum::GetValueAsString(row->Type));
+			AR_LOG_CSS(GetWorld(), LogAR_UI, Warning, TEXT("Could not stream class %s (key: %s)"),
+					   *soft_class_ptr.ToString(), *UEnum::GetValueAsString(row->Type));
 			continue;
 		}
 
 		// Finally we add the pointer.
 		check(!ActorAttachedWidgetClasses.Contains(row->Type));
 
-		UE_LOG(LogAR_UI, Log, TEXT("Loaded widget class %s (key: %s)"), *subclass_ptr->GetName(),
-			   *UEnum::GetValueAsString(row->Type));
+		AR_LOG_CSS(GetWorld(), LogAR_UI, Log, TEXT("Loaded widget class %s (key: %s)"),
+				   *subclass_ptr->GetName(), *UEnum::GetValueAsString(row->Type));
 		ActorAttachedWidgetClasses.Add(row->Type, std::move(subclass_ptr));
 	}
 }
@@ -52,16 +53,17 @@ UARActorAttachedWidget* UARWidgetSubsystem::CreateActorAttachedWidget(const EARW
 	auto* widget_class = ActorAttachedWidgetClasses.Find(type);
 	if (!widget_class)
 	{
-		UE_LOG(LogAR_UI, Error, TEXT("Widget class by key %s not loaded"),
-			   *UEnum::GetValueAsString(type));
+		AR_LOG_CSS(GetWorld(), LogAR_UI, Error, TEXT("Widget class by key %s not loaded"),
+				   *UEnum::GetValueAsString(type));
 		return nullptr;
 	}
 
 	auto widget = CreateWidget<UARActorAttachedWidget>(GetWorld(), *widget_class);
 	if (!widget)
 	{
-		UE_LOG(LogAR_UI, Error, TEXT("Could not create widget with class %s (key: %s)"),
-			   *GetNameSafe(*widget_class), *UEnum::GetValueAsString(type));
+		AR_LOG_CSS(GetWorld(), LogAR_UI, Error,
+				   TEXT("Could not create widget with class %s (key: %s)"),
+				   *GetNameSafe(*widget_class), *UEnum::GetValueAsString(type));
 		return nullptr;
 	}
 

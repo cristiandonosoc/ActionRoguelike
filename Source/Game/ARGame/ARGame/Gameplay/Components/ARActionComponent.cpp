@@ -1,5 +1,6 @@
 ﻿#include <ARGame/Gameplay/Components/ARActionComponent.h>
 
+#include <ARBase/Logging.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/ARDebugCategories.h>
@@ -71,7 +72,8 @@ void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* 
 	NotNullPtr action = NewObject<UARAction>(this, action_class.Get());
 	Actions.Add(action);
 
-	UE_LOG(LogAR_Actions, Log, TEXT("Adding action %s"), *action->GetActionName().ToString());
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Adding action %s"),
+			   *action->GetActionName().ToString());
 
 	if (action->GetAutoStarts())
 	{

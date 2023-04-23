@@ -1,7 +1,9 @@
-﻿// ReSharper disable CppDeclaratorNeverUsed
+﻿#include <ARBase/Logging.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARBase/StateMachine.h>
 #include <AutomationTestModule.h>
+
+// ReSharper disable CppDeclaratorNeverUsed
 
 IMPLEMENT_SIMPLE_AUTOMATION_TEST(FStateMachineTest, "StateMachine.Basic",
 								 EAutomationTestFlags::ApplicationContextMask |
@@ -51,13 +53,13 @@ struct TestStateMachine : public ar::fsm::StateMachine<TestStateMachine, TestBas
 
 void StateA::OnEnter(NotNullPtr<TestStateMachine> fsm)
 {
-	UE_LOG(LogTemp, Log, TEXT("ON ENTER"));
+	AR_LOG(LogTemp, Log, TEXT("ON ENTER"));
 	fsm->AEnter = true;
 }
 
 void StateA::OnExit(NotNullPtr<TestStateMachine> fsm)
 {
-	UE_LOG(LogTemp, Log, TEXT("ON EXIT"));
+	AR_LOG(LogTemp, Log, TEXT("ON EXIT"));
 	fsm->AExit = true;
 }
 
@@ -69,13 +71,13 @@ void StateA::OnTrigger(NotNullPtr<TestStateMachine> fsm, const TestTrigger& trig
 
 void StateB::OnEnter(NotNullPtr<TestStateMachine> fsm)
 {
-	UE_LOG(LogTemp, Log, TEXT("ON ENTER"));
+	AR_LOG(LogTemp, Log, TEXT("ON ENTER"));
 	fsm->BEnter = true;
 }
 
 void StateB::OnExit(NotNullPtr<TestStateMachine> fsm)
 {
-	UE_LOG(LogTemp, Log, TEXT("ON EXIT"));
+	AR_LOG(LogTemp, Log, TEXT("ON EXIT"));
 	fsm->BExit = true;
 }
 

@@ -1,5 +1,6 @@
 #include <ARGame/Gameplay/Entities/ARExplosiveBarrel.h>
 
+#include <ARBase/Logging.h>
 #include <ARGame/ARDebugCategories.h>
 
 #include <PhysicsEngine/RadialForceComponent.h>
@@ -52,12 +53,12 @@ void AARExplosiveBarrel::OnActorHit(UPrimitiveComponent* hit_component, AActor* 
 									UPrimitiveComponent* other_component, FVector normal,
 									const FHitResult& hit)
 {
-	UE_LOG(LogAR_Entities, Log, TEXT("OnActorHit in Explosive Barrel"));
+	AR_LOG_CSS(GetWorld(), LogAR_Entities, Log, TEXT("OnActorHit in Explosive Barrel"));
 
 	Explode();
 
-	UE_LOG(LogAR_Entities, Warning, TEXT("Other Actor: %s, at time: %f"), *GetNameSafe(other_actor),
-		   GetWorld()->TimeSeconds);
+	AR_LOG_CSS(GetWorld(), LogAR_Entities, Warning, TEXT("Other Actor: %s, at time: %f"),
+			   *GetNameSafe(other_actor), GetWorld()->TimeSeconds);
 
 	FString Temp = FString::Printf(TEXT("Hit at location: %s"), *hit.ImpactPoint.ToString());
 	DrawDebugString(GetWorld(), hit.ImpactPoint, Temp, nullptr, FColor::Green, 2.0f, true);

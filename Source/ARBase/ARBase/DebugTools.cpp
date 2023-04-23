@@ -1,4 +1,5 @@
 ﻿#include <ARBase/DebugTools.h>
+#include <ARBase/Logging.h>
 
 #if AR_BUILD_DEBUG
 
@@ -95,23 +96,7 @@ void DrawText(int32 category, NotNullPtr<UWorld> world, const FString& msg, cons
 		return;
 	}
 
-	FString prefix;
-	switch (world->GetNetMode())
-	{
-	case NM_Client:
-		// GPlayInEditorID 0 is always the server, so 1 will be first client.
-		// You want to keep this logic in sync with GeneratePIEViewportWindowTitle and
-		// UpdatePlayInEditorWorldDebugString
-		prefix = FString::Printf(TEXT("Client %d"), GPlayInEditorID);
-		break;
-	case NM_DedicatedServer:
-	case NM_ListenServer:
-		prefix = FString::Printf(TEXT("Server"));
-		break;
-	default:
-		break;
-	}
-
+	const FString& prefix = ar::logging::GetClientServerPrefix(world);
 	GEngine->AddOnScreenDebugMessage(INDEX_NONE, lifetime, color,
 									 FString::Printf(TEXT("%s: %s"), *prefix, *msg));
 }

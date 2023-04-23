@@ -1,7 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include <ARGame/AI/BehaviorTree/ARBTTask_Hide.h>
 
+#include <ARBase/Logging.h>
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/ARDebugCategories.h>
 
@@ -64,7 +63,8 @@ EBTNodeResult::Type UARBTTask_Hide::ExecuteTask(UBehaviorTreeComponent& owner, u
 
 	SetNextTickTime(node_memory, ARBTTask_Hide_Private::TickTime);
 
-	UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Scheduled Hide task with query"), query_id);
+	AR_LOG_CSS(GetWorld(), LogAR_AI, Log, TEXT("[Query %d] Scheduled Hide task with query"),
+			   query_id);
 	return EBTNodeResult::InProgress;
 }
 
@@ -75,23 +75,24 @@ void UARBTTask_Hide::TickTask(UBehaviorTreeComponent& owner, uint8* node_memory,
 	NotNullPtr<Context> context = reinterpret_cast<Context*>(node_memory);
 	if (!context->Result)
 	{
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: Result is not there yet"),
-			   context->Result->QueryID);
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log, TEXT("[Query %d] Tick: Result is not there yet"),
+				   context->Result->QueryID);
 		SetNextTickTime(node_memory, ARBTTask_Hide_Private::TickTime);
 		return;
 	}
 
 	if (!context->Result->IsFinished())
 	{
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: Query is not finished yet"),
-			   context->Result->QueryID);
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log, TEXT("[Query %d] Tick: Query is not finished yet"),
+				   context->Result->QueryID);
 		SetNextTickTime(node_memory, ARBTTask_Hide_Private::TickTime);
 		return;
 	}
 
 	if (!context->Result->IsSuccessful())
 	{
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: Query failed"), context->Result->QueryID);
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log, TEXT("[Query %d] Tick: Query failed"),
+				   context->Result->QueryID);
 		FinishLatentTask(owner, EBTNodeResult::Failed);
 		return;
 	}
@@ -102,18 +103,21 @@ void UARBTTask_Hide::TickTask(UBehaviorTreeComponent& owner, uint8* node_memory,
 	switch (ai->MoveToLocation(target_location))
 	{
 	case EPathFollowingRequestResult::Failed:
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: (location: %s), Pathfinding failed"),
-			   context->Result->QueryID, *target_location.ToString());
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log,
+				   TEXT("[Query %d] Tick: (location: %s), Pathfinding failed"),
+				   context->Result->QueryID, *target_location.ToString());
 		FinishLatentTask(owner, EBTNodeResult::Failed);
 		return;
 	case EPathFollowingRequestResult::AlreadyAtGoal:
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: (location: %s) Pathfinding succeeded"),
-			   context->Result->QueryID, *target_location.ToString());
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log,
+				   TEXT("[Query %d] Tick: (location: %s) Pathfinding succeeded"),
+				   context->Result->QueryID, *target_location.ToString());
 		FinishLatentTask(owner, EBTNodeResult::Succeeded);
 		return;
 	case EPathFollowingRequestResult::RequestSuccessful:
-		UE_LOG(LogAR_AI, Log, TEXT("[Query %d] Tick: (location: %s) Request successful"),
-			   context->Result->QueryID, *target_location.ToString());
+		AR_LOG_CSS(GetWorld(), LogAR_AI, Log,
+				   TEXT("[Query %d] Tick: (location: %s) Request successful"),
+				   context->Result->QueryID, *target_location.ToString());
 		SetNextTickTime(node_memory, ARBTTask_Hide_Private::TickTime);
 		return;
 	}
@@ -122,7 +126,8 @@ void UARBTTask_Hide::TickTask(UBehaviorTreeComponent& owner, uint8* node_memory,
 void UARBTTask_Hide::ReceiveResult(TSharedPtr<FEnvQueryResult> result)
 {
 	check(result);
-	UE_LOG(LogAR_AI, Log, TEXT("Received query result for query %d"), result->QueryID);
+	AR_LOG_CSS(GetWorld(), LogAR_AI, Log, TEXT("Received query result for query %d"),
+			   result->QueryID);
 	auto manager = ARBTTask_Hide_Private::GetQueryManager();
 	Context* context = manager->Queries[result->QueryID];
 	check(context);

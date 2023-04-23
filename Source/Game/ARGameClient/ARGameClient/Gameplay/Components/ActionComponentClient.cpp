@@ -1,5 +1,6 @@
 ﻿#include <ARGameClient/Gameplay/Components/ActionComponentClient.h>
 
+#include <ARBase/Logging.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
@@ -40,7 +41,8 @@ void ActionComponentClient::PredictStartActionByName(const FName& name, AActor* 
 	UARAction* action = FindStartableAction(GetBase(), name, instigator);
 	if (!action)
 	{
-		UE_LOG(LogAR_Actions, Error, TEXT("Action %s not found!"), *name.ToString());
+		AR_LOG_CSS(GetWorld(), LogAR_Actions, Error, TEXT("Action %s not found!"),
+				   *name.ToString());
 		return;
 	}
 
@@ -62,7 +64,8 @@ void ActionComponentClient::StartActionByName(const FName& name, AActor* instiga
 	UARAction* action = FindStartableAction(GetBase(), name, instigator);
 	if (!action)
 	{
-		UE_LOG(LogAR_Actions, Error, TEXT("Action %s not found!"), *name.ToString());
+		AR_LOG_CSS(GetWorld(), LogAR_Actions, Error, TEXT("Action %s not found!"),
+				   *name.ToString());
 		return;
 	}
 

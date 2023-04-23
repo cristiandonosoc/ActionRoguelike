@@ -1,6 +1,9 @@
 ﻿#pragma once
 
+#include <Logging/LogCategory.h>
+
 // This file contains macros that are useful to the rest of development.
+
 
 // AR_CONCAT will concatenate two elements of the macros into one string.
 // Useful for creating macro defined variable names. For example:

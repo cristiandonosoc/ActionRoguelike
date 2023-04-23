@@ -1,7 +1,6 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#include <ARGame/Gameplay/Entities/ARTargetDummy.h>
 
-#include <ARGame/Gameplay/Entities/ARTargetDummy.h>
-
+#include <ARBase/Logging.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
@@ -26,7 +25,7 @@ void AARTargetDummy::BeginPlay()
 }
 void AARTargetDummy::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
-	UE_LOG(LogAR_Entities, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
+	AR_LOG_CSS(GetWorld(), LogAR_Entities, Log, TEXT("HEALTH CHANGED: %f"), payload.NewHealth);
 
 	// We only flash on negative hits.
 	if (payload.ActualDelta > 0)

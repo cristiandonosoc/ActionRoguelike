@@ -2,6 +2,7 @@
 
 #include <ARGame/Gameplay/ARCharacter.h>
 
+#include <ARBase/Logging.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Base/ARPlayerState.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
@@ -82,9 +83,10 @@ void AARCharacter::BeginPlay()
 				 "*******************************************************************************\n"
 				 "*******************************************************************************");
 
-	UE_LOG(LogAR_PlayerCharacter, Log, TEXT("%s\n%s (%s) -> IsServer: %d, IsClient: %d\n%s"), *line,
-		   *prefix, *GetNameSafe(this), ARClientServerGlobals::RunningInServer(this),
-		   ARClientServerGlobals::RunningInClient(this), *line);
+	AR_LOG_CSS(GetWorld(), LogAR_PlayerCharacter, Log,
+			   TEXT("%s\n%s (%s) -> IsServer: %d, IsClient: %d\n%s"), *line, *prefix,
+			   *GetNameSafe(this), ARClientServerGlobals::RunningInServer(this),
+			   ARClientServerGlobals::RunningInClient(this), *line);
 }
 
 FVector AARCharacter::GetPawnViewLocation() const

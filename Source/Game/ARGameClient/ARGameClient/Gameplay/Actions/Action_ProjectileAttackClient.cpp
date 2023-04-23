@@ -1,5 +1,6 @@
 ﻿#include <ARGameClient/Gameplay/Actions/Action_ProjectileAttackClient.h>
 
+#include <ARBase/Logging.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Actions/ARAction_ProjectileAttack.h>
@@ -17,14 +18,15 @@ void Action_ProjectileAttackClient::PredictStart(
 {
 	if (!ensure(GetBase()->GetProjectileClass()))
 	{
-		UE_LOG(LogAR_Projectiles, Error, TEXT("Projectile class is not set"));
+		AR_LOG_CSS(GetWorld(), LogAR_Projectiles, Error, TEXT("Projectile class is not set"));
 		return;
 	}
 
 	AARCharacter* character = Cast<AARCharacter>(instigator.Get());
 	if (!character)
 	{
-		UE_LOG(LogAR_Projectiles, Warning, TEXT("Instigator is not an AARCharacter"));
+		AR_LOG_CSS(GetWorld(), LogAR_Projectiles, Warning,
+				   TEXT("Instigator is not an AARCharacter"));
 		return;
 	}
 
