@@ -21,8 +21,6 @@ class ARGAME_API AARGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AARGameModeBase();
-
 	virtual void StartPlay() override;
 
 	// Global event for when an actor has been killed (mostly defined by AttributeComponent).

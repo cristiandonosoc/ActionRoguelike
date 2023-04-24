@@ -11,11 +11,15 @@
 #include <EngineUtils.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
 
-static TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ar.GameMode.SpawnBots"), true,
+namespace
+{
+
+TAutoConsoleVariable<bool> CVarSpawnBots(TEXT("ar.GameMode.SpawnBots"), true,
 												TEXT("Enable spawning of bots via a timer"),
 												ECVF_Cheat);
-
-AARGameModeBase::AARGameModeBase() {}
+												
+												
+} // namespace
 
 void AARGameModeBase::StartPlay()
 {
