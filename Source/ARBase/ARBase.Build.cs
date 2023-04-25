@@ -28,15 +28,5 @@ public class ARBase : ModuleRules
 		PublicIncludePaths.AddRange(new string[] { "ARBase" });
 
 		PrivateDefinitions.AddRange(ARBuildRules.GetModuleDefines(Target.Type));
-
-		if (ARBuildRules.HasClientCode(Target.Type))
-		{
-			PublicDependencyModuleNames.AddRange(new string[] { "ARGameClient" });
-		}
-
-		if (ARBuildRules.HasServerCode(Target.Type))
-		{
-			PublicDependencyModuleNames.AddRange(new string[] { "ARGameServer" });
-		}
 	}
 }
