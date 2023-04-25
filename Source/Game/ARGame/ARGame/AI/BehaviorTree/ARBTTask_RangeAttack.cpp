@@ -24,6 +24,7 @@ EBTNodeResult::Type UARBTTask_RangeAttack::ExecuteTask(UBehaviorTreeComponent& o
 	{
 		return EBTNodeResult::Failed;
 	}
+	CHECK_RUNNING_ON_SERVER(target_actor);
 
 	NotNullPtr<AAIController> ai = owner.GetAIOwner();
 	auto* character = Cast<AARAICharacter>(ai->GetPawn());
@@ -32,7 +33,7 @@ EBTNodeResult::Type UARBTTask_RangeAttack::ExecuteTask(UBehaviorTreeComponent& o
 		return EBTNodeResult::Failed;
 	}
 
-	if (!character->PerformPrimaryAttack(*target_actor))
+	if (!character->GetServerSplit()->PerformPrimaryAttack(*target_actor))
 	{
 		return EBTNodeResult::Failed;
 	}

@@ -1,8 +1,13 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+﻿#pragma once
 
-#pragma once
-
+#include <ARBase/ClientServerSplit.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
+#if AR_BUILD_CLIENT
+#include <ARGameClient/AI/AICharacterClient.h>
+#endif // AR_BUILD_CLIENT
+#if AR_BUILD_SERVER
+#include <ARGameServer/AI/AICharacterServer.h>
+#endif // AR_BUILD_SERVER
 
 #include <CoreMinimal.h>
 #include <GameFramework/Character.h>
@@ -19,14 +24,18 @@ UCLASS()
 class ARGAME_API AARAICharacter : public ACharacter
 {
 	GENERATED_BODY()
+	GENERATED_BASE_CLIENT_SPLIT(AARAICharacter, ar::client::AICharacterClient);
+	GENERATED_BASE_SERVER_SPLIT(AARAICharacter, ar::server::AICharacterServer);
 
 public:
-	// Sets default values for this character's properties
 	AARAICharacter();
 
+public:
+	// INTERFACE_BEGIN(ACharacter)
 	virtual void BeginPlay() override;
-
-	virtual bool PerformPrimaryAttack(const AActor& target);
+	// INTERFACE_END(ACharacter)
+	
+	// virtual bool PerformPrimaryAttack(const AActor& target);
 
 protected:
 	UFUNCTION()
@@ -50,6 +59,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Attacks", meta = (ClampMin = 0.0, ClampMax = 10.0f))
 	float PrimaryAttackSpread = 2.0f;
-
-	TObjectPtr<UAREnemyHealthBarWidget> HealthBarWidget;
 };

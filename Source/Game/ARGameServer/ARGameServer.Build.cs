@@ -9,6 +9,7 @@ public class ARGameServer : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new string[]
 			{
+				"AIModule",
 				"Core",
 				"GameplayTags",
 			}
