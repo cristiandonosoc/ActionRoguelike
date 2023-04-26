@@ -3,11 +3,8 @@
 ## TODOs
 
 - AI Minion
-  - Minion projectiles stack up sometimes against characters.
   - Minion doesn't ragdoll when dying.
   - Minion still has collision when dead.
-- Projectiles
-  - Character collides against his own (replicated) projectile
 - Console Manager
   - Needs to create interim actor to be able to function as a "channel".
 

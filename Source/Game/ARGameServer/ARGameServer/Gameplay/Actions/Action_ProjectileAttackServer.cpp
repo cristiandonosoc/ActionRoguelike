@@ -4,6 +4,7 @@
 #include <ARGame/Gameplay/Actions/ARAction_ProjectileAttack.h>
 #include <ARGame/Gameplay/Projectiles/ARBaseProjectile.h>
 
+#include <Components/CapsuleComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 
 namespace ar
@@ -22,7 +23,12 @@ void Action_ProjectileAttackServer::Start(NotNullPtr<AARCharacter> instigator,
 	FActorSpawnParameters params = {};
 	params.Instigator = instigator.Get();
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	GetWorld()->SpawnActor<AActor>(GetBase()->GetProjectileClass().Get(), spawn_transform, params);
+	AActor* projectile = GetWorld()->SpawnActor<AActor>(GetBase()->GetProjectileClass().Get(),
+														spawn_transform, params);
+	check(projectile);
+
+	// We mark the collision instigator to stop colliding with the projectile.
+	instigator->GetCapsuleComponent()->IgnoreActorWhenMoving(projectile, true);
 
 	// This is a one-off action, so we stop it.
 	GetBase()->DispatchServerStop(instigator);

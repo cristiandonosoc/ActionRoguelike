@@ -2,11 +2,12 @@
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
-#include <ARGame/Gameplay/Actions/ARActionEffect.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
+#include <Components/CapsuleComponent.h>
 
 #include <Components/SphereComponent.h>
+#include <GameFramework/Character.h>
 #include <Kismet/KismetMathLibrary.h>
 
 namespace ar
@@ -87,6 +88,12 @@ void MagicProjectileServer::MarkForDestruction()
 										   false);
 
 	GetBase()->CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	// We tell our instigator to forget us (otherwise they keep bubbling up).
+	if (auto* instigator = Cast<ACharacter>(GetBase()->GetInstigator()))
+	{
+		instigator->GetCapsuleComponent()->IgnoreActorWhenMoving(GetBase(), false);
+	}
 }
 
 } // namespace server
