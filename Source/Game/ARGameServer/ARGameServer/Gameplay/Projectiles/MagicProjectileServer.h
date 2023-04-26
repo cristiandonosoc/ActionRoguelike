@@ -14,6 +14,9 @@ class ARGAMESERVER_API MagicProjectileServer
 	GENERATED_LEAF_SERVER_SPLIT(AARMagicProjectile, MagicProjectileServer);
 
 public:
+	// TODO(cdc): We should not go about this in this manner.
+	//            We should let the client know some effect needs to run before the other side gets
+	//            finally destroyed.
 	static constexpr float kDestroyDelay = 0.25f;
 
 public:

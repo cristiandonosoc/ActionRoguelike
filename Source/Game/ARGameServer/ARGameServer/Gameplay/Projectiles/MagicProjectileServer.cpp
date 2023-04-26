@@ -5,6 +5,8 @@
 #include <ARGame/Gameplay/Actions/ARActionEffect.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
+
+#include <Components/SphereComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 
 namespace ar
@@ -70,6 +72,7 @@ void MagicProjectileServer::OnBeginHit(const FHitResult& hit, AActor* other_acto
 
 void MagicProjectileServer::MarkForDestruction()
 {
+	// We issue a timer to let the client hit a bit.
 	FTimerDelegate delegate;
 	delegate.BindLambda(
 		[weakBase = TWeakObjectPtr<AARMagicProjectile>(GetBase())]()
@@ -82,8 +85,9 @@ void MagicProjectileServer::MarkForDestruction()
 
 	GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, std::move(delegate), kDestroyDelay,
 										   false);
-}
 
+	GetBase()->CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 
 } // namespace server
 } // namespace ar

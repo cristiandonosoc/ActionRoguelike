@@ -13,7 +13,7 @@
 AARMagicProjectile::AARMagicProjectile()
 {
 	INIT_BASE_CLIENT_SERVER_SPLIT();
-	
+
 	ExplosionParticle = CreateDefaultSubobject<UParticleSystem>("ExplosionParticle");
 
 	TravelSound = CreateDefaultSubobject<USoundCue>("TravelSound");

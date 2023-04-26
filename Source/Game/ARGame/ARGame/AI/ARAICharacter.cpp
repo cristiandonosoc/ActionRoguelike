@@ -5,12 +5,8 @@
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 #include <ARGame/UI/ARWidgetManager.h>
-#include <ARGame/UI/Widgets/ARDamagePopupWidget.h>
-#include <ARGame/UI/Widgets/AREnemyHealthBarWidget.h>
 
 #include <Blueprint/UserWidget.h>
-#include <BrainComponent.h>
-#include <Components/CapsuleComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <Perception/PawnSensingComponent.h>
 
@@ -43,8 +39,3 @@ void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
 	CLIENT_SERVER_CALL(OnHealthChanged, payload);
 }
-
-// bool AARAICharacter::PerformPrimaryAttack(const AActor& target)
-// {
-// 
-// }

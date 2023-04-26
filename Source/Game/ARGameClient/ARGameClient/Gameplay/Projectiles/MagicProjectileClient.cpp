@@ -4,6 +4,7 @@
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
+#include <Components/SphereComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <Sound/SoundCue.h>
@@ -19,7 +20,6 @@ namespace
 void PlayHitEffects(NotNullPtr<AARMagicProjectile> base, const FVector& location,
 					const FRotator& rotation)
 {
-
 	// Spawn a particle effect for the collision.
 	if (ensure(base->GetExplosionParticle()))
 	{
@@ -44,6 +44,9 @@ void MagicProjectileClient::OnBeginHit(const FHitResult& hit, AActor* hit_actor)
 
 	// We draw the debug collision.
 	debug::DrawSphere(ar::PROJECTILES, GetWorld(), location, 20, 16, FColor::Yellow, 1, 1);
+
+	// Disable the collisions for this projectile now that we hit.
+	GetBase()->CollisionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	PlayHitEffects(GetBase(), location, rotation);
 }
