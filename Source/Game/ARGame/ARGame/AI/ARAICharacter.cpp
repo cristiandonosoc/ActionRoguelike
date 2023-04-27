@@ -7,6 +7,7 @@
 #include <ARGame/UI/ARWidgetManager.h>
 
 #include <Blueprint/UserWidget.h>
+#include <Components/CapsuleComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <Perception/PawnSensingComponent.h>
 
@@ -37,5 +38,13 @@ void AARAICharacter::OnSeePawn(APawn* pawn)
 
 void AARAICharacter::OnHealthChanged(const FOnHealthChangedPayload& payload)
 {
+	// Common behaviour to both client/server.
+	if (payload.Killed())
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetCharacterMovement()->DisableMovement();
+	}
+
+	// We call the specific part.
 	CLIENT_SERVER_CALL(OnHealthChanged, payload);
 }

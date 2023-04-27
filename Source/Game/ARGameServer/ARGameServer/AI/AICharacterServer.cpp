@@ -5,7 +5,6 @@
 #include <ARGame/Gameplay/Components/ARAttributeComponent.h>
 
 #include <BrainComponent.h>
-#include <Components/CapsuleComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 
 namespace ar
@@ -67,11 +66,8 @@ void AICharacterServer::OnHealthChanged(const FOnHealthChangedPayload& payload)
 		NotNullPtr ai = Cast<AARAIController>(GetBase()->GetController());
 		ai->GetBrainComponent()->StopLogic(TEXT("Killed"));
 
-		GetBase()->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetBase()->GetCharacterMovement()->DisableMovement();
-
 		// Destroy the character after a while.
-		GetBase()->SetLifeSpan(10.0f);
+		GetBase()->SetLifeSpan(kDeathDelay);
 
 		return;
 	}

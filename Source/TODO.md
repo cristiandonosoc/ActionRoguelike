@@ -2,11 +2,23 @@
 
 ## TODOs
 
-- AI Minion
-  - Minion doesn't ragdoll when dying.
-  - Minion still has collision when dead.
-- Console Manager
-  - Needs to create interim actor to be able to function as a "channel".
+### Attributes
+- On Killed calculation is repeated twice, both in the server and in the OnRep.
+  - We should centralize that calculation.
+
+### AI Minion
+- Minion doesn't ragdoll when dying.
+- Minion still has collision when dead.
+
+### Console Manager
+- Needs to create interim actor to be able to function as a "channel".
+
+### Actions
+- Magic Projectile setting a fire effect doesn't work
+  - Verify that ActionEffect actually work
+
+### Tom Looman
+- Go back to watch the lessons.
 
 ## Possible Systems
 

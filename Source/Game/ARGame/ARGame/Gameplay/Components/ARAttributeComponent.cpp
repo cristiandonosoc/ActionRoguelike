@@ -75,5 +75,13 @@ void UARAttributeComponent::OnRep_Health(float old_health)
 	payload.MaxHealth = MaxHealth;
 	payload.NewHealth = Health;
 	payload.ActualDelta = Health - old_health;
+
+	// TODO(cdc): This is recalculating the health calculation twice (See AttributeComponentServer).
+	//            We should have a single way of calculating this.
+	if (Health == 0.0f && old_health > 0.0f)
+	{
+		payload.SetKilled();
+	}
+	
 	OnHealthChanged.Broadcast(payload);
 }

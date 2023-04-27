@@ -34,8 +34,6 @@ public:
 	// INTERFACE_BEGIN(ACharacter)
 	virtual void BeginPlay() override;
 	// INTERFACE_END(ACharacter)
-	
-	// virtual bool PerformPrimaryAttack(const AActor& target);
 
 protected:
 	UFUNCTION()
