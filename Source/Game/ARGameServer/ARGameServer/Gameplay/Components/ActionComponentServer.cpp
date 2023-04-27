@@ -1,5 +1,6 @@
 ﻿#include <ARGameServer/Gameplay/Components/ActionComponentServer.h>
 
+#include <ARBase/Logging.h>
 #include <ARBase/Subsystems/ARStreamingSubsystem.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Actions/ARAction.h>
@@ -12,6 +13,20 @@ namespace ar
 {
 namespace server
 {
+
+void ActionComponentServer::AddAction(TSubclassOf<UARAction> action_class, AActor* instigator)
+{
+	NotNullPtr action = NewObject<UARAction>(GetBase(), action_class.Get());
+	GetBase()->Actions.Add(action);
+
+	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Adding action %s"),
+			   *action->GetActionName().ToString());
+
+	if (action->GetAutoStarts())
+	{
+		StartAction(action, instigator, {});
+	}
+}
 
 void ActionComponentServer::StartActionByName(const FName& name, AActor* instigator,
 											  FPredictedStartActionContext&& context)
@@ -66,7 +81,7 @@ void ActionComponentServer::BeginPlay()
 		NotNullPtr<UClass> uclass = action_soft_class.Get();
 
 		// We assume the action component holder is the instigator for these actions.
-		GetBase()->AddAction(TSubclassOf<UARAction>(uclass), GetOwner());
+		AddAction(TSubclassOf<UARAction>(uclass), GetOwner());
 	}
 }
 

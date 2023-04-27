@@ -2,10 +2,11 @@
 
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARAttributeFunctionLibrary.h>
+#include <ARGame/Gameplay/Actions/ARActionEffect.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 #include <ARGame/Gameplay/Projectiles/ARMagicProjectile.h>
-#include <Components/CapsuleComponent.h>
 
+#include <Components/CapsuleComponent.h>
 #include <Components/SphereComponent.h>
 #include <GameFramework/Character.h>
 #include <Kismet/KismetMathLibrary.h>
@@ -64,11 +65,12 @@ void MagicProjectileServer::OnBeginHit(const FHitResult& hit, AActor* other_acto
 	UARAttributeFunctionLibrary::Server_ApplyDirectionalDamage(
 		GetBase()->GetInstigator(), other_actor, GetBase()->GetDamage(), hit);
 
-	// // See if we need to add an effect.
-	// if (actions && GetBase()->GetActionEffect())
-	// {
-	// 	actions->AddAction(GetBase()->GetActionEffect(), GetBase()->GetInstigator());
-	// }
+	// See if we need to add an effect.
+	if (actions && GetBase()->GetActionEffect())
+	{
+		actions->GetServerSplit()->AddAction(GetBase()->GetActionEffect(),
+											 GetBase()->GetInstigator());
+	}
 }
 
 void MagicProjectileServer::MarkForDestruction()

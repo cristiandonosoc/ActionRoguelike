@@ -1,4 +1,5 @@
 ﻿#include <ARGame/Gameplay/Actions/ARActionEffect.h>
+
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
 
 UARActionEffect::UARActionEffect()
@@ -15,14 +16,28 @@ void UARActionEffect::ServerStart_Implementation(AActor* instigator,
 	if (Duration > 0.0f)
 	{
 		FTimerDelegate delegate;
-		delegate.BindUFunction(this, "Stop", instigator);
+		delegate.BindLambda(
+			[this, instigator, weakGuard = TWeakObjectPtr<UObject>(this)]()
+			{
+				if (weakGuard.IsValid())
+				{
+					ServerStop(instigator);
+				}
+			});
 		GetWorld()->GetTimerManager().SetTimer(DurationHandle, delegate, Duration, false);
 	}
 
 	if (Period > 0.0f)
 	{
 		FTimerDelegate delegate;
-		delegate.BindUFunction(this, "Execute", instigator);
+		delegate.BindLambda(
+			[this, instigator, weakGuard = TWeakObjectPtr<UObject>(this)]()
+			{
+				if (weakGuard.IsValid())
+				{
+					Execute(instigator);
+				}
+			});
 		GetWorld()->GetTimerManager().SetTimer(PeriodHandle, delegate, Period, true);
 	}
 }

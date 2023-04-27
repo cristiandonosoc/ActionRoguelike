@@ -64,21 +64,12 @@ void UARActionComponent::TickComponent(float delta, ELevelTick tick_type,
 	}
 }
 
-void UARActionComponent::AddAction(TSubclassOf<UARAction> action_class, AActor* instigator)
+void UARActionComponent::ServerAddAction(TSubclassOf<UARAction> action_class, AActor* instigator)
 {
+	CHECK_RUNNING_ON_SERVER(this);
 	check(action_class);
 
-
-	NotNullPtr action = NewObject<UARAction>(this, action_class.Get());
-	Actions.Add(action);
-
-	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Adding action %s"),
-			   *action->GetActionName().ToString());
-
-	if (action->GetAutoStarts())
-	{
-		ClientPredictStartAction(action->GetActionName(), instigator);
-	}
+	SERVER_ONLY_CALL(AddAction, action_class, instigator);
 }
 
 void UARActionComponent::RemoveAction(const FName& name)
@@ -151,7 +142,15 @@ void UARActionComponent::RPC_Server_StopAction_Implementation(UARAction* action,
 void UARActionComponent::RPC_Multicast_StartAction_Implementation(UARAction* action,
 																  AActor* instigator)
 {
-	check(action);
+	// TODO(cdc): Likely start should be handled in the action directly rather than through the
+	//            component, so that we're correctly synced with the replication.
+	if (!action)
+	{
+		AR_LOG_CSS(GetWorld(), LogAR_Actions, Error,
+				   TEXT("Starting action that has not been replicated yet. Most likely because of "
+						"auto start."));
+		return;
+	}
 	CLIENT_ONLY_CALL(StartAction, action, instigator);
 }
 

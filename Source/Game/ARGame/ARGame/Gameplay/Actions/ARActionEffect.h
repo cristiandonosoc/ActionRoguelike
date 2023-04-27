@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <ARGame/Gameplay/Actions/ARAction.h>
+
 #include <CoreMinimal.h>
 
 #include "ARActionEffect.generated.h"

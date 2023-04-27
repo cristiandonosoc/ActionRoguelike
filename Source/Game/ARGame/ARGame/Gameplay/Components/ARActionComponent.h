@@ -45,7 +45,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Action")
-	void AddAction(TSubclassOf<UARAction> action_class, AActor* instigator);
+	void ServerAddAction(TSubclassOf<UARAction> action_class, AActor* instigator);
 
 	UFUNCTION(BlueprintCallable, Category = "Action")
 	void RemoveAction(const FName& name);

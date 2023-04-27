@@ -34,6 +34,8 @@ public:
 	};
 
 public:
+	void AddAction(TSubclassOf<UARAction> action_class, AActor* instigator);
+	
 	void StartActionByName(const FName& name, AActor* instigator,
 						   FPredictedStartActionContext&& context);
 	void StartAction(NotNullPtr<UARAction> action, AActor* instigator,
