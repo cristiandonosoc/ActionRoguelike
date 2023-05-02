@@ -113,50 +113,13 @@ void UARActionComponent::ServerStartAction(const FName& name, AActor* instigator
 void UARActionComponent::StopAction(const FName& name, AActor* instigator)
 {
 	NotNullPtr<UARAction> action = FindAction(name);
-	CLIENT_SERVER_CALL(StopAction, action, instigator);
-}
-
-void UARActionComponent::OnRep_Actions(TArray<UARAction*> old_actions)
-{
-	CHECK_RUNNING_ON_CLIENT(this);
-}
-
-void UARActionComponent::RPC_Server_StartAction_Implementation(UARAction* action,
-															   AActor* instigator,
-															   FPredictedStartActionContext context)
-{
-	CHECK_RUNNING_ON_SERVER(this);
-	check(action);
-
-	SERVER_ONLY_CALL(StartAction, action, instigator, std::move(context));
-}
-
-void UARActionComponent::RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator)
-{
-	CHECK_RUNNING_ON_SERVER(this);
-	check(action);
-
-	SERVER_ONLY_CALL(StopAction, action, instigator);
-}
-
-void UARActionComponent::RPC_Multicast_StartAction_Implementation(UARAction* action,
-																  AActor* instigator)
-{
-	// TODO(cdc): Likely start should be handled in the action directly rather than through the
-	//            component, so that we're correctly synced with the replication.
-	if (!action)
+	if (ARClientServerGlobals::RunningInClient(this))
 	{
-		AR_LOG_CSS(GetWorld(), LogAR_Actions, Error,
-				   TEXT("Starting action that has not been replicated yet. Most likely because of "
-						"auto start."));
-		return;
+		checkf(false, TEXT("Not sure if this should be called..."));
+		action->ClientStop(instigator);
 	}
-	CLIENT_ONLY_CALL(StartAction, action, instigator);
-}
-
-void UARActionComponent::RPC_Multicast_StopAction_Implementation(UARAction* action,
-																 AActor* instigator)
-{
-	check(action);
-	CLIENT_ONLY_CALL(StopAction, action, instigator);
+	if (ARClientServerGlobals::RunningInServer(this))
+	{
+		action->ServerStop(instigator);
+	}
 }

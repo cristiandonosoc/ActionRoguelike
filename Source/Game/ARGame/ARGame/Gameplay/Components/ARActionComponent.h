@@ -64,35 +64,10 @@ public:
 	void StopAction(const FName& name, AActor* instigator);
 
 protected:
-	UFUNCTION(Server, Reliable)
-	void RPC_Server_StartAction(UARAction* action, AActor* instigator,
-								FPredictedStartActionContext context);
-
-	UFUNCTION(Server, Reliable)
-	void RPC_Server_StopAction(UARAction* action, AActor* instigator);
-
-	UFUNCTION(NetMulticast, Reliable)
-	void RPC_Multicast_StartAction(UARAction* action, AActor* instigator);
-
-	UFUNCTION(NetMulticast, Reliable)
-	void RPC_Multicast_StopAction(UARAction* action, AActor* instigator);
-
-	// INTERFACE_BEGIN(UARActionComponent)
-	UFUNCTION()
-	void OnRep_Actions(TArray<UARAction*> old_actions);
-
-	void RPC_Server_StartAction_Implementation(UARAction* action, AActor* instigator,
-											   FPredictedStartActionContext context);
-	void RPC_Server_StopAction_Implementation(UARAction* action, AActor* instigator);
-	void RPC_Multicast_StartAction_Implementation(UARAction* action, AActor* instigator);
-	void RPC_Multicast_StopAction_Implementation(UARAction* action, AActor* instigator);
-	// INTERFACE_END(UARActionComponent)
-
-protected:
 	UPROPERTY(Replicated, EditAnywhere, BlueprintReadWrite, Category = "Tags")
 	FGameplayTagContainer ActiveGameplayTags;
 
-	UPROPERTY(ReplicatedUsing = "OnRep_Actions", EditAnywhere)
+	UPROPERTY(Replicated, EditAnywhere)
 	TArray<TObjectPtr<UARAction>> Actions;
 
 	// SERVER_PROPERTIES_BEGIN ---------------------------------------------------------------------

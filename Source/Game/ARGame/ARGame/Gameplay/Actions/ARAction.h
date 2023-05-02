@@ -1,6 +1,11 @@
 ﻿#pragma once
 
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
+#if AR_BUILD_SERVER
+#include <ARGameServer/Gameplay/Actions/ActionServer.h>
+#endif // AR_BUILD_SERVER
+
+
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
 #include <UObject/Object.h>
@@ -14,7 +19,11 @@ UCLASS(Blueprintable, BlueprintType)
 class ARGAME_API UARAction : public UObject
 {
 	GENERATED_BODY()
+	GENERATED_BASE_SERVER_SPLIT(UARAction, ar::server::ActionServer);
 
+public:
+	UARAction();
+	
 public:
 	const FName& GetActionName() const { return ActionName; }
 	bool GetIsClientOnly() const { return IsClientOnly; }
@@ -35,6 +44,7 @@ public:
 	// INTERFACE_BEGIN(UObject)
 	virtual bool IsSupportedForNetworking() const override { return true; }
 	virtual UWorld* GetWorld() const override;
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const override;
 	// INTERFACE_END(UObject)
 
 public:
@@ -73,6 +83,19 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Action|Server")
 	void DispatchServerStop(AActor* instigator);
 
+public:
+	UFUNCTION(Server, Reliable)
+	void RPC_Server_Start(AActor* instigator, FPredictedStartActionContext context);
+
+	UFUNCTION(Server, Reliable)
+	void RPC_Server_Stop(AActor* instigator);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void RPC_Multicast_ClientStart(AActor* instigator);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void RPC_Multicast_ClientStop(AActor* instigator);
+
 protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual bool CanStart_Implementation(AActor* instigator);
@@ -91,7 +114,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Action|Config")
 	FName ActionName;
 
-	UPROPERTY(BlueprintReadOnly, BlueprintReadOnly, Category = "Action|Runtime")
+	UPROPERTY(Replicated, BlueprintReadOnly, BlueprintReadOnly, Category = "Action|Runtime")
 	bool IsRunning = false;
 
 	// Whether this gets started as soon as someone adds the ability to the action component.

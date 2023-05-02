@@ -18,8 +18,6 @@ public:
 	void PredictStartActionByName(const FName& name, AActor* instigator);
 
 	void StartActionByName(const FName& name, AActor* instigator);
-	void StartAction(NotNullPtr<UARAction> action, AActor* instigator);
-	void StopAction(NotNullPtr<UARAction> action, AActor* instigator);
 };
 
 } // namespace client

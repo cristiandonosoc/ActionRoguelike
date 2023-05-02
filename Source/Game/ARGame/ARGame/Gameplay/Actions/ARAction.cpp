@@ -4,6 +4,12 @@
 #include <ARBase/NotNullPtr.h>
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/Components/ARActionComponent.h>
+#include <Net/UnrealNetwork.h>
+
+UARAction::UARAction()
+{
+	INIT_BASE_SERVER_SPLIT();
+}
 
 UARActionComponent* UARAction::GetOwningComponent() const
 {
@@ -19,6 +25,15 @@ UWorld* UARAction::GetWorld() const
 	}
 
 	return nullptr;
+}
+
+void UARAction::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& props) const
+{
+	Super::GetLifetimeReplicatedProps(props);
+
+	// Unreal expects this stupid ass name.
+	auto& OutLifetimeProps = props;
+	DOREPLIFETIME(UARAction, IsRunning);
 }
 
 void UARAction::DispatchClientStopPrediction(AActor* instigator)
@@ -37,11 +52,32 @@ void UARAction::DispatchClientStopPrediction(AActor* instigator)
 void UARAction::DispatchServerStop(AActor* instigator)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
+	RPC_Server_Stop(instigator); // Should be a simple function call.
+}
 
-	// We make the roundabout via the ActionComponent to make sure the accounting and RPCs are
-	// triggered properly.
-	// This will call |ServerStop| on this action.
-	GetOwningComponent()->GetServerSplit()->StopAction(this, instigator);
+void UARAction::RPC_Server_Start_Implementation(AActor* instigator,
+												FPredictedStartActionContext context)
+{
+	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
+	GetServerSplit()->Start(instigator, std::move(context));
+}
+
+void UARAction::RPC_Server_Stop_Implementation(AActor* instigator)
+{
+	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
+	GetServerSplit()->Stop(instigator);
+}
+
+void UARAction::RPC_Multicast_ClientStart_Implementation(AActor* instigator)
+{
+	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
+	ClientStart(instigator);
+}
+
+void UARAction::RPC_Multicast_ClientStop_Implementation(AActor* instigator)
+{
+	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
+	ClientStop(instigator);
 }
 
 bool UARAction::CanStart_Implementation(AActor* instigator)
@@ -59,6 +95,7 @@ bool UARAction::CanStart_Implementation(AActor* instigator)
 
 	return true;
 }
+
 FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
