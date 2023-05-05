@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <ARBase/Messaging/Message.h>
+
 #include <vector>
 
 class UNetConnection;
@@ -8,25 +10,17 @@ class UNetMessageChannel;
 namespace ar
 {
 
-class Message;
-
-enum class MessageDomain
-{
-		Local,
-		Remote,
-		Both,
-};
-const char* ToString(MessageDomain domain);
+using MessageChannelId = FName;
 
 struct MessageChannel
 {
-	using IDType = FName;
-
 	struct ConnectionAdapter
 	{
 		TWeakObjectPtr<UNetConnection> NetConnection;
 		TWeakObjectPtr<UNetMessageChannel> NetMessageChannel;
 	};
+
+	MessageChannelId Id;
 	std::vector<ConnectionAdapter> Connections;
 };
 

@@ -22,6 +22,13 @@ void UNetMessageChannel::Init(UNetConnection* in_connection, int32 in_ch_index,
 bool UNetMessageChannel::CleanUp(const bool for_destroy, EChannelCloseReason close_reason)
 {
 	checkf(false, TEXT("TODO: IMPLEMENT ME"));
+
+	if (!MessageQueue.empty())
+	{
+	}
+
+
+
 	return Super::CleanUp(for_destroy, close_reason);
 }
 

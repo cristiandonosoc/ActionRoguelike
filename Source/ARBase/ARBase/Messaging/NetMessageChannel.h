@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include <ARBase/Messaging/Message.h>
+#include <ARBase/Messaging/MessageChannel.h>
 
 #include <deque>
 
@@ -12,6 +13,10 @@ UCLASS()
 class UNetMessageChannel : public UChannel
 {
 	GENERATED_BODY()
+
+public:
+	const ar::MessageChannelId& GetChannelId() const { return ChannelId; }
+
 public:
 	void Enqueue(std::unique_ptr<ar::Message>&& message);
 
@@ -26,5 +31,6 @@ public:
 	// INTERFACE_END(UChannel)
 
 private:
+	ar::MessageChannelId ChannelId;
 	std::deque<std::unique_ptr<ar::Message>> MessageQueue;
 };

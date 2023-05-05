@@ -15,6 +15,15 @@ public:                                                                         
 namespace ar
 {
 
+// MessageDomain represents where this message will be sent to.
+enum class MessageDomain : uint8
+{
+		Local,
+		Remote,
+		Both,
+};
+const char* ToString(MessageDomain domain);
+
 class Message
 {
 public:
