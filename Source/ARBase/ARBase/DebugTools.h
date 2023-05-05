@@ -23,6 +23,20 @@ class UWorld;
 #endif // AR_BUILD_DEBUG
 // clang-format on
 
+// DECLARE_DEBUG_CATEGORY declares a new category id for our debug system, as well as an UE log
+// category.
+//
+// IMPORTANT: Any category declared here has to have the equivalent AR_DEFINE_DEBUG_CATEGORY call
+//            within the .cpp!
+#define DECLARE_DEBUG_CATEGORY(ns, dllspec, category_name, category_variable,                      \
+							   ue_default_verbosity, ue_compile_time_verbosity)                    \
+	namespace ns                                                                                   \
+	{                                                                                              \
+	static constexpr uint32 category_variable = UNIQUE_CATEGORY_ID;                                \
+	}                                                                                              \
+	dllspec DECLARE_LOG_CATEGORY_EXTERN(category_name, ue_default_verbosity,                       \
+										ue_compile_time_verbosity);
+
 // AR_DEFINE_DEBUG_CATEGORY registers a new category so that code can enable/disable the category
 // on runtime in a convenient manner.
 //
@@ -44,6 +58,12 @@ class UWorld;
 
 // ARDebugDraw represents all the debug draw capabilities that are automatically stripped out in
 // release builds, so gameplay code can always call.
+
+// Define base categories.
+// For the unique category id, we add a big offset to differentiate from the game categories.
+#define UNIQUE_CATEGORY_ID __LINE__ + 0xf000'0000
+DECLARE_DEBUG_CATEGORY(ar, ARBASE_API, LogARBase_Messaging, BASE_MESSAGING, Log, All);
+#undef UNIQUE_CATEGORY_ID
 
 namespace debug
 {

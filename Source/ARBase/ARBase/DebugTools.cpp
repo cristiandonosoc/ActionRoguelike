@@ -5,10 +5,11 @@
 
 #include <ARBase/Macros.h>
 
-#include <Engine/Console.h>
-
 #include <iostream>
 #include <map>
+
+AR_DEFINE_DEBUG_CATEGORY(ar::BASE_MESSAGING, LogARBase_Messaging, Base_Messaging, true,
+						 "Base category for the messaging system");
 
 namespace debug
 {
