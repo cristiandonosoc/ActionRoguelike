@@ -40,13 +40,9 @@ public:
 
 public:
 	// INTERFACE_BEGIN(UARAction)
-	virtual FPredictedStartActionContext ClientPredictStart_Implementation(AActor* instigator);
-	// virtual void ClientPredictStop_Implementation(AActor* instigator) override;
-	// virtual void ClientStart_Implementation(AActor* instigator) override;
-	// virtual void ClientStop_Implementation(AActor* instigator) override;
-	virtual void ServerStart_Implementation(AActor* instigator,
-											const FPredictedStartActionContext& context) override;
-	// virtual void ServerStop_Implementation(AActor* instigator) override;
+	virtual FPredictedStartActionContext OnClientPredictStart_Implementation(AActor* instigator);
+	virtual void OnServerStart_Implementation(AActor* instigator,
+											  const FPredictedStartActionContext& context) override;
 	//  INTERFACE_END(UARAction)
 
 protected:

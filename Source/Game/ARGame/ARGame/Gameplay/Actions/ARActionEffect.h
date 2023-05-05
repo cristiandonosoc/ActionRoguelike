@@ -22,9 +22,9 @@ public:
 
 protected:
 	// INTERFACE_BEGIN(UARAction)
-	virtual void ServerStart_Implementation(AActor* instigator,
+	virtual void OnServerStart_Implementation(AActor* instigator,
 											const FPredictedStartActionContext& context) override;
-	virtual void ServerStop_Implementation(AActor* instigator) override;
+	virtual void OnServerStop_Implementation(AActor* instigator) override;
 	// INTERFACE_END(UARAction)
 
 	// INTERFACE_BEGIN(UARActionEffect)

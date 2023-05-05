@@ -24,7 +24,7 @@ void ActionComponentServer::AddAction(TSubclassOf<UARAction> action_class, AActo
 
 	if (action->GetAutoStarts())
 	{
-		action->ServerStart(instigator, {});
+		action->OnServerStart(instigator, {});
 	}
 }
 
@@ -32,7 +32,7 @@ void ActionComponentServer::StartActionByName(const FName& name, AActor* instiga
 											  FPredictedStartActionContext&& context)
 {
 	NotNullPtr<UARAction> action = GetBase()->FindAction(name);
-	action->ServerStart(instigator, std::move(context));
+	action->OnServerStart(instigator, std::move(context));
 }
 
 void ActionComponentServer::BeginPlay()
@@ -70,7 +70,6 @@ bool ActionComponentServer::ReplicateSubObjects(NotNullPtr<UActorChannel> channe
 
 	return wrote_something;
 }
-
 
 } // namespace server
 } // namespace ar

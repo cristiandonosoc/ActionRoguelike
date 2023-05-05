@@ -45,7 +45,7 @@ void UARAction::DispatchClientStopPrediction(AActor* instigator)
 	// In that case, we ignore.
 	if (IsRunning)
 	{
-		ClientPredictStop(instigator);
+		OnClientPredictStop(instigator);
 	}
 }
 
@@ -71,13 +71,13 @@ void UARAction::RPC_Server_Stop_Implementation(AActor* instigator)
 void UARAction::RPC_Multicast_ClientStart_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
-	ClientStart(instigator);
+	OnClientStart(instigator);
 }
 
 void UARAction::RPC_Multicast_ClientStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
-	ClientStop(instigator);
+	OnClientStop(instigator);
 }
 
 bool UARAction::CanStart_Implementation(AActor* instigator)
@@ -96,7 +96,7 @@ bool UARAction::CanStart_Implementation(AActor* instigator)
 	return true;
 }
 
-FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor* instigator)
+FPredictedStartActionContext UARAction::OnClientPredictStart_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsClientStartPredicting);
@@ -111,7 +111,7 @@ FPredictedStartActionContext UARAction::ClientPredictStart_Implementation(AActor
 	return {};
 }
 
-void UARAction::FinalizeClientStartPrediction_Implementation()
+void UARAction::OnFinalizeClientStartPrediction_Implementation()
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(IsClientStartPredicting);
@@ -124,7 +124,7 @@ void UARAction::FinalizeClientStartPrediction_Implementation()
 	IsClientStartPredicting = false;
 }
 
-void UARAction::ClientPredictStop_Implementation(AActor* instigator)
+void UARAction::OnClientPredictStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 
@@ -144,7 +144,7 @@ void UARAction::ClientPredictStop_Implementation(AActor* instigator)
 	IsClientStopPredicting = true;
 }
 
-void UARAction::FinalizeClientStopPrediction_Implementation()
+void UARAction::OnFinalizeClientStopPrediction_Implementation()
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsClientStartPredicting);
@@ -157,7 +157,7 @@ void UARAction::FinalizeClientStopPrediction_Implementation()
 	IsClientStopPredicting = false;
 }
 
-void UARAction::ClientStart_Implementation(AActor* instigator)
+void UARAction::OnClientStart_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(!IsRunning);
@@ -167,7 +167,7 @@ void UARAction::ClientStart_Implementation(AActor* instigator)
 	// want to do before starting the action "for real" client-wise.
 	if (IsClientStartPredicting)
 	{
-		FinalizeClientStartPrediction();
+		OnFinalizeClientStartPrediction();
 	}
 
 	check(!IsClientStartPredicting);
@@ -176,11 +176,9 @@ void UARAction::ClientStart_Implementation(AActor* instigator)
 			   *ActionName.ToString(), *GetNameSafe(this));
 
 	IsRunning = true;
-	// TODO(cdc): Should this be done via replication?
-	// GetOwningComponent()->GetActiveGameplayTags().AppendTags(GrantsTags);
 }
 
-void UARAction::ClientStop_Implementation(AActor* instigator)
+void UARAction::OnClientStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_CLIENT(GetOwningComponent());
 	check(IsRunning);
@@ -189,19 +187,17 @@ void UARAction::ClientStop_Implementation(AActor* instigator)
 	// before stopping the action "for real" client-wise.
 	if (IsClientStopPredicting)
 	{
-		FinalizeClientStopPrediction();
+		OnFinalizeClientStopPrediction();
 	}
 
 	AR_LOG_CSS(GetWorld(), LogAR_Actions, Log, TEXT("Action Stop: %s (Action: %s)"),
 			   *ActionName.ToString(), *GetNameSafe(this));
 
-	// TODO(cdc): Should this be done via replication?
-	// GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GrantsTags);
 	IsRunning = false;
 }
 
-void UARAction::ServerStart_Implementation(AActor* instigator,
-										   const FPredictedStartActionContext& context)
+void UARAction::OnServerStart_Implementation(AActor* instigator,
+											 const FPredictedStartActionContext& context)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	check(!IsClientStartPredicting);
@@ -215,7 +211,7 @@ void UARAction::ServerStart_Implementation(AActor* instigator,
 	IsRunning = true;
 }
 
-void UARAction::ServerStop_Implementation(AActor* instigator)
+void UARAction::OnServerStop_Implementation(AActor* instigator)
 {
 	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	check(!IsClientStartPredicting);

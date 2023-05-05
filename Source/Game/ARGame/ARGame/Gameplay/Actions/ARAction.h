@@ -53,28 +53,36 @@ public:
 	bool CanStart(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
-	FPredictedStartActionContext ClientPredictStart(AActor* instigator);
+	FPredictedStartActionContext OnClientPredictStart(AActor* instigator);
+	virtual FPredictedStartActionContext OnClientPredictStart_Implementation(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
-	void FinalizeClientStartPrediction();
+	void OnFinalizeClientStartPrediction();
+	virtual void OnFinalizeClientStartPrediction_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
-	void ClientPredictStop(AActor* instigator);
+	void OnClientPredictStop(AActor* instigator);
+	virtual void OnClientPredictStop_Implementation(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client|Prediction")
-	void FinalizeClientStopPrediction();
+	void OnFinalizeClientStopPrediction();
+	virtual void OnFinalizeClientStopPrediction_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client")
-	void ClientStart(AActor* instigator);
+	void OnClientStart(AActor* instigator);
+	virtual void OnClientStart_Implementation(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Client")
-	void ClientStop(AActor* instigator);
+	void OnClientStop(AActor* instigator);
+	virtual void OnClientStop_Implementation(AActor* instigator);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
-	void ServerStart(AActor* instigator, const FPredictedStartActionContext& context);
-
+	void OnServerStart(AActor* instigator, const FPredictedStartActionContext& context);
+	virtual void OnServerStart_Implementation(AActor* instigator,
+											const FPredictedStartActionContext& context);
 	UFUNCTION(BlueprintNativeEvent, Category = "Action|Server")
-	void ServerStop(AActor* instigator);
+	void OnServerStop(AActor* instigator);
+	virtual void OnServerStop_Implementation(AActor* instigator);
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Action|Client|Prediction")
@@ -99,15 +107,7 @@ public:
 protected:
 	// INTERFACE_BEGIN(UARAction)
 	virtual bool CanStart_Implementation(AActor* instigator);
-	virtual FPredictedStartActionContext ClientPredictStart_Implementation(AActor* instigator);
-	virtual void FinalizeClientStartPrediction_Implementation();
-	virtual void ClientPredictStop_Implementation(AActor* instigator);
-	virtual void FinalizeClientStopPrediction_Implementation();
-	virtual void ClientStart_Implementation(AActor* instigator);
-	virtual void ClientStop_Implementation(AActor* instigator);
-	virtual void ServerStart_Implementation(AActor* instigator,
-											const FPredictedStartActionContext& context);
-	virtual void ServerStop_Implementation(AActor* instigator);
+
 	// INTERFACE_END(UARAction)
 
 protected:

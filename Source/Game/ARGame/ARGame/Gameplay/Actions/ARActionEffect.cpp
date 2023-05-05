@@ -8,10 +8,10 @@ UARActionEffect::UARActionEffect()
 	AutoStarts = true;
 }
 
-void UARActionEffect::ServerStart_Implementation(AActor* instigator,
-												 const FPredictedStartActionContext& context)
+void UARActionEffect::OnServerStart_Implementation(AActor* instigator,
+												   const FPredictedStartActionContext& context)
 {
-	Super::ServerStart_Implementation(instigator, context);
+	Super::OnServerStart_Implementation(instigator, context);
 
 	if (Duration > 0.0f)
 	{
@@ -21,7 +21,7 @@ void UARActionEffect::ServerStart_Implementation(AActor* instigator,
 			{
 				if (weakGuard.IsValid())
 				{
-					ServerStop(instigator);
+					OnServerStop(instigator);
 				}
 			});
 		GetWorld()->GetTimerManager().SetTimer(DurationHandle, delegate, Duration, false);
@@ -42,8 +42,9 @@ void UARActionEffect::ServerStart_Implementation(AActor* instigator,
 	}
 }
 
-void UARActionEffect::ServerStop_Implementation(AActor* instigator)
+void UARActionEffect::OnServerStop_Implementation(AActor* instigator)
 {
+	CHECK_RUNNING_ON_SERVER(GetOwningComponent());
 	auto& timer = GetWorld()->GetTimerManager();
 
 	// We check if we had a period pending (could happen if the period and the duration would end
@@ -58,5 +59,5 @@ void UARActionEffect::ServerStop_Implementation(AActor* instigator)
 
 	GetOwningComponent()->RemoveAction(ActionName);
 
-	Super::ServerStop_Implementation(instigator);
+	Super::OnServerStop_Implementation(instigator);
 }

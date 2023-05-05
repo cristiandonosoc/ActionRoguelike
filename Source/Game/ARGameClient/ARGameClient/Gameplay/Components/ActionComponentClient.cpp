@@ -57,15 +57,15 @@ void ActionComponentClient::PredictStartActionByName(const FName& name, AActor* 
 	// If it's a client only action, there is no prediction needed so we go direct to start.
 	if (action->GetIsClientOnly())
 	{
-		action->ClientStart(instigator);
+		action->OnClientStart(instigator);
 		return;
 	}
 
 	// This is a networked ability, so we start the client prediction and then send a request for
 	// the server to start the ability on its end.
 	// TODO(cdc): Figure out a way of sending this without needing to go through the component.
-	FPredictedStartActionContext context = action->ClientPredictStart(instigator);
-	action->ServerStart(instigator, std::move(context));
+	FPredictedStartActionContext context = action->OnClientPredictStart(instigator);
+	action->RPC_Server_Start(instigator, std::move(context));
 }
 
 void ActionComponentClient::StartActionByName(const FName& name, AActor* instigator)
@@ -78,7 +78,7 @@ void ActionComponentClient::StartActionByName(const FName& name, AActor* instiga
 		return;
 	}
 
-	action->ClientStart(instigator);
+	action->OnClientStart(instigator);
 }
 
 } // namespace client

@@ -83,7 +83,7 @@ void ActionServer::ProcessStartCommand(Command&& command)
 
 	// TODO(cdc): This should be done in the action component.
 	GetBase()->GetOwningComponent()->GetActiveGameplayTags().AppendTags(GetBase()->GetGrantsTags());
-	GetBase()->ServerStart(command.Instigator, std::move(command.Context));
+	GetBase()->OnServerStart(command.Instigator, std::move(command.Context));
 
 	// We also let the clients know that this action has started.
 	GetBase()->RPC_Multicast_ClientStart(command.Instigator);
@@ -92,14 +92,13 @@ void ActionServer::ProcessStartCommand(Command&& command)
 void ActionServer::ProcessStopCommand(Command&& command)
 {
 	check(GetBase()->IsRunning);
-	GetBase()->ServerStop(command.Instigator);
+	GetBase()->OnServerStop(command.Instigator);
 	// TODO(cdc): This should be done in the action component.
 	GetBase()->GetOwningComponent()->GetActiveGameplayTags().RemoveTags(GetBase()->GetGrantsTags());
 
 	// We also let the clients know that this action has stopped.
 	GetBase()->RPC_Multicast_ClientStop(command.Instigator);
 }
-
 
 } // namespace server
 } // namespace ar

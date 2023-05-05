@@ -116,10 +116,10 @@ void UARActionComponent::StopAction(const FName& name, AActor* instigator)
 	if (ARClientServerGlobals::RunningInClient(this))
 	{
 		checkf(false, TEXT("Not sure if this should be called..."));
-		action->ClientStop(instigator);
+		action->OnClientStop(instigator);
 	}
 	if (ARClientServerGlobals::RunningInServer(this))
 	{
-		action->ServerStop(instigator);
+		action->OnServerStop(instigator);
 	}
 }
