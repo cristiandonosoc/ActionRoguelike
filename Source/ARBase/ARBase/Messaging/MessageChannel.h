@@ -8,20 +8,28 @@ class UNetMessageChannel;
 namespace ar
 {
 
-class MessageChannel
+class Message;
+
+enum class MessageDomain
 {
-public:
+		Local,
+		Remote,
+		Both,
+};
+const char* ToString(MessageDomain domain);
+
+struct MessageChannel
+{
 	using IDType = FName;
 
-private:
-	struct RemoteDataAdapter
+	struct ConnectionAdapter
 	{
 		TWeakObjectPtr<UNetConnection> NetConnection;
 		TWeakObjectPtr<UNetMessageChannel> NetMessageChannel;
 	};
-	std::vector<RemoteDataAdapter> Adapters;
+	std::vector<ConnectionAdapter> Connections;
 };
 
+void Dispatch(MessageChannel* channel, std::unique_ptr<Message>&& message, MessageDomain domain);
 
 } // namespace ar
-

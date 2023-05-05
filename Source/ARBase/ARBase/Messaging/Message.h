@@ -3,35 +3,42 @@
 #define GENERATED_MESSAGE(class_name, parent_class_name)                                           \
 public:                                                                                            \
 	using Parent = parent_class_name;                                                              \
-	static const ar::MessageType& GetMessageType();
+	static const ar::Message::Type& StaticMessageType();
 
 #define DEFINE_MESSAGE(class_name)                                                                 \
-	const ar::MessageType& class_name::GetMessageType()                                            \
+	const ar::Message::Type& class_name::StaticMessageType()                                          \
 	{                                                                                              \
-		static ar::MessageType type{ TEXT(#class_name) };                                          \
+		static ar::Message::Type type{ TEXT(#class_name) };                                        \
 		return type;                                                                               \
 	}
 
 namespace ar
 {
 
-struct MessageType;
-
 class Message
 {
 public:
-	static const MessageType& GetMessageType();
+	// Type is an entry in a bare bones type system to identity a message.
+	struct Type
+	{
+		FName Id;
+	};
+
+public:
+	static const Type& StaticMessageType();
 
 public:
 	virtual ~Message() = default;
 
 public:
+	const Type& GetMessageType() const { return MessageType; }
+
+public:
 	virtual void Serialize(FArchive& ar) = 0;
+
+protected:
+	Type MessageType = {};
 };
 
-struct MessageType
-{
-	FName Id;
-};
 
 } // namespace ar
