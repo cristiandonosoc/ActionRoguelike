@@ -3,12 +3,12 @@
 #define GENERATED_MESSAGE(class_name, parent_class_name)                                           \
 public:                                                                                            \
 	using Parent = parent_class_name;                                                              \
-	static const ar::Message::Type& StaticMessageType();
+	static const FName& StaticMessageType();
 
 #define DEFINE_MESSAGE(class_name)                                                                 \
-	const ar::Message::Type& class_name::StaticMessageType()                                          \
+	const FName& class_name::StaticMessageType()                                                   \
 	{                                                                                              \
-		static ar::Message::Type type{ TEXT(#class_name) };                                        \
+		static FName type{ TEXT(#class_name) };                                                    \
 		return type;                                                                               \
 	}
 
@@ -18,35 +18,29 @@ namespace ar
 // MessageDomain represents where this message will be sent to.
 enum class MessageDomain : uint8
 {
-		Local,
-		Remote,
-		Both,
+	Local,
+	Remote,
+	Both,
 };
 const char* ToString(MessageDomain domain);
 
 class Message
 {
 public:
-	// Type is an entry in a bare bones type system to identity a message.
-	struct Type
-	{
-		FName Id;
-	};
-
-public:
-	static const Type& StaticMessageType();
+	static const FName& StaticMessageType();
+	static std::unique_ptr<Message> FactoryFromType(const FName& type);
 
 public:
 	virtual ~Message() = default;
 
 public:
-	const Type& GetMessageType() const { return MessageType; }
+	const FName& GetMessageType() const { return MessageType; }
 
 public:
 	virtual void Serialize(FArchive& ar) = 0;
 
 protected:
-	Type MessageType = {};
+	FName MessageType;
 };
 
 

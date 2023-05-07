@@ -6,26 +6,16 @@
 namespace ar
 {
 
-namespace
-{
 
-void DispatchRemote(NotNullPtr<MessageChannel> channel, std::unique_ptr<Message>&& message);
-
-} // namespace
-
-void Dispatch(NotNullPtr<MessageChannel> channel, std::unique_ptr<Message>&& message,
-			  MessageDomain domain)
-{
-	checkf(domain == MessageDomain::Remote, TEXT("Only Remote supported for now"));
-	DispatchRemote(channel, std::move(message));
-}
+MessageChannel::MessageChannel() {}
 
 namespace
 {
+
 void DispatchRemote(NotNullPtr<MessageChannel> channel, std::unique_ptr<Message>&& message)
 {
 	// We iterate over all the connections.
-	for (auto& connection : channel->Connections)
+	for (auto& connection : channel->GetConnections())
 	{
 		NotNullPtr<UNetMessageChannel> uchannel = connection.NetMessageChannel.Get();
 		uchannel->Enqueue(std::move(message));
@@ -34,20 +24,15 @@ void DispatchRemote(NotNullPtr<MessageChannel> channel, std::unique_ptr<Message>
 
 } // namespace
 
-const char* ToString(MessageDomain domain)
+void MessageChannel::Send(std::unique_ptr<Message>&& message, MessageDomain domain)
 {
-	// clang-format off
-	switch (domain)
-	{
-	case MessageDomain::Local: return "Local";
-	case MessageDomain::Remote: return "Remote";
-	case MessageDomain::Both: return "Both";
-	}
-	// clang-format on
-
-	checkf(false, TEXT("Invalid domain given %d"), domain);
-	return "<invalid>";
+	checkf(domain == MessageDomain::Remote, TEXT("Only Remote supported for now"));
+	DispatchRemote(this, std::move(message));
 }
 
+void MessageChannel::ReceiveNetMessage(std::unique_ptr<Message>&& message)
+{
+	checkf(false, TEXT("TODO: IMPLEMENT ME"));
+}
 
 } // namespace ar

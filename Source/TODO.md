@@ -26,6 +26,14 @@
 - Player Character doesn't unspawn when reviving (keeps there).
 - UI doesn't correctly reset when reviving (likely tied to the character).
 
+### Messaging
+
+- Do Message Type registration so it can be queried by NetChannel.
+- Do Channel registration, likely in the game instance, though could be at some other scope.
+- Do Channel/NetChannel binding, to ensure the correct underlying UChannel is correctly bound to the
+  appropiate MessageChannel.
+- Make Channel send the message back to their owner.
+
 ### Tom Looman
 
 - Go back to watch the lessons.

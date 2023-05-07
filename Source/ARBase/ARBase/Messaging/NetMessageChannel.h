@@ -15,7 +15,7 @@ class UNetMessageChannel : public UChannel
 	GENERATED_BODY()
 
 public:
-	const ar::MessageChannelId& GetChannelId() const { return ChannelId; }
+	void SetOwningChannel(ar::MessageChannel* channel) { OwningChannel = channel; }
 
 public:
 	void Enqueue(std::unique_ptr<ar::Message>&& message);
@@ -31,6 +31,9 @@ public:
 	// INTERFACE_END(UChannel)
 
 private:
-	ar::MessageChannelId ChannelId;
+	static constexpr bool kSaturate = false;
+
+private:
+	ar::MessageChannel* OwningChannel; // Not owning.
 	std::deque<std::unique_ptr<ar::Message>> MessageQueue;
 };

@@ -10,20 +10,33 @@ class UNetMessageChannel;
 namespace ar
 {
 
-using MessageChannelId = FName;
-
-struct MessageChannel
+class MessageChannel
 {
+public:
 	struct ConnectionAdapter
 	{
 		TWeakObjectPtr<UNetConnection> NetConnection;
 		TWeakObjectPtr<UNetMessageChannel> NetMessageChannel;
 	};
 
-	MessageChannelId Id;
-	std::vector<ConnectionAdapter> Connections;
-};
+public:
+	MessageChannel();
 
-void Dispatch(MessageChannel* channel, std::unique_ptr<Message>&& message, MessageDomain domain);
+public:
+	const FName& GetId() const { return Id; }
+	const std::vector<ConnectionAdapter>& GetConnections() const { return Connections; }
+
+public:
+	void Send(std::unique_ptr<Message>&& message, MessageDomain domain);
+
+private:
+	void ReceiveNetMessage(std::unique_ptr<Message>&& message);
+
+private:
+	FName Id;
+	std::vector<ConnectionAdapter> Connections;
+
+	friend class ::UNetMessageChannel;
+};
 
 } // namespace ar
