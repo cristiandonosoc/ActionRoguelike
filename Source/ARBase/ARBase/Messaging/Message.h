@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <ARBase/Macros.h>
+
 #define GENERATED_MESSAGE(class_name, parent_class_name)                                           \
 public:                                                                                            \
 	using Parent = parent_class_name;                                                              \
@@ -10,7 +12,11 @@ public:                                                                         
 	{                                                                                              \
 		static FName type{ TEXT(#class_name) };                                                    \
 		return type;                                                                               \
-	}
+	}                                                                                              \
+	static ::ar::__MessageTypeRegisterer AR_CONCAT3(__message_type_registerer__, class_name,       \
+													__LINE__)(                                     \
+		class_name::StaticMessageType(), __FILE__, __LINE__,                                       \
+		[]() { return std::make_unique<class_name>(); });
 
 namespace ar
 {
@@ -22,9 +28,9 @@ enum class MessageDomain : uint8
 	Remote,
 	Both,
 };
-const char* ToString(MessageDomain domain);
+ARBASE_API const char* ToString(MessageDomain domain);
 
-class Message
+class ARBASE_API Message
 {
 public:
 	static const FName& StaticMessageType();
@@ -41,6 +47,15 @@ public:
 
 protected:
 	FName MessageType;
+};
+
+class ARBASE_API __MessageTypeRegisterer
+{
+public:
+	using MessageTypeFactoryFunction = std::function<std::unique_ptr<Message>()>;
+
+	explicit __MessageTypeRegisterer(const FName& type, const char* file, int line,
+									 MessageTypeFactoryFunction&& factory_function);
 };
 
 
