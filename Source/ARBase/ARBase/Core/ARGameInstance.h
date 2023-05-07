@@ -10,7 +10,7 @@
 class UDataTable;
 
 UCLASS()
-class ARGAME_API UARGameInstance : public UGameInstance
+class ARBASE_API UARGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 

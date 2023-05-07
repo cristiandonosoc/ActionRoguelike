@@ -63,6 +63,7 @@ class UWorld;
 // For the unique category id, we add a big offset to differentiate from the game categories.
 #define UNIQUE_CATEGORY_ID __LINE__ + 0xf000'0000
 DECLARE_DEBUG_CATEGORY(ar, ARBASE_API, LogARBase_Messaging, BASE_MESSAGING, Log, All);
+DECLARE_DEBUG_CATEGORY(ar, ARBASE_API, LogARBase_UI, BASE_UI, Log, All);
 #undef UNIQUE_CATEGORY_ID
 
 namespace debug

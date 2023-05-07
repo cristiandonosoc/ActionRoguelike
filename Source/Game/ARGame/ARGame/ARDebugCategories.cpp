@@ -24,5 +24,3 @@ AR_DEFINE_DEBUG_CATEGORY(ar::PLAYER_CHARACTER, LogAR_PlayerCharacter, PlayerChar
 
 AR_DEFINE_DEBUG_CATEGORY(ar::PROJECTILES, LogAR_Projectiles, Projectiles, true,
 						 "All the display about projectiles");
-
-AR_DEFINE_DEBUG_CATEGORY(ar::UI, LogAR_UI, UI, true, "All the display about projectiles");

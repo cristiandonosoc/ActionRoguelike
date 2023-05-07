@@ -1,13 +1,10 @@
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
 
-#include <ARGame/ARDebugCategories.h>
+#include <ARBase/UI/ARActorAttachedWidget.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/ARGameplayInterface.h>
-#include <ARGame/UI/ARActorAttachedWidget.h>
 
-#include <Blueprint/UserWidget.h>
 #include <Components/BoxComponent.h>
-
 
 // Sets default values for this component's properties
 UARInteractionComponent::UARInteractionComponent()

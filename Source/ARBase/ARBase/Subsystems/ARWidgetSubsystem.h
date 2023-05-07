@@ -1,6 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include <CoreMinimal.h>
 #include <Engine/DataTable.h>
@@ -36,7 +34,7 @@ struct FWidgetSubsystemConfig : public FTableRowBase
 };
 
 UCLASS()
-class ARGAME_API UARWidgetSubsystem : public UGameInstanceSubsystem
+class ARBASE_API UARWidgetSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 

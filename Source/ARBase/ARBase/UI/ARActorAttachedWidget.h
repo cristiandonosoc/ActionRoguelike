@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <ARBase/NotNullPtr.h>
-
 #include <Blueprint/UserWidget.h>
 
 #include "ARActorAttachedWidget.generated.h"
@@ -12,7 +10,7 @@ class USizeBox;
 // "near" it.
 // It handles the world to screen projection. It is meant to be sub-classed.
 UCLASS()
-class ARGAME_API UARActorAttachedWidget : public UUserWidget
+class ARBASE_API UARActorAttachedWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -22,7 +20,7 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<AActor> AttachedTo;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FVector TranslationOffset = FVector::ZeroVector;
 
@@ -33,7 +31,7 @@ public:
 	FVector2D OnScreenScale = {1.0f, 1.0f};
 
 protected:
-	
+
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
 	TObjectPtr<USizeBox> ParentSizeBox;
 };

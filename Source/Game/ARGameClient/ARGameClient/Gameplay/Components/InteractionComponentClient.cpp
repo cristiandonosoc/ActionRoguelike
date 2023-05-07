@@ -3,7 +3,7 @@
 #include <ARGame/ARDebugCategories.h>
 #include <ARGame/Gameplay/ARCharacter.h>
 #include <ARGame/Gameplay/Components/ARInteractionComponent.h>
-#include <ARGame/UI/ARActorAttachedWidget.h>
+#include <ARBase/UI/ARActorAttachedWidget.h>
 
 namespace ar
 {

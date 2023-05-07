@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <ARBase/DebugTools.h>
+
 class UWorld;
 
 namespace ar

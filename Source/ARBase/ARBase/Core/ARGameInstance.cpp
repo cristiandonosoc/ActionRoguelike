@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include <ARGame/Gameplay/Base/ARGameInstance.h>
+#include <ARBase/Core/ARGameInstance.h>
 
 #include <ARBase/NotNullPtr.h>
-#include <ARGame/Subsystems/ARWidgetSubsystem.h>
+#include <ARBase/Subsystems/ARWidgetSubsystem.h>
 
 namespace
 {

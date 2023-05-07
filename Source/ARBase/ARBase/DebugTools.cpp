@@ -10,6 +10,8 @@
 
 AR_DEFINE_DEBUG_CATEGORY(ar::BASE_MESSAGING, LogARBase_Messaging, Base_Messaging, true,
 						 "Base category for the messaging system");
+AR_DEFINE_DEBUG_CATEGORY(ar::BASE_UI, LogARBase_UI, Base_UI, true,
+						 "Base category for the UI system");
 
 namespace debug
 {
