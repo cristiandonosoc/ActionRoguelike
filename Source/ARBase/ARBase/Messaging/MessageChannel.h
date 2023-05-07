@@ -10,7 +10,7 @@ class UNetMessageChannel;
 namespace ar
 {
 
-class MessageChannel
+class ARBASE_API MessageChannel
 {
 public:
 	struct ConnectionAdapter
@@ -18,9 +18,6 @@ public:
 		TWeakObjectPtr<UNetConnection> NetConnection;
 		TWeakObjectPtr<UNetMessageChannel> NetMessageChannel;
 	};
-
-public:
-	MessageChannel();
 
 public:
 	const FName& GetId() const { return Id; }
@@ -38,5 +35,30 @@ private:
 
 	friend class ::UNetMessageChannel;
 };
+
+// MessageChannelRegistry --------------------------------------------------------------------------
+
+struct MessageChannelRegistryEntry
+{
+	// Tracking data.
+	const char* FromFile;
+	int FromLine;
+};
+using MessageChannelRegistry = TMap<FName, MessageChannelRegistryEntry>;
+
+ARBASE_API const MessageChannelRegistry& GetGlobalMessageChannelRegistry();
+ARBASE_API const MessageChannelRegistryEntry*
+FindMessageChannelRegistryEntry(const FName& channel_id);
+
+namespace internal
+{
+
+class ARBASE_API __MessageChannelRegisterer
+{
+public:
+	explicit __MessageChannelRegisterer(const FName& channel_id, const char* file, int line);
+};
+
+} // namespace internal
 
 } // namespace ar

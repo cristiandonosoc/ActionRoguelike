@@ -55,7 +55,8 @@ std::unique_ptr<Message> UnserializeMessage(FInBunch& bunch)
 
 	// We create an instance of this message from the type and use virtual functions to call the
 	// correct deserialization function.
-	auto message = Message::FactoryFromType(type);
+	NotNullPtr entry = FindMessageTypeRegistryEntry(type);
+	auto message = entry->FactoryFunction();
 	check(message);
 	message->Serialize(bunch);
 

@@ -3,13 +3,6 @@
 namespace ar
 {
 
-std::unique_ptr<Message> Message::FactoryFromType(const FName& type)
-{
-	checkf(false, TEXT("TODO: IMPLEMENT ME"));
-	return nullptr;
-}
-
-
 const char* ToString(MessageDomain domain)
 {
 	// clang-format off
@@ -25,20 +18,11 @@ const char* ToString(MessageDomain domain)
 	return "<invalid>";
 }
 
+
 // __MessageTypeRegisterer -------------------------------------------------------------------------
 
 namespace
 {
-
-struct MessageTypeRegistryEntry
-{
-	__MessageTypeRegisterer::MessageTypeFactoryFunction FactoryFunction;
-
-	// Tracking data.
-	std::string FromFile;
-	int FromLine;
-};
-using MessageTypeRegistry = TMap<FName, MessageTypeRegistryEntry>;
 
 MessageTypeRegistry& GetMessageTypeRegistry()
 {
@@ -48,8 +32,23 @@ MessageTypeRegistry& GetMessageTypeRegistry()
 
 } // namespace
 
-__MessageTypeRegisterer::__MessageTypeRegisterer(const FName& type, const char* file, int line,
-												 MessageTypeFactoryFunction&& factory_function)
+const MessageTypeRegistry& GetGlobalMessageTypeRegistry()
+{
+	return GetMessageTypeRegistry();
+}
+
+const MessageTypeRegistryEntry* FindMessageTypeRegistryEntry(const FName& type)
+{
+	const auto& registry = GetGlobalMessageTypeRegistry();
+	return registry.Find(type);
+}
+
+namespace internal
+{
+
+__MessageTypeRegisterer::__MessageTypeRegisterer(
+	const FName& type, const char* file, int line,
+	MessageTypeRegistryEntry::MessageTypeFactoryFunction&& factory_function)
 {
 	auto& registry = GetMessageTypeRegistry();
 
@@ -75,4 +74,5 @@ __MessageTypeRegisterer::__MessageTypeRegisterer(const FName& type, const char* 
 	registry[type] = std::move(entry);
 }
 
+} // namespace internal
 } // namespace ar
