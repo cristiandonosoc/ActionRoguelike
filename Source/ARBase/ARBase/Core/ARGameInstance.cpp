@@ -41,4 +41,12 @@ void UARGameInstance::OnStart()
 		NotNullPtr widget_manager = GetSubsystem<UARWidgetSubsystem>();
 		widget_manager->LoadWidgetClasses(std::move(rows));
 	}
+
+	MessagingManager.Start(this);
+}
+void UARGameInstance::Shutdown()
+{
+	Super::Shutdown();
+
+	MessagingManager.Shutdown();
 }

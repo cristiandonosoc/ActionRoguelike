@@ -1,6 +1,6 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
+
+#include <ARBase/Messaging/MessagingManager.h>
 
 #include <CoreMinimal.h>
 #include <Engine/GameInstance.h>
@@ -14,10 +14,17 @@ class ARBASE_API UARGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+public:
+	const ar::MessagingManager& GetMessagingManager() const { return MessagingManager; }
+
 protected:
 	virtual void OnStart() override;
+	virtual void Shutdown() override;
 
 protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UDataTable> WidgetConfigData;
+
+private:
+	ar::MessagingManager MessagingManager;
 };
