@@ -4,6 +4,8 @@
 
 #include <ARBase/ClientServerSplit.h>
 
+class UARGameInstance;
+
 namespace ar
 {
 
@@ -15,6 +17,12 @@ namespace server
 class MessagingManagerServer
 {
 	GENERATED_LEAF_SERVER_SPLIT(ar::MessagingManager, ar::server::MessagingManagerServer);
+
+public:
+	void Start();
+
+private:
+	UARGameInstance* GetGameInstance();
 };
 
 } // namespace server
