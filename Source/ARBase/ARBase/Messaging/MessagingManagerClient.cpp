@@ -6,6 +6,11 @@ namespace ar
 {
 namespace client
 {
+void MessagingManagerClient::OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
+											 NotNullPtr<UNetConnection> connection)
+{
+	checkf(false, TEXT("TODO(cdc): Implement"));
+}
 } // namespace client
 } // namespace ar
 

@@ -5,12 +5,12 @@
 
 #include <deque>
 
-#include "NetMessageChannel.generated.h"
+#include "ChannelWrapper.generated.h"
 
-// UNetMessageChannel is our custom UChannel implementation that understands our messages and is
+// UChannelWrapper is our custom UChannel implementation that understands our messages and is
 // capable to serialize them and send them over the wire.
 UCLASS()
-class UNetMessageChannel : public UChannel
+class UChannelWrapper : public UChannel
 {
 	GENERATED_BODY()
 

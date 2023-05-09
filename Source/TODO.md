@@ -28,11 +28,10 @@
 
 ### Messaging
 
-- Do Message Type registration so it can be queried by NetChannel.
-- Do Channel registration, likely in the game instance, though could be at some other scope.
 - Do Channel/NetChannel binding, to ensure the correct underlying UChannel is correctly bound to the
   appropiate MessageChannel.
 - Make Channel send the message back to their owner.
+- Add UChannel name to DefaultEngine.ini, so we can have our messaging type.
 
 ### Tom Looman
 
@@ -44,14 +43,6 @@
 
 Some code generation to embed state machines into the game.
 This is one is bigger as it needs code generation and some work.
-
-### Messaging System
-
-Some way to be able to send arbitrary structs, mostly within actors, but could be expanded to
-other systems as well:
-
-- Actor Components
-- Subsystems
 
 ### Subsystem Dependency/Initialization Enforcement
 

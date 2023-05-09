@@ -4,6 +4,8 @@
 
 #include <ARBase/ClientServerSplit.h>
 
+class AARPlayerController;
+
 namespace ar
 {
 
@@ -12,9 +14,13 @@ class MessagingManager;
 namespace client
 {
 
-class MessagingManagerClient
+class ARBASE_API MessagingManagerClient
 {
 	GENERATED_LEAF_CLIENT_SPLIT(ar::MessagingManager, MessagingManagerClient);
+
+public:
+	void OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
+						 NotNullPtr<UNetConnection> connection);
 };
 
 } // namespace client

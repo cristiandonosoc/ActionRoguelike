@@ -1,10 +1,10 @@
-﻿#include <ARBase/Messaging/NetMessageChannel.h>
+﻿#include <ARBase/Messaging/ChannelWrapper.h>
 
 #include <ARBase/DebugTools.h>
 #include <ARBase/Logging.h>
 #include <ARBase/Messaging/Message.h>
 
-void UNetMessageChannel::Enqueue(std::unique_ptr<ar::Message>&& message)
+void UChannelWrapper::Enqueue(std::unique_ptr<ar::Message>&& message)
 {
 	check(message);
 	checkf(!Closing, TEXT("Channel %s, MessageType %s: Enqueing to channel while closing"),
@@ -12,14 +12,14 @@ void UNetMessageChannel::Enqueue(std::unique_ptr<ar::Message>&& message)
 	MessageQueue.push_back(std::move(message));
 }
 
-void UNetMessageChannel::Init(UNetConnection* in_connection, int32 in_ch_index,
+void UChannelWrapper::Init(UNetConnection* in_connection, int32 in_ch_index,
 							  EChannelCreateFlags create_flags)
 {
 	Super::Init(in_connection, in_ch_index, create_flags);
 	AR_LOG_CSS(GetWorld(), LogARBase_Messaging, Log, TEXT("Initializing channel %s"), *GetName());
 }
 
-bool UNetMessageChannel::CleanUp(const bool for_destroy, EChannelCloseReason close_reason)
+bool UChannelWrapper::CleanUp(const bool for_destroy, EChannelCloseReason close_reason)
 {
 	checkf(false, TEXT("TODO: IMPLEMENT ME"));
 
@@ -32,7 +32,7 @@ bool UNetMessageChannel::CleanUp(const bool for_destroy, EChannelCloseReason clo
 	return Super::CleanUp(for_destroy, close_reason);
 }
 
-bool UNetMessageChannel::CanStopTicking() const
+bool UChannelWrapper::CanStopTicking() const
 {
 	// TODO(cdc): Investigate is there is a way to make UChannel not tick (bPendingDormancy).
 	return Super::CanStopTicking();
@@ -65,7 +65,7 @@ std::unique_ptr<Message> UnserializeMessage(FInBunch& bunch)
 
 } // namespace
 
-void UNetMessageChannel::ReceivedBunch(FInBunch& bunch)
+void UChannelWrapper::ReceivedBunch(FInBunch& bunch)
 {
 	check(OwningChannel);
 
@@ -89,7 +89,7 @@ void UNetMessageChannel::ReceivedBunch(FInBunch& bunch)
 namespace
 {
 
-bool WriteMessage(NotNullPtr<UNetMessageChannel> net_channel, std::unique_ptr<Message>&& message)
+bool WriteMessage(NotNullPtr<UChannelWrapper> net_channel, std::unique_ptr<Message>&& message)
 {
 	FOutBunch bunch(net_channel, false);
 	// TODO(cdc): Have reliable be part of the sending params.
@@ -116,7 +116,7 @@ bool WriteMessage(NotNullPtr<UNetMessageChannel> net_channel, std::unique_ptr<Me
 
 } // namespace
 
-void UNetMessageChannel::Tick()
+void UChannelWrapper::Tick()
 {
 	// We call Super after because it does a check for dormancy which should be done after
 	// processing all of our messages.

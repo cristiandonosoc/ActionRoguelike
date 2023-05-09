@@ -29,6 +29,12 @@ TMap<FName, T*> GetAllRowsWithName(NotNullPtr<UDataTable> dt)
 
 } // namespace
 
+NotNullPtr<UARGameInstance> UARGameInstance::GetInstance(NotNullPtr<const UObject> outer)
+{
+	NotNullPtr<UWorld> world = outer->GetWorld();
+	return world->GetGameInstance<UARGameInstance>();
+}
+
 void UARGameInstance::OnStart()
 {
 	Super::OnStart();

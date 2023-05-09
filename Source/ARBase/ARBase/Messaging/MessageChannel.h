@@ -5,7 +5,7 @@
 #include <vector>
 
 class UNetConnection;
-class UNetMessageChannel;
+class UChannelWrapper;
 
 namespace ar
 {
@@ -16,7 +16,7 @@ public:
 	struct ConnectionAdapter
 	{
 		TWeakObjectPtr<UNetConnection> NetConnection;
-		TWeakObjectPtr<UNetMessageChannel> NetMessageChannel;
+		TWeakObjectPtr<UChannelWrapper> NetMessageChannel;
 	};
 
 public:
@@ -33,7 +33,7 @@ private:
 	FName Id;
 	std::vector<ConnectionAdapter> Connections;
 
-	friend class ::UNetMessageChannel;
+	friend class ::UChannelWrapper;
 };
 
 // MessageChannelRegistry --------------------------------------------------------------------------

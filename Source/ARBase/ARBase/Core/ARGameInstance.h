@@ -15,7 +15,10 @@ class ARBASE_API UARGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	const ar::MessagingManager& GetMessagingManager() const { return MessagingManager; }
+	static NotNullPtr<UARGameInstance> GetInstance(NotNullPtr<const UObject> outer);
+
+public:
+	ar::MessagingManager& GetMessagingManager() { return MessagingManager; }
 
 protected:
 	virtual void OnStart() override;

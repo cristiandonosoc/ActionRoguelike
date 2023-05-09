@@ -10,6 +10,7 @@
 #include <ARBase/Messaging/MessagingManagerServer.h>
 #endif // AR_BUILD_SERVER
 
+class AARPlayerController;
 class UARGameInstance;
 
 namespace ar
@@ -22,23 +23,37 @@ class MessagingManager
 
 public:
 	using MessageChannelMap = TMap<FName, std::unique_ptr<MessageChannel>>;
+	using UChannelWrapperMap = TMap<FName, std::vector<TWeakObjectPtr<UChannelWrapper>>>;
+
 
 public:
 	MessagingManager();
 
 public:
-	const MessageChannelMap& GetMessageChannelMap() const { return ChannelMap; }
-
-public:
 	void Start(UARGameInstance* game_instance);
 	void Shutdown();
+
+	void OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
+						 NotNullPtr<UNetConnection> connection);
 
 	void CreateChannel(const FName& channel_id);
 	void DestroyChannel(const FName& channel_id);
 
 private:
 	UARGameInstance* GameInstance = nullptr; // Not owning.
-	TMap<FName, std::unique_ptr<MessageChannel>> ChannelMap;
+
+	MessageChannelMap MessageChannels;
+	UChannelWrapperMap UChannelWrappers;
+
+	// The actual player connections we're tracking.
+	// On client: Would be one connection, to the server.
+	// On server: Would have many connections, one per connected client.
+	struct ConnectionTracker
+	{
+		TWeakObjectPtr<AARPlayerController> PlayerController;
+		TWeakObjectPtr<UNetConnection> Connection;
+	};
+	std::vector<ConnectionTracker> Connections;
 };
 
 } // namespace ar

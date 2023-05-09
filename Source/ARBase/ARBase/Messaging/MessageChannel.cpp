@@ -1,6 +1,6 @@
 ﻿#include <ARBase/Messaging/MessageChannel.h>
 
-#include <ARBase/Messaging/NetMessageChannel.h>
+#include <ARBase/Messaging/ChannelWrapper.h>
 #include <ARBase/NotNullPtr.h>
 
 namespace ar
@@ -13,7 +13,7 @@ void DispatchRemote(NotNullPtr<MessageChannel> channel, std::unique_ptr<Message>
 	// We iterate over all the connections.
 	for (auto& connection : channel->GetConnections())
 	{
-		NotNullPtr<UNetMessageChannel> uchannel = connection.NetMessageChannel.Get();
+		NotNullPtr<UChannelWrapper> uchannel = connection.NetMessageChannel.Get();
 		uchannel->Enqueue(std::move(message));
 	}
 }
