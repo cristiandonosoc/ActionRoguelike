@@ -15,23 +15,19 @@ void MessagingManagerServer::OnNewConnection(NotNullPtr<AARPlayerController> pla
 											 NotNullPtr<UNetConnection> connection)
 {
 	// We should not be tracking this connection already.
-	auto it = std::find_if(GetBase()->Connections.begin(), GetBase()->Connections.end(),
-						   [connection](const auto& tracker) -> bool
-						   { return tracker.Connection == connection.Get(); });
-	check(it == GetBase()->Connections.end());
+	check(std::find_if(GetBase()->ConnectionTracker.begin(), GetBase()->ConnectionTracker.end(),
+					   [connection](const auto& entry) -> bool {
+						   return entry->NetConnection.Get() == connection.Get();
+					   }) == GetBase()->ConnectionTracker.end());
 
 	// We add it to the tracking.
-	MessagingManager::ConnectionTracker tracker = {};
-	tracker.PlayerController = player_controller;
-	tracker.Connection = connection;
-	GetBase()->Connections.push_back(std::move(tracker));
+	auto entry = std::make_unique<MessagingManager::ConnectionTrackerEntry>();
+	entry->PlayerController = player_controller;
+	entry->NetConnection = connection;
 
+	// TODO(cdc): For each channel we're tracking, we create an UMessageChannel.
 
-	// For each channel we're tracking, we create an UChannelWrapper.
-	for (const auto& [channel_id, channel] : GetBase()->MessageChannels)
-	{
-		checkf(false, TEXT("TODO(cdc): Implement"));
-	}
+	GetBase()->ConnectionTracker.push_back(std::move(entry));
 }
 
 UARGameInstance* MessagingManagerServer::GetGameInstance()

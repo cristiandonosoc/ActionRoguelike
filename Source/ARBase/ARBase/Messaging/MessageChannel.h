@@ -1,64 +1,39 @@
 ﻿#pragma once
 
 #include <ARBase/Messaging/Message.h>
+#include <ARBase/Messaging/MessageEndpoint.h>
 
-#include <vector>
+#include <deque>
 
-class UNetConnection;
-class UChannelWrapper;
+#include "MessageChannel.generated.h"
 
-namespace ar
+// UMessageChannel is our custom UChannel implementation that understands Message sub-classes and is
+// capable to serialize them and send them over the wire.
+UCLASS()
+class UMessageChannel : public UChannel
 {
-
-class ARBASE_API MessageChannel
-{
-public:
-	struct ConnectionAdapter
-	{
-		TWeakObjectPtr<UNetConnection> NetConnection;
-		TWeakObjectPtr<UChannelWrapper> NetMessageChannel;
-	};
+	GENERATED_BODY()
 
 public:
-	const FName& GetId() const { return Id; }
-	const std::vector<ConnectionAdapter>& GetConnections() const { return Connections; }
+	void SetOwningEndpoint(ar::MessageEndpoint* endpoint) { OwningEndpoint = endpoint; }
 
 public:
-	void Send(std::unique_ptr<Message>&& message, MessageDomain domain);
+	void Enqueue(std::unique_ptr<ar::Message>&& message);
+
+public:
+	// INTERFACE_BEGIN(UChannel)
+	void Init(UNetConnection* in_connection, int32 in_ch_index,
+			  EChannelCreateFlags create_flags) override;
+	virtual bool CleanUp(const bool for_destroy, EChannelCloseReason close_reason) override;
+	virtual bool CanStopTicking() const override;
+	virtual void ReceivedBunch(FInBunch& bunch) override;
+	virtual void Tick() override;
+	// INTERFACE_END(UChannel)
 
 private:
-	void ReceiveNetMessage(std::unique_ptr<Message>&& message);
+	static constexpr bool kSaturate = false;
 
 private:
-	FName Id;
-	std::vector<ConnectionAdapter> Connections;
-
-	friend class ::UChannelWrapper;
+	ar::MessageEndpoint* OwningEndpoint; // Not owning.
+	std::deque<std::unique_ptr<ar::Message>> MessageQueue;
 };
-
-// MessageChannelRegistry --------------------------------------------------------------------------
-
-struct MessageChannelRegistryEntry
-{
-	// Tracking data.
-	const char* FromFile;
-	int FromLine;
-};
-using MessageChannelRegistry = TMap<FName, MessageChannelRegistryEntry>;
-
-ARBASE_API const MessageChannelRegistry& GetGlobalMessageChannelRegistry();
-ARBASE_API const MessageChannelRegistryEntry*
-FindMessageChannelRegistryEntry(const FName& channel_id);
-
-namespace internal
-{
-
-class ARBASE_API __MessageChannelRegisterer
-{
-public:
-	explicit __MessageChannelRegisterer(const FName& channel_id, const char* file, int line);
-};
-
-} // namespace internal
-
-} // namespace ar

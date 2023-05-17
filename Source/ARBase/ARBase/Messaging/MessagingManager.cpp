@@ -1,7 +1,7 @@
 ﻿#include <ARBase/Messaging/MessagingManager.h>
 
 #include <ARBase/Core/ARPlayerController.h>
-#include <ARBase/Messaging/MessageChannel.h>
+#include <ARBase/Messaging/MessageEndpoint.h>
 
 namespace ar
 {
@@ -15,10 +15,10 @@ void MessagingManager::Start(UARGameInstance* game_instance)
 {
 	GameInstance = game_instance;
 
-	// We create all the channels that have been registered.
-	for (const auto& [channel_id, entry] : GetGlobalMessageChannelRegistry())
+	// We create all the endpoints that have been registered.
+	for (const auto& [endpoint_id, entry] : GetGlobalMessageEndpointRegistry())
 	{
-		CreateChannel(channel_id);
+		CreateMessageEndpoint(endpoint_id);
 	}
 }
 
@@ -42,17 +42,17 @@ void MessagingManager::OnNewConnection(NotNullPtr<AARPlayerController> player_co
 	}
 }
 
-void MessagingManager::CreateChannel(const FName& channel_id)
+void MessagingManager::CreateMessageEndpoint(const FName& endpoint_id)
 {
-	check(!MessageChannels.Contains(channel_id));
-	auto channel = std::make_unique<MessageChannel>();
-	MessageChannels[channel_id] = std::move(channel);
+	check(!MessageEndpoints.Contains(endpoint_id));
+	auto channel = std::make_unique<MessageEndpoint>();
+	MessageEndpoints[endpoint_id] = std::move(channel);
 }
 
-void MessagingManager::DestroyChannel(const FName& channel_id)
+void MessagingManager::DestroyMessageEndpoint(const FName& endpoint_id)
 {
-	check(MessageChannels.Contains(channel_id));
-	MessageChannels.Remove(channel_id);
+	check(MessageEndpoints.Contains(endpoint_id));
+	MessageEndpoints.Remove(endpoint_id);
 }
 
 } // namespace ar
