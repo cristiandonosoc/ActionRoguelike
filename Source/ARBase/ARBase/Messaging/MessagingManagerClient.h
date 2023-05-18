@@ -4,6 +4,7 @@
 
 #include <ARBase/ClientServerSplit.h>
 
+struct FMessageChannelCreatedEventData;
 class AARPlayerController;
 
 namespace ar
@@ -19,8 +20,7 @@ class ARBASE_API MessagingManagerClient
 	GENERATED_LEAF_CLIENT_SPLIT(ar::MessagingManager, MessagingManagerClient);
 
 public:
-	void OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
-						 NotNullPtr<UNetConnection> connection);
+	void OnChannelCreated(const FMessageChannelCreatedEventData& data);
 };
 
 } // namespace client

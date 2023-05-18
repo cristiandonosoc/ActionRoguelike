@@ -1,5 +1,6 @@
 ﻿#include <ARBase/Messaging/MessagingManagerServer.h>
 
+#include <ARBase/Core/ARGameInstance.h>
 #include <ARBase/Core/ARPlayerController.h>
 #include <ARBase/Messaging/MessagingManager.h>
 
@@ -28,6 +29,12 @@ void MessagingManagerServer::OnNewConnection(NotNullPtr<AARPlayerController> pla
 	// TODO(cdc): For each channel we're tracking, we create an UMessageChannel.
 
 	GetBase()->ConnectionTracker.push_back(std::move(entry));
+
+	check(GetBase()->GameInstance);
+
+	// Let the clients know that this channel was created.
+	FMessageChannelCreatedEventData data = {};
+	GetBase()->GameInstance->RPC_Multicast_MessageChannelCreated(std::move(data));
 }
 
 UARGameInstance* MessagingManagerServer::GetGameInstance()

@@ -18,7 +18,6 @@ TMap<FName, T*> GetAllRowsWithName(NotNullPtr<UDataTable> dt)
 
 	TMap<FName, T> rows;
 	rows.Reserve(dt->GetRowMap().Num());
-
 	for (const auto& [key, ptr] : dt->GetRowMap())
 	{
 		rows.Add(key, reinterpret_cast<T*>(ptr));
@@ -33,6 +32,12 @@ NotNullPtr<UARGameInstance> UARGameInstance::GetInstance(NotNullPtr<const UObjec
 {
 	NotNullPtr<UWorld> world = outer->GetWorld();
 	return world->GetGameInstance<UARGameInstance>();
+}
+
+void UARGameInstance::RPC_Multicast_MessageChannelCreated_Implementation(
+	FMessageChannelCreatedEventData data)
+{
+	MessagingManager.GetClientSplit()->OnChannelCreated(data);
 }
 
 void UARGameInstance::OnStart()

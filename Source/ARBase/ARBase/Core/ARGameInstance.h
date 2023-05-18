@@ -9,6 +9,12 @@
 
 class UDataTable;
 
+USTRUCT()
+struct FMessageChannelCreatedEventData
+{
+	GENERATED_BODY()
+};
+
 UCLASS()
 class ARBASE_API UARGameInstance : public UGameInstance
 {
@@ -19,6 +25,11 @@ public:
 
 public:
 	ar::MessagingManager& GetMessagingManager() { return MessagingManager; }
+
+public:
+	UFUNCTION(NetMulticast, Reliable)
+	void RPC_Multicast_MessageChannelCreated(FMessageChannelCreatedEventData data);
+	
 
 protected:
 	virtual void OnStart() override;

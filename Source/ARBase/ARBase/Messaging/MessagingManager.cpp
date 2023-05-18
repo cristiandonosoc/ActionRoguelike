@@ -31,15 +31,7 @@ void MessagingManager::Shutdown()
 void MessagingManager::OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
 									   NotNullPtr<UNetConnection> connection)
 {
-	check(GameInstance);
-	if (ARClientServerGlobals::RunningInClient(player_controller))
-	{
-		GetClientSplit()->OnNewConnection(player_controller, connection);
-	}
-	if (ARClientServerGlobals::RunningInServer(player_controller))
-	{
-		GetServerSplit()->OnNewConnection(player_controller, connection);
-	}
+	GetServerSplit()->OnNewConnection(player_controller, connection);
 }
 
 void MessagingManager::CreateMessageEndpoint(const FName& endpoint_id)
