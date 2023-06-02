@@ -8,6 +8,11 @@
 class UNetConnection;
 class UMessageChannel;
 
+#define DEFINE_MESSAGE_ENDPOINT(endpoint_id)                                                       \
+	static ::ar::internal::__MessageEndpointRegisterer AR_CONCAT3(                                 \
+		__message_endpoint_registerer__, endpoint_id, __LINE__)(FName(TEXT(#endpoint_id)),         \
+																__FILE__, __LINE__);
+
 namespace ar
 {
 
@@ -20,7 +25,6 @@ namespace ar
 // bound to a particular |NetConnection|.
 class ARBASE_API MessageEndpoint
 {
-public:
 public:
 	const FName& GetId() const { return Id; }
 	const auto& GetMessageChannels() const { return MessageChannels; }
@@ -45,6 +49,8 @@ private:
 
 struct MessageEndpointRegistryEntry
 {
+	FName EndpointId;
+	
 	// Tracking data.
 	const char* FromFile;
 	int FromLine;

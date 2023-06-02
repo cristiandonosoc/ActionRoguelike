@@ -3,6 +3,21 @@
 namespace ar
 {
 
+class TestMessage : public Message
+{
+	GENERATED_MESSAGE(TestMessage, Message);
+
+public:
+	void Serialize(FArchive& ar) override {}
+};
+
+DEFINE_MESSAGE(TestMessage);
+
+} // namespace ar
+
+namespace ar
+{
+
 const char* ToString(MessageDomain domain)
 {
 	// clang-format off
@@ -18,6 +33,26 @@ const char* ToString(MessageDomain domain)
 	return "<invalid>";
 }
 
+bool MessageType::operator==(const MessageType& other) const
+{
+	return ID == other.ID;
+}
+
+bool MessageType::operator!=(const MessageType& other) const
+{
+	return !operator==(other);
+}
+
+std::size_t MessageType::operator()(const MessageType& type) const noexcept
+{
+	return GetTypeHash(type.ID);
+}
+
+const MessageType& Message::StaticMessageType()
+{
+	static MessageType type{TEXT("Message")};
+	return type;
+}
 
 // __MessageTypeRegisterer -------------------------------------------------------------------------
 
@@ -37,26 +72,29 @@ const MessageTypeRegistry& GetGlobalMessageTypeRegistry()
 	return GetMessageTypeRegistry();
 }
 
-const MessageTypeRegistryEntry* FindMessageTypeRegistryEntry(const FName& type)
+const MessageTypeRegistryEntry& FindMessageTypeRegistryEntry(const FName& id)
 {
 	const auto& registry = GetGlobalMessageTypeRegistry();
-	return registry.Find(type);
+
+	MessageType dummy{id};
+	auto it = registry.find(dummy);
+	check(it != registry.end());
+	return it->second;
 }
 
-namespace internal
-{
-
 __MessageTypeRegisterer::__MessageTypeRegisterer(
-	const FName& type, const char* file, int line,
+	const MessageType& type, const MessageType& parent_type, const char* file, int line,
 	MessageTypeRegistryEntry::MessageTypeFactoryFunction&& factory_function)
 {
 	auto& registry = GetMessageTypeRegistry();
 
 	// This message type should not be registered twice.
-	if (MessageTypeRegistryEntry* entry = registry.Find(type))
+	if (auto it = registry.find(type); it != registry.end())
 	{
-		std::cout << "Message type " << TCHAR_TO_ANSI(*type.ToString())
-				  << " already registered from " << entry->FromFile << ":" << entry->FromLine
+		const auto& [_, entry] = *it;
+
+		std::cout << "Message type " << TCHAR_TO_ANSI(*type.ID.ToString())
+				  << " already registered from " << entry.FromFile << ":" << entry.FromLine
 				  << std::endl;
 
 		// Put a couple so that all compilers will show the break line correctly.
@@ -68,11 +106,12 @@ __MessageTypeRegisterer::__MessageTypeRegisterer(
 
 	// We add it to the registry.
 	MessageTypeRegistryEntry entry = {};
+	entry.Type = type;
+	entry.ParentType = parent_type;
 	entry.FactoryFunction = std::move(factory_function);
 	entry.FromFile = file;
 	entry.FromLine = line;
 	registry[type] = std::move(entry);
 }
 
-} // namespace internal
 } // namespace ar

@@ -3,6 +3,8 @@
 #include <ARBase/Messaging/MessageChannel.h>
 #include <ARBase/NotNullPtr.h>
 
+// DEFINE_MESSAGE_ENDPOINT(TestMessageEndpoint);
+
 namespace ar
 {
 namespace
@@ -32,8 +34,7 @@ void MessageEndpoint::ReceiveMessageFromChannel(NotNullPtr<UMessageChannel> chan
 	checkf(false, TEXT("TODO: IMPLEMENT ME"));
 }
 
-// MessageEndpointRegistry
-// --------------------------------------------------------------------------
+// MessageEndpointRegistry -------------------------------------------------------------------------
 
 namespace
 {
@@ -59,6 +60,7 @@ const MessageEndpointRegistryEntry* FindMessageEndpointRegistryEntry(const FName
 
 namespace internal
 {
+
 __MessageEndpointRegisterer::__MessageEndpointRegisterer(const FName& endpoint_id, const char* file,
 														 int line)
 {
@@ -80,6 +82,7 @@ __MessageEndpointRegisterer::__MessageEndpointRegisterer(const FName& endpoint_i
 
 	// We add it to the registry.
 	MessageEndpointRegistryEntry entry = {};
+	entry.EndpointId = endpoint_id;
 	entry.FromFile = file;
 	entry.FromLine = line;
 	registry[endpoint_id] = std::move(entry);

@@ -27,13 +27,16 @@ public:
 	ar::MessagingManager& GetMessagingManager() { return MessagingManager; }
 
 public:
+	void Init() override;
+	void Shutdown() override;
+
+public:
 	UFUNCTION(NetMulticast, Reliable)
 	void RPC_Multicast_MessageChannelCreated(FMessageChannelCreatedEventData data);
 	
 
 protected:
-	virtual void OnStart() override;
-	virtual void Shutdown() override;
+	void OnStart() override;
 
 protected:
 	UPROPERTY(EditAnywhere)

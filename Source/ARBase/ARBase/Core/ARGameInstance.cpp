@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #include <ARBase/Core/ARGameInstance.h>
 
 #include <ARBase/NotNullPtr.h>
@@ -34,6 +32,18 @@ NotNullPtr<UARGameInstance> UARGameInstance::GetInstance(NotNullPtr<const UObjec
 	return world->GetGameInstance<UARGameInstance>();
 }
 
+void UARGameInstance::Init()
+{
+	Super::Init();
+	MessagingManager.Init(this);
+}
+
+void UARGameInstance::Shutdown()
+{
+	MessagingManager.Shutdown();
+	Super::Shutdown();
+}
+
 void UARGameInstance::RPC_Multicast_MessageChannelCreated_Implementation(
 	FMessageChannelCreatedEventData data)
 {
@@ -52,12 +62,4 @@ void UARGameInstance::OnStart()
 		NotNullPtr widget_manager = GetSubsystem<UARWidgetSubsystem>();
 		widget_manager->LoadWidgetClasses(std::move(rows));
 	}
-
-	MessagingManager.Start(this);
-}
-void UARGameInstance::Shutdown()
-{
-	Super::Shutdown();
-
-	MessagingManager.Shutdown();
 }

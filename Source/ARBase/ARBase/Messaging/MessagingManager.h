@@ -25,14 +25,15 @@ public:
 	MessagingManager();
 
 public:
-	void Start(UARGameInstance* game_instance);
+	void Init(UARGameInstance* game_instance);
 	void Shutdown();
+
+public:
+	void CreateMessageEndpoint(const FName& endpoint_id);
+	void DestroyMessageEndpoint(const FName& endpoint_id);
 
 	void OnNewConnection(NotNullPtr<AARPlayerController> player_controller,
 						 NotNullPtr<UNetConnection> connection);
-
-	void CreateMessageEndpoint(const FName& link_id);
-	void DestroyMessageEndpoint(const FName& link_id);
 
 private:
 	UARGameInstance* GameInstance = nullptr; // Not owning.

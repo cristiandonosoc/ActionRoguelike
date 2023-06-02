@@ -28,6 +28,11 @@
 
 ### Messaging
 
+- Do MessageEndpoint registering the std way, TMap hangs.
+- Create a global MessageEndpoint via the macro, by having the GameInstance create them.
+- Have the connection map into the MessageEndpoint.
+- Send a message via the channel.
+
 - Do Channel/NetChannel binding, to ensure the correct underlying UChannel is correctly bound to the
   appropiate MessageChannel.
 - Make Channel send the message back to their owner.

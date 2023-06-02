@@ -11,7 +11,7 @@ MessagingManager::MessagingManager()
 	INIT_BASE_CLIENT_SERVER_SPLIT();
 }
 
-void MessagingManager::Start(UARGameInstance* game_instance)
+void MessagingManager::Init(UARGameInstance* game_instance)
 {
 	GameInstance = game_instance;
 

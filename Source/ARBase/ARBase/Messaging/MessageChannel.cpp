@@ -8,7 +8,7 @@ void UMessageChannel::Enqueue(std::unique_ptr<ar::Message>&& message)
 {
 	check(message);
 	checkf(!Closing, TEXT("Channel %s, MessageType %s: Enqueing to channel while closing"),
-		   *GetName(), *message->GetMessageType().ToString());
+		   *GetName(), *message->GetType().ID.ToString());
 	MessageQueue.push_back(std::move(message));
 }
 
@@ -55,8 +55,8 @@ std::unique_ptr<Message> UnserializeMessage(FInBunch& bunch)
 
 	// We create an instance of this message from the type and use virtual functions to call the
 	// correct deserialization function.
-	NotNullPtr entry = FindMessageTypeRegistryEntry(type);
-	auto message = entry->FactoryFunction();
+	const auto& entry = FindMessageTypeRegistryEntry(type);
+	auto message = entry.FactoryFunction();
 	check(message);
 	message->Serialize(bunch);
 
@@ -101,8 +101,8 @@ bool WriteMessage(NotNullPtr<UMessageChannel> net_channel, std::unique_ptr<Messa
 
 	// We write the message type so it can be decoded (See |ReceivedBunch|).
 	// Then we serialize the rest, which is message dependent.
-	FName type = message->GetMessageType();
-	bunch << type;
+	FName id = message->GetType().ID;
+	bunch << id;
 	message->Serialize(bunch);
 	if (bunch.IsError())
 	{
