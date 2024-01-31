@@ -2,6 +2,7 @@
 
 #include <ARBase/ClientServerSplit.h>
 
+#include <functional>
 #include <memory>
 
 namespace ar

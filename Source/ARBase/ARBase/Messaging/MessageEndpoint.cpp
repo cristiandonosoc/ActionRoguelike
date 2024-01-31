@@ -3,6 +3,8 @@
 #include <ARBase/Messaging/MessageChannel.h>
 #include <ARBase/NotNullPtr.h>
 
+#include <iostream>
+
 // DEFINE_MESSAGE_ENDPOINT(TestMessageEndpoint);
 
 namespace ar

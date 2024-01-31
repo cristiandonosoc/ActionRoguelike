@@ -1,5 +1,7 @@
 ﻿#include <ARBase/Messaging/Message.h>
 
+#include <iostream>
+
 namespace ar
 {
 

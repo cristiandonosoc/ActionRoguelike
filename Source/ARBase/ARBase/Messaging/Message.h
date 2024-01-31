@@ -3,6 +3,7 @@
 #include <ARBase/Macros.h>
 
 #include <unordered_map>
+#include <functional>
 
 #define GENERATED_MESSAGE(class_name, parent_class_name)                                           \
 public:                                                                                            \

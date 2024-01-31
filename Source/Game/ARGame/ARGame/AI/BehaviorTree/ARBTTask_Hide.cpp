@@ -6,6 +6,7 @@
 
 #include <AIController.h>
 #include <EnvironmentQuery/EnvQueryManager.h>
+#include <Navigation/PathFollowingComponent.h>
 
 #include <map>
 
